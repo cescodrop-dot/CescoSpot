@@ -34,24 +34,20 @@
       height: 100%;
       height: 100dvh;
       width: 100vw;
-      background-color: #050a15; /* Sfondo scuro per chi apre da PC */
-      color: var(--text-light);
-      display: flex;
-      justify-content: center; /* Centra l'app su schermi grandi */
-      align-items: center;
-    }
-
-    /* Contenitore principale per simulare app mobile su PC */
-    .app-container {
-      width: 100%;
-      max-width: 480px; /* Limite per PC */
-      height: 100%;
       background-color: var(--bg-dark);
-      position: relative;
+      color: var(--text-light);
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      box-shadow: 0 0 30px rgba(0,0,0,0.8);
+    }
+
+    /* L'app container ora occupa il 100% dello spazio disponibile sia su PC che su Mobile */
+    .app-container {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      display: flex;
+      flex-direction: column;
     }
 
     /* Top Compass Bar */
@@ -71,7 +67,7 @@
       display: flex;
       justify-content: space-between;
       width: 100%;
-      max-width: 320px;
+      max-width: 400px;
       font-weight: 700;
       color: var(--text-muted);
       letter-spacing: 2px;
@@ -81,7 +77,7 @@
       display: flex;
       justify-content: space-between;
       width: 100%;
-      max-width: 320px;
+      max-width: 400px;
       font-size: 0.75rem;
       color: #cbd5e1;
     }
@@ -136,6 +132,7 @@
       cursor: pointer;
       transition: all 0.2s;
     }
+    .map-btn:hover { background: #f1f5f9; }
     .map-btn:active { transform: scale(0.95); }
     .map-btn.active { background: #0284c7; color: #fff; }
 
@@ -152,6 +149,7 @@
       box-shadow: none;
     }
     .map-btn-group .map-btn:first-child { border-bottom: 1px solid #e2e8f0; }
+    .map-btn-group .map-btn:hover { background: #f1f5f9; }
 
     .bottom-left-gps {
       position: absolute;
@@ -214,8 +212,9 @@
       justify-content: center;
       box-shadow: 0 4px 20px rgba(2, 132, 199, 0.6);
       cursor: pointer;
-      transition: transform 0.2s;
+      transition: transform 0.2s, background 0.2s;
     }
+    .fab-add:hover { background: #0369a1; }
     .fab-add:active { transform: scale(0.9); }
 
     /* Bottom Nav Bar */
@@ -235,7 +234,7 @@
       align-items: center;
       gap: 4px;
       color: var(--text-muted);
-      font-size: 0.7rem;
+      font-size: 0.75rem;
       cursor: pointer;
       background: none;
       border: none;
@@ -243,6 +242,7 @@
       transition: color 0.3s;
     }
     .nav-item i { font-size: 1.3rem; margin-bottom: 2px; }
+    .nav-item:hover { color: #fff; }
     .nav-item.active { color: var(--accent-light-blue); font-weight: bold; }
 
     /* Modal */
@@ -259,9 +259,11 @@
       padding: 20px; 
       padding-bottom: calc(24px + env(safe-area-inset-bottom));
       transition: bottom 0.35s cubic-bezier(0.1, 0.9, 0.2, 1); 
-      max-height: 85vh; 
+      max-height: 90vh; 
       overflow-y: auto;
       box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
+      margin: 0 auto;
+      max-width: 800px; /* Limita la larghezza del modal su schermi grandissimi */
     }
     .modal.open { bottom: 0; }
     
@@ -281,7 +283,7 @@
 
     .icon-picker-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
       gap: 10px;
       max-height: 220px;
       overflow-y: auto;
@@ -289,6 +291,7 @@
       background: #f8fafc;
       border-radius: 12px;
       border: 1px solid #e2e8f0;
+      margin-bottom: 12px;
     }
     .icon-card {
       display: flex;
@@ -302,6 +305,7 @@
       cursor: pointer;
       transition: all 0.2s;
     }
+    .icon-card:hover { border-color: #cbd5e1; }
     .icon-card.selected {
       border-color: #0284c7;
       background: #e0f2fe;
@@ -323,6 +327,9 @@
       font-size: 1rem;
     }
 
+    .form-group {
+      margin-bottom: 14px;
+    }
     .form-control { 
       width: 100%; 
       padding: 14px; 
@@ -333,7 +340,10 @@
       font-size: 1rem; 
       outline: none;
       margin-top: 6px;
+      font-family: inherit;
     }
+    .form-control:focus { border-color: #0284c7; background: #fff; }
+    
     .btn-submit { 
       width: 100%; 
       padding: 16px; 
@@ -344,18 +354,33 @@
       font-weight: 700; 
       font-size: 1.1rem;
       cursor: pointer; 
-      margin-top: 18px;
+      margin-top: 10px;
       box-shadow: 0 4px 12px rgba(2, 132, 199, 0.4);
+      transition: background 0.2s;
     }
+    .btn-submit:hover { background: #0369a1; }
 
     .widget-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
-    .metric-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 12px; }
+    .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 12px; margin-top: 12px; }
     .metric-box { background: var(--panel-bg); padding: 12px; border-radius: 12px; text-align: center; }
     .metric-val { font-size: 1.15rem; font-weight: bold; color: var(--accent-light-blue); }
     .metric-lbl { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
     
+    .spot-actions button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1.2rem;
+      padding: 8px;
+      border-radius: 8px;
+      transition: background 0.2s;
+    }
+    .spot-actions button:hover { background: rgba(255,255,255,0.1); }
+    .btn-edit { color: var(--accent-light-blue); }
+    .btn-delete { color: var(--accent-red); }
+
     /* Scrollbar personalizzata per liste interne */
-    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: #475569; border-radius: 10px; }
   </style>
@@ -448,11 +473,11 @@
     <button class="nav-item" onclick="switchTab('tabMe', this)"><i class="fa-solid fa-bookmark"></i>Spot</button>
   </nav>
 
-  <!-- Modal Aggiungi Spot -->
+  <!-- Modal Aggiungi/Modifica Spot -->
   <div class="modal" id="modalAddSpot">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
       <button style="background:none; border:none; font-size:1.4rem; color:#64748b; cursor:pointer; padding:5px;" onclick="closeModals()"><i class="fa-solid fa-xmark"></i></button>
-      <h4 style="font-size:1.1rem; color:#0f172a;">Salva Posizione</h4>
+      <h4 style="font-size:1.1rem; color:#0f172a;" id="modalTitle">Salva Posizione</h4>
       <button style="background:#0284c7; border:none; width:32px; height:32px; border-radius:50%; color:#fff; cursor:pointer;" onclick="saveSpotFromModal()"><i class="fa-solid fa-check"></i></button>
     </div>
 
@@ -460,39 +485,49 @@
       <input type="hidden" id="tempLat">
       <input type="hidden" id="tempLng">
       
-      <div style="margin-bottom:16px;">
+      <div class="form-group">
         <label style="font-size:0.8rem; font-weight:700; color:#64748b;">NOME SPOT</label>
         <input type="text" class="form-control" id="spotName" placeholder="Es. Spot Lucci, Secca..." required>
       </div>
 
-      <label style="font-size:0.8rem; font-weight:700; color:#64748b;">COLORE IDENTIFICATIVO</label>
-      <div class="color-picker-grid">
-        <div class="color-opt selected" style="background:#22c55e;" onclick="selectColor('#22c55e', this)"><i class="fa-solid fa-check"></i></div>
-        <div class="color-opt" style="background:#eab308;" onclick="selectColor('#eab308', this)"></div>
-        <div class="color-opt" style="background:#f97316;" onclick="selectColor('#f97316', this)"></div>
-        <div class="color-opt" style="background:#ef4444;" onclick="selectColor('#ef4444', this)"></div>
-        <div class="color-opt" style="background:#991b1b;" onclick="selectColor('#991b1b', this)"></div>
-        <div class="color-opt" style="background:#0284c7;" onclick="selectColor('#0284c7', this)"></div>
-        <div class="color-opt" style="background:#06b6d4;" onclick="selectColor('#06b6d4', this)"></div>
-        <div class="color-opt" style="background:#d946ef;" onclick="selectColor('#d946ef', this)"></div>
-        <div class="color-opt" style="background:#475569;" onclick="selectColor('#475569', this)"></div>
-        <div class="color-opt" style="background:#000000;" onclick="selectColor('#000000', this)"></div>
+      <div class="form-group">
+        <label style="font-size:0.8rem; font-weight:700; color:#64748b;">SPECIE TARGET</label>
+        <input type="text" class="form-control" id="spotTarget" placeholder="Es. Spigola, Luccio, Carpa...">
       </div>
 
-      <label style="font-size:0.8rem; font-weight:700; color:#64748b; margin-top:8px; display:block;">ICONA: <span id="selectedIconLabel" style="color:#0284c7;">Pesce (Standard)</span></label>
+      <div class="form-group">
+        <label style="font-size:0.8rem; font-weight:700; color:#64748b;">NOTE / DESCRIZIONE</label>
+        <textarea class="form-control" id="spotNotes" rows="2" placeholder="Dettagli profondità, esca usata, correnti..."></textarea>
+      </div>
+
+      <label style="font-size:0.8rem; font-weight:700; color:#64748b;">COLORE IDENTIFICATIVO</label>
+      <div class="color-picker-grid">
+        <div class="color-opt selected" style="background:#22c55e;" onclick="selectColor('#22c55e', this)" data-color="#22c55e"><i class="fa-solid fa-check"></i></div>
+        <div class="color-opt" style="background:#eab308;" onclick="selectColor('#eab308', this)" data-color="#eab308"></div>
+        <div class="color-opt" style="background:#f97316;" onclick="selectColor('#f97316', this)" data-color="#f97316"></div>
+        <div class="color-opt" style="background:#ef4444;" onclick="selectColor('#ef4444', this)" data-color="#ef4444"></div>
+        <div class="color-opt" style="background:#991b1b;" onclick="selectColor('#991b1b', this)" data-color="#991b1b"></div>
+        <div class="color-opt" style="background:#0284c7;" onclick="selectColor('#0284c7', this)" data-color="#0284c7"></div>
+        <div class="color-opt" style="background:#06b6d4;" onclick="selectColor('#06b6d4', this)" data-color="#06b6d4"></div>
+        <div class="color-opt" style="background:#d946ef;" onclick="selectColor('#d946ef', this)" data-color="#d946ef"></div>
+        <div class="color-opt" style="background:#475569;" onclick="selectColor('#475569', this)" data-color="#475569"></div>
+        <div class="color-opt" style="background:#000000;" onclick="selectColor('#000000', this)" data-color="#000000"></div>
+      </div>
+
+      <label style="font-size:0.8rem; font-weight:700; color:#64748b; display:block;">ICONA: <span id="selectedIconLabel" style="color:#0284c7;">Pesce 1</span></label>
       <div class="icon-picker-grid" id="iconPicker"></div>
 
-      <button type="submit" class="btn-submit">Salva nel Database</button>
+      <button type="submit" class="btn-submit" id="btnSubmitForm">Salva nel Database</button>
     </form>
   </div>
 
-</div> <!-- Chiusura app-container -->
+</div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
   <script>
     // --- INIZIALIZZAZIONE MAPPA E LIVELLI ---
-    const map = L.map('map', { zoomControl: false, attributionControl: false }).setView([41.9028, 12.4964], 6); // Centro Italia di default
+    const map = L.map('map', { zoomControl: false, attributionControl: false }).setView([41.9028, 12.4964], 6); // Centro Italia
 
     const satLayer = L.layerGroup([
       L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'),
@@ -528,15 +563,17 @@
     let selectedIcon = 'fa-fish';
     let spots = [];
     let mapMarkers = [];
+    let editingSpotId = null; // Memorizza l'ID se stiamo modificando
+    let tempMarker = null; // Marker temporaneo (il "ping")
     
-    // Gestione rigorosa del LocalStorage per evitare perdite di dati
+    // Gestione LocalStorage
     try {
       const savedData = localStorage.getItem('navifish_spots');
       if (savedData) {
         spots = JSON.parse(savedData);
       }
     } catch(e) {
-      console.warn("LocalStorage non disponibile, impossibile salvare i punti in modo permanente.");
+      console.warn("LocalStorage non disponibile.");
     }
 
     // Costruzione UI Picker Icone
@@ -544,6 +581,7 @@
     iconList.forEach((item, index) => {
       const card = document.createElement('div');
       card.className = `icon-card ${index === 0 ? 'selected' : ''}`;
+      card.dataset.icon = item.id;
       card.innerHTML = `<i class="fa-solid ${item.id}"></i><span>${item.name}</span>`;
       card.onclick = () => {
         document.querySelectorAll('.icon-card').forEach(c => c.classList.remove('selected'));
@@ -559,45 +597,118 @@
         c.classList.remove('selected');
         c.innerHTML = '';
       });
-      el.classList.add('selected');
-      el.innerHTML = '<i class="fa-solid fa-check"></i>';
+      if(el) {
+        el.classList.add('selected');
+        el.innerHTML = '<i class="fa-solid fa-check"></i>';
+      }
       selectedColor = color;
     }
 
     // --- LOGICA MODAL E SPOT ---
+
+    function setIconSelection(iconId) {
+      document.querySelectorAll('.icon-card').forEach(c => {
+        c.classList.remove('selected');
+        if(c.dataset.icon === iconId) {
+          c.classList.add('selected');
+          const itemName = iconList.find(i => i.id === iconId)?.name || 'Icona';
+          document.getElementById('selectedIconLabel').innerText = itemName;
+          selectedIcon = iconId;
+        }
+      });
+    }
+
+    function setColorSelection(colorHex) {
+      const el = document.querySelector(`.color-opt[data-color="${colorHex}"]`);
+      if(el) selectColor(colorHex, el);
+    }
+
     function openAddSpotModal(lat, lng) {
+      editingSpotId = null; // Reset ID modifica
+      document.getElementById('modalTitle').innerText = "Salva Posizione";
+      document.getElementById('btnSubmitForm').innerText = "Salva nel Database";
+      
       const center = lat && lng ? { lat, lng } : map.getCenter();
       document.getElementById('tempLat').value = center.lat;
       document.getElementById('tempLng').value = center.lng;
+      
+      // Resetta i campi form
+      document.getElementById('spotName').value = '';
+      document.getElementById('spotTarget').value = '';
+      document.getElementById('spotNotes').value = '';
+      
       document.getElementById('modalAddSpot').classList.add('open');
     }
 
     function closeModals() {
       document.querySelectorAll('.modal').forEach(m => m.classList.remove('open'));
+      if(tempMarker) {
+        map.removeLayer(tempMarker);
+        tempMarker = null;
+      }
+      editingSpotId = null;
     }
 
     function saveSpotFromModal() {
       const name = document.getElementById('spotName').value || 'Nuovo Spot';
+      const target = document.getElementById('spotTarget').value || '';
+      const notes = document.getElementById('spotNotes').value || '';
       const lat = parseFloat(document.getElementById('tempLat').value);
       const lng = parseFloat(document.getElementById('tempLng').value);
 
-      const newSpot = {
-        id: Date.now().toString(),
-        name: name,
-        color: selectedColor,
-        icon: selectedIcon,
-        lat: lat,
-        lng: lng,
-        date: new Date().toLocaleDateString()
-      };
-
-      spots.push(newSpot);
+      if (editingSpotId) {
+        // Aggiorna spot esistente
+        const spotIndex = spots.findIndex(s => s.id === editingSpotId);
+        if (spotIndex !== -1) {
+          spots[spotIndex].name = name;
+          spots[spotIndex].target = target;
+          spots[spotIndex].notes = notes;
+          spots[spotIndex].color = selectedColor;
+          spots[spotIndex].icon = selectedIcon;
+          // non tocchiamo lat, lng e data originali
+        }
+      } else {
+        // Crea nuovo spot
+        const newSpot = {
+          id: Date.now().toString(),
+          name: name,
+          target: target,
+          notes: notes,
+          color: selectedColor,
+          icon: selectedIcon,
+          lat: lat,
+          lng: lng,
+          date: new Date().toLocaleDateString()
+        };
+        spots.push(newSpot);
+      }
       
       try { localStorage.setItem('navifish_spots', JSON.stringify(spots)); } catch(e) {}
       
       renderMapSpots();
       closeModals();
-      document.getElementById('spotName').value = '';
+    }
+
+    function editSpot(id) {
+      const spot = spots.find(s => s.id === id);
+      if(!spot) return;
+
+      editingSpotId = id;
+      
+      // Popola i campi
+      document.getElementById('modalTitle').innerText = "Modifica Spot";
+      document.getElementById('btnSubmitForm').innerText = "Aggiorna Dati";
+      document.getElementById('spotName').value = spot.name;
+      document.getElementById('spotTarget').value = spot.target || '';
+      document.getElementById('spotNotes').value = spot.notes || '';
+      document.getElementById('tempLat').value = spot.lat;
+      document.getElementById('tempLng').value = spot.lng;
+      
+      // Imposta colori e icone
+      setColorSelection(spot.color);
+      setIconSelection(spot.icon);
+
+      document.getElementById('modalAddSpot').classList.add('open');
     }
 
     function renderMapSpots() {
@@ -613,8 +724,11 @@
           iconAnchor: [18, 18]
         });
 
-        const m = L.marker([s.lat, s.lng], { icon: customIcon }).addTo(map)
-          .bindPopup(`<b>${s.name}</b><br>Inserito: ${s.date||''}`);
+        let popupContent = `<b>${s.name}</b><br><small>Inserito: ${s.date||''}</small>`;
+        if(s.target) popupContent += `<br><small>Target: ${s.target}</small>`;
+        if(s.notes) popupContent += `<br><small><i>${s.notes}</i></small>`;
+
+        const m = L.marker([s.lat, s.lng], { icon: customIcon }).addTo(map).bindPopup(popupContent);
         mapMarkers.push(m);
       });
 
@@ -624,7 +738,7 @@
     function renderSavedSpotsUI() {
       const listContainer = document.getElementById('savedSpotsList');
       if(!listContainer) return;
-      listContainer.innerHTML = spots.length ? '' : '<p style="color:var(--text-muted); text-align:center; margin-top:20px;">Nessun spot registrato. Clicca sulla mappa o usa il tasto + per aggiungerne uno.</p>';
+      listContainer.innerHTML = spots.length ? '' : '<p style="color:var(--text-muted); text-align:center; margin-top:20px;">Nessun spot registrato.</p>';
       
       // Inverti array per mostrare i più recenti in alto
       const reversedSpots = [...spots].reverse();
@@ -632,11 +746,18 @@
       reversedSpots.forEach(s => {
         listContainer.innerHTML += `
           <div class="widget-card" style="display:flex; justify-content:space-between; align-items:center; padding:12px;">
-            <div style="display:flex; align-items:center; gap:12px;">
-              <div class="custom-map-icon" style="background-color: ${s.color}; position:static; width:32px; height:32px; font-size:0.9rem;"><i class="fa-solid ${s.icon}"></i></div>
-              <div><b style="color:#fff;">${s.name}</b><br><small style="color:var(--text-muted)">Lat: ${s.lat.toFixed(4)}, Lng: ${s.lng.toFixed(4)}</small></div>
+            <div style="display:flex; align-items:center; gap:12px; max-width:70%;">
+              <div class="custom-map-icon" style="background-color: ${s.color}; position:static; width:36px; height:36px; font-size:1rem; flex-shrink:0;"><i class="fa-solid ${s.icon}"></i></div>
+              <div style="overflow:hidden;">
+                <b style="color:#fff; display:block; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;">${s.name}</b>
+                ${s.target ? `<small style="color:var(--accent-light-blue); display:block;">Target: ${s.target}</small>` : ''}
+                <small style="color:var(--text-muted)">Lat: ${s.lat.toFixed(4)}</small>
+              </div>
             </div>
-            <button style="background:none; border:none; color:var(--accent-red); cursor:pointer; font-size:1.2rem; padding:8px;" onclick="deleteSpot('${s.id}')"><i class="fa-solid fa-trash-can"></i></button>
+            <div class="spot-actions" style="display:flex; gap:4px;">
+              <button class="btn-edit" onclick="editSpot('${s.id}')" title="Modifica"><i class="fa-solid fa-pen-to-square"></i></button>
+              <button class="btn-delete" onclick="deleteSpot('${s.id}')" title="Elimina"><i class="fa-solid fa-trash-can"></i></button>
+            </div>
           </div>`;
       });
     }
@@ -649,7 +770,7 @@
       }
     }
 
-    // --- RIGHELLO MISURA DISTANZE ---
+    // --- RIGHELLO E CLIC SULLA MAPPA ---
     let rulerActive = false;
     let rulerPoints = [];
     let rulerLine = null;
@@ -679,7 +800,6 @@
     map.on('click', function(e) {
       if (rulerActive) {
         rulerPoints.push([e.latlng.lat, e.latlng.lng]);
-        
         L.circleMarker(e.latlng, {radius: 4, color: '#38bdf8', fillColor: '#fff', fillOpacity: 1}).addTo(rulerMarkers);
         
         if (rulerPoints.length > 1) {
@@ -692,6 +812,18 @@
           document.getElementById('measureBox').innerText = dist > 1000 ? `Distanza: ${(dist/1000).toFixed(2)} km` : `Distanza: ${Math.round(dist)} m`;
         }
       } else {
+        // Se non stiamo misurando, mostriamo il marker temporaneo (PING) e apriamo il modale
+        if(tempMarker) map.removeLayer(tempMarker);
+        
+        const tempIcon = L.divIcon({
+          className: '',
+          html: `<div style="width:20px; height:20px; background:#0284c7; border:3px solid #fff; border-radius:50%; box-shadow:0 0 15px rgba(2,132,199,1); animation: pulse 1s infinite alternate;"></div>`,
+          iconSize: [20, 20],
+          iconAnchor: [10, 10]
+        });
+        
+        tempMarker = L.marker(e.latlng, {icon: tempIcon}).addTo(map);
+        
         openAddSpotModal(e.latlng.lat, e.latlng.lng);
       }
     });
@@ -705,7 +837,7 @@
       if(tabId === 'tabMap') setTimeout(() => map.invalidateSize(), 300);
     }
 
-    // --- GPS, BUSSOLA E TACHIMETRO ---
+    // --- GPS E BUSSOLA ---
     let watchId = null;
     let userMarker = null;
 
@@ -713,7 +845,6 @@
       const btn = document.getElementById('gpsBtn');
       
       if (watchId) {
-        // Disattiva
         navigator.geolocation.clearWatch(watchId);
         watchId = null;
         btn.classList.remove('active');
@@ -729,10 +860,9 @@
         watchId = navigator.geolocation.watchPosition((pos) => {
           const lat = pos.coords.latitude;
           const lng = pos.coords.longitude;
-          const speed = pos.coords.speed; // m/s
-          const heading = pos.coords.heading; // Gradi rispetto al nord
+          const speed = pos.coords.speed;
+          const heading = pos.coords.heading;
           
-          // Aggiorna marker utente sulla mappa
           if(!userMarker) {
             userMarker = L.circleMarker([lat, lng], {
               radius: 8, color: '#fff', weight: 2, fillColor: '#0284c7', fillOpacity: 1
@@ -742,12 +872,10 @@
             userMarker.setLatLng([lat, lng]);
           }
 
-          // Aggiorna Tachimetro (Converti m/s in Nodi)
           if(speed !== null && speed >= 0) {
             document.getElementById('speedVal').innerText = (speed * 1.94384).toFixed(1);
           }
 
-          // Aggiorna Course Over Ground (se in movimento)
           if(heading !== null && !isNaN(heading)) {
             document.getElementById('cogVal').innerText = Math.round(heading) + "°";
           }
@@ -761,33 +889,30 @@
       }
     }
 
-    // Bussola Hardware (Device Orientation)
     if (window.DeviceOrientationEvent) {
       window.addEventListener('deviceorientation', function(event) {
         let heading = null;
-        
-        // Supporto per iOS (richiede permessi speciali su Safari >= 13, per ora usiamo webkitCompassHeading se disponibile)
         if (event.webkitCompassHeading) { 
           heading = event.webkitCompassHeading;
         } else if (event.alpha !== null) {
-          // Calcolo generico per Android (l'alpha dipende dall'orientamento iniziale, è un'approssimazione)
           heading = 360 - event.alpha; 
         }
-
         if(heading !== null) {
           document.getElementById('hdgVal').innerText = Math.round(heading) + "°";
         }
       }, true);
     }
 
-    // Inizializza visualizzazione marker al caricamento
+    // Aggiungi un'animazione CSS per il ping temporaneo
+    const style = document.createElement('style');
+    style.innerHTML = `@keyframes pulse { from { transform: scale(1); opacity: 1; } to { transform: scale(1.3); opacity: 0.7; } }`;
+    document.head.appendChild(style);
+
+    // Init
     renderMapSpots();
-    
-    // Se è la prima volta assoluta che apre l'app, centrala in base al suo IP/GPS (fallback semplice)
     if(spots.length > 0) {
       map.setView([spots[spots.length-1].lat, spots[spots.length-1].lng], 13);
     }
-
   </script>
 </body>
 </html>
