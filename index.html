@@ -41,7 +41,6 @@
       overflow: hidden;
     }
 
-    /* L'app container ora occupa il 100% dello spazio disponibile sia su PC che su Mobile */
     .app-container {
       width: 100%;
       height: 100%;
@@ -263,7 +262,7 @@
       overflow-y: auto;
       box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
       margin: 0 auto;
-      max-width: 800px; /* Limita la larghezza del modal su schermi grandissimi */
+      max-width: 800px;
     }
     .modal.open { bottom: 0; }
     
@@ -379,7 +378,30 @@
     .btn-edit { color: var(--accent-light-blue); }
     .btn-delete { color: var(--accent-red); }
 
-    /* Scrollbar personalizzata per liste interne */
+    /* Pulsanti Backup */
+    .backup-bar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .btn-backup {
+      flex: 1;
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+      background: var(--panel-bg);
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background 0.2s;
+    }
+    .btn-backup:hover { background: var(--card-bg); }
+
     ::-webkit-scrollbar { width: 8px; height: 8px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: #475569; border-radius: 10px; }
@@ -460,7 +482,15 @@
 
     <!-- TAB I MIEI SPOT -->
     <div id="tabMe" class="tab-content" style="padding:16px;">
-      <h3 style="margin-bottom:16px; margin-top:8px;">I Tuoi Spot Salvati</h3>
+      <h3 style="margin-bottom:12px; margin-top:8px;">I Tuoi Spot Salvati</h3>
+      
+      <!-- Pulsanti di Backup ed Esportazione/Importazione -->
+      <div class="backup-bar">
+        <button class="btn-backup" onclick="exportSpots()"><i class="fa-solid fa-file-arrow-down" style="color:var(--accent-light-blue);"></i>Esporta Backup</button>
+        <button class="btn-backup" onclick="document.getElementById('importFile').click()"><i class="fa-solid fa-file-arrow-up" style="color:var(--accent-green);"></i>Importa Backup</button>
+        <input type="file" id="importFile" style="display:none" accept=".json" onchange="importSpots(event)">
+      </div>
+
       <div id="savedSpotsList"></div>
     </div>
 
@@ -527,7 +557,7 @@
 
   <script>
     // --- INIZIALIZZAZIONE MAPPA E LIVELLI ---
-    const map = L.map('map', { zoomControl: false, attributionControl: false }).setView([41.9028, 12.4964], 6); // Centro Italia
+    const map = L.map('map', { zoomControl: false, attributionControl: false }).setView([41.9028, 12.4964], 6);
 
     const satLayer = L.layerGroup([
       L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'),
@@ -563,8 +593,8 @@
     let selectedIcon = 'fa-fish';
     let spots = [];
     let mapMarkers = [];
-    let editingSpotId = null; // Memorizza l'ID se stiamo modificando
-    let tempMarker = null; // Marker temporaneo (il "ping")
+    let editingSpotId = null;
+    let tempMarker = null;
     
     // Gestione LocalStorage
     try {
@@ -604,8 +634,56 @@
       selectedColor = color;
     }
 
-    // --- LOGICA MODAL E SPOT ---
+    // --- FUNZIONI DI ESPORTAZIONE E IMPORTAZIONE (BACKUP) ---
+    function exportSpots() {
+      if (spots.length === 0) {
+        alert("Non ci sono spot da esportare.");
+        return;
+      }
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(spots, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `navifish_spots_backup_${new Date().toISOString().slice(0,10)}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+    }
 
+    function importSpots(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const importedData = JSON.parse(e.target.result);
+          if (Array.isArray(importedData)) {
+            if (confirm(`Trovati ${importedData.length} spot nel backup. Vuoi unirli a quelli attuali o sostituirli?\n\n[OK] = Sostituisci\n[Annulla] = Unisci`)) {
+              spots = importedData; // Sostituisci
+            } else {
+              // Unisci evitando doppioni basati sull'id
+              importedData.forEach(impSpot => {
+                if (!spots.some(s => s.id === impSpot.id)) {
+                  spots.push(impSpot);
+                }
+              });
+            }
+            localStorage.setItem('navifish_spots', JSON.stringify(spots));
+            renderMapSpots();
+            alert("Backup importato con successo!");
+          } else {
+            alert("Il file non è un formato di backup valido.");
+          }
+        } catch (err) {
+          alert("Errore durante la lettura del file JSON.");
+        }
+        // Resetta l'input file per permettere re-importazioni dello stesso file
+        event.target.value = '';
+      };
+      reader.readAsText(file);
+    }
+
+    // --- LOGICA MODAL E SPOT ---
     function setIconSelection(iconId) {
       document.querySelectorAll('.icon-card').forEach(c => {
         c.classList.remove('selected');
@@ -624,7 +702,7 @@
     }
 
     function openAddSpotModal(lat, lng) {
-      editingSpotId = null; // Reset ID modifica
+      editingSpotId = null;
       document.getElementById('modalTitle').innerText = "Salva Posizione";
       document.getElementById('btnSubmitForm').innerText = "Salva nel Database";
       
@@ -632,7 +710,6 @@
       document.getElementById('tempLat').value = center.lat;
       document.getElementById('tempLng').value = center.lng;
       
-      // Resetta i campi form
       document.getElementById('spotName').value = '';
       document.getElementById('spotTarget').value = '';
       document.getElementById('spotNotes').value = '';
@@ -657,7 +734,6 @@
       const lng = parseFloat(document.getElementById('tempLng').value);
 
       if (editingSpotId) {
-        // Aggiorna spot esistente
         const spotIndex = spots.findIndex(s => s.id === editingSpotId);
         if (spotIndex !== -1) {
           spots[spotIndex].name = name;
@@ -665,10 +741,8 @@
           spots[spotIndex].notes = notes;
           spots[spotIndex].color = selectedColor;
           spots[spotIndex].icon = selectedIcon;
-          // non tocchiamo lat, lng e data originali
         }
       } else {
-        // Crea nuovo spot
         const newSpot = {
           id: Date.now().toString(),
           name: name,
@@ -695,7 +769,6 @@
 
       editingSpotId = id;
       
-      // Popola i campi
       document.getElementById('modalTitle').innerText = "Modifica Spot";
       document.getElementById('btnSubmitForm').innerText = "Aggiorna Dati";
       document.getElementById('spotName').value = spot.name;
@@ -704,7 +777,6 @@
       document.getElementById('tempLat').value = spot.lat;
       document.getElementById('tempLng').value = spot.lng;
       
-      // Imposta colori e icone
       setColorSelection(spot.color);
       setIconSelection(spot.icon);
 
@@ -712,7 +784,6 @@
     }
 
     function renderMapSpots() {
-      // Pulisci marker vecchi
       mapMarkers.forEach(m => map.removeLayer(m));
       mapMarkers = [];
 
@@ -740,7 +811,6 @@
       if(!listContainer) return;
       listContainer.innerHTML = spots.length ? '' : '<p style="color:var(--text-muted); text-align:center; margin-top:20px;">Nessun spot registrato.</p>';
       
-      // Inverti array per mostrare i più recenti in alto
       const reversedSpots = [...spots].reverse();
       
       reversedSpots.forEach(s => {
@@ -812,7 +882,6 @@
           document.getElementById('measureBox').innerText = dist > 1000 ? `Distanza: ${(dist/1000).toFixed(2)} km` : `Distanza: ${Math.round(dist)} m`;
         }
       } else {
-        // Se non stiamo misurando, mostriamo il marker temporaneo (PING) e apriamo il modale
         if(tempMarker) map.removeLayer(tempMarker);
         
         const tempIcon = L.divIcon({
@@ -823,7 +892,6 @@
         });
         
         tempMarker = L.marker(e.latlng, {icon: tempIcon}).addTo(map);
-        
         openAddSpotModal(e.latlng.lat, e.latlng.lng);
       }
     });
@@ -903,12 +971,10 @@
       }, true);
     }
 
-    // Aggiungi un'animazione CSS per il ping temporaneo
     const style = document.createElement('style');
     style.innerHTML = `@keyframes pulse { from { transform: scale(1); opacity: 1; } to { transform: scale(1.3); opacity: 0.7; } }`;
     document.head.appendChild(style);
 
-    // Init
     renderMapSpots();
     if(spots.length > 0) {
       map.setView([spots[spots.length-1].lat, spots[spots.length-1].lng], 13);
