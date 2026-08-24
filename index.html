@@ -592,7 +592,7 @@
     let selectedColor = '#22c55e';
     let selectedIcon = 'fa-fish';
     let spots = [];
-    let mapMarkers = [];
+    let mapMarkers = {}; // Modificato in oggetto per associare facilmente l'ID del marker
     let editingSpotId = null;
     let tempMarker = null;
     
@@ -677,10 +677,28 @@
         } catch (err) {
           alert("Errore durante la lettura del file JSON.");
         }
-        // Resetta l'input file per permettere re-importazioni dello stesso file
         event.target.value = '';
       };
       reader.readAsText(file);
+    }
+
+    // --- NAVIGA ALLO SPOT ---
+    function focusSpot(id) {
+      const spot = spots.find(s => s.id === id);
+      if (!spot) return;
+
+      // Sposta alla tab Mappa e attiva il pulsante di navigazione corrispondente
+      const mapTabBtn = document.querySelectorAll('.nav-item')[0];
+      switchTab('tabMap', mapTabBtn);
+
+      // Centra la mappa sullo spot con zoom ravvicinato e apri il popup
+      map.setView([spot.lat, spot.lng], 16);
+      
+      if (mapMarkers[id]) {
+        setTimeout(() => {
+          mapMarkers[id].openPopup();
+        }, 300);
+      }
     }
 
     // --- LOGICA MODAL E SPOT ---
@@ -784,8 +802,9 @@
     }
 
     function renderMapSpots() {
-      mapMarkers.forEach(m => map.removeLayer(m));
-      mapMarkers = [];
+      // Rimuovi i vecchi marker dalla mappa
+      Object.values(mapMarkers).forEach(m => map.removeLayer(m));
+      mapMarkers = {};
 
       spots.forEach(s => {
         const customIcon = L.divIcon({
@@ -800,7 +819,7 @@
         if(s.notes) popupContent += `<br><small><i>${s.notes}</i></small>`;
 
         const m = L.marker([s.lat, s.lng], { icon: customIcon }).addTo(map).bindPopup(popupContent);
-        mapMarkers.push(m);
+        mapMarkers[s.id] = m;
       });
 
       renderSavedSpotsUI();
@@ -816,12 +835,12 @@
       reversedSpots.forEach(s => {
         listContainer.innerHTML += `
           <div class="widget-card" style="display:flex; justify-content:space-between; align-items:center; padding:12px;">
-            <div style="display:flex; align-items:center; gap:12px; max-width:70%;">
+            <div onclick="focusSpot('${s.id}')" style="display:flex; align-items:center; gap:12px; max-width:70%; cursor:pointer; flex:1;">
               <div class="custom-map-icon" style="background-color: ${s.color}; position:static; width:36px; height:36px; font-size:1rem; flex-shrink:0;"><i class="fa-solid ${s.icon}"></i></div>
               <div style="overflow:hidden;">
                 <b style="color:#fff; display:block; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;">${s.name}</b>
                 ${s.target ? `<small style="color:var(--accent-light-blue); display:block;">Target: ${s.target}</small>` : ''}
-                <small style="color:var(--text-muted)">Lat: ${s.lat.toFixed(4)}</small>
+                <small style="color:var(--text-muted)">Lat: ${s.lat.toFixed(4)}, Lng: ${s.lng.toFixed(4)}</small>
               </div>
             </div>
             <div class="spot-actions" style="display:flex; gap:4px;">
