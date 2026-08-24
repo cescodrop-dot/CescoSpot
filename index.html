@@ -9,12 +9,12 @@
   <link rel="manifest" id="manifestLink" href="">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="CescoSpot PRO">
+  <meta name="apple-mobile-web-app-title" content="CescoSpot">
   <meta name="theme-color" content="#070d1d">
   
-  <!-- ICONA DELLA SCHERMATA HOME COLLEGATA ALLA TUA IMMAGINE "map.png" -->
-  <link rel="icon" type="image/png" href="map.png" />
-  <link rel="apple-touch-icon" href="map.png" />
+  <!-- ICONE PLACEHOLDER CHE VERRANNO SOSTITUITE ISTANTANEAMENTE DAL MOTORE GRAFICO -->
+  <link rel="icon" type="image/png" id="favicon" href="" />
+  <link rel="apple-touch-icon" type="image/png" id="appleTouchIcon" href="" />
 
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
@@ -96,6 +96,7 @@
       box-shadow: 0 4px 30px rgba(0,0,0,0.6);
     }
     
+    /* Griglia Bussola e Freccia Rossa */
     .compass-track {
       position: relative;
       width: 100%;
@@ -595,6 +596,76 @@
 </head>
 <body>
 
+  <!-- MOTORE GRAFICO: Generazione Icona Vettoriale PNG -->
+  <script>
+    (function generateAppIcon() {
+      try {
+        const canvas = document.createElement('canvas');
+        canvas.width = 512;
+        canvas.height = 512;
+        const ctx = canvas.getContext('2d');
+
+        // Sfondo Icona
+        const grad = ctx.createLinearGradient(0, 0, 0, 512);
+        grad.addColorStop(0, '#070d1d');
+        grad.addColorStop(1, '#1e293b');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, 512, 512);
+
+        // Bordo/Cornice
+        ctx.strokeStyle = '#38bdf8';
+        ctx.lineWidth = 16;
+        ctx.lineJoin = 'round';
+        ctx.strokeRect(24, 24, 464, 464);
+
+        // Disegno Onda Astratta (Sonar/Acqua)
+        ctx.beginPath();
+        ctx.arc(256, 256, 140, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(2, 132, 199, 0.4)';
+        ctx.lineWidth = 10;
+        ctx.stroke();
+
+        // Scritta "Cesco"
+        ctx.font = 'bold 80px -apple-system, sans-serif';
+        ctx.fillStyle = '#ffffff';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('Cesco', 256, 180);
+
+        // Scritta "Spot"
+        ctx.fillStyle = '#22c55e';
+        ctx.fillText('Spot', 256, 270);
+
+        // Scritta "PRO"
+        ctx.font = '900 50px -apple-system, sans-serif';
+        ctx.fillStyle = '#f97316';
+        ctx.fillText('PRO', 256, 370);
+
+        // Conversione in PNG ad alta risoluzione
+        const dataURL = canvas.toDataURL('image/png');
+        
+        // Assegnazione ai tag Head (Risolve il bug di Safari iOS)
+        document.getElementById('appleTouchIcon').href = dataURL;
+        document.getElementById('favicon').href = dataURL;
+        
+        // Manifest Dinamico
+        const manifest = {
+          "name": "CescoSpot Pro",
+          "short_name": "CescoSpot",
+          "start_url": ".",
+          "display": "standalone",
+          "background_color": "#070d1d",
+          "theme_color": "#070d1d",
+          "icons": [{ "src": dataURL, "sizes": "512x512", "type": "image/png" }]
+        };
+        const manifestBlob = new Blob([JSON.stringify(manifest)], {type: 'application/json'});
+        document.getElementById('manifestLink').setAttribute('href', URL.createObjectURL(manifestBlob));
+      } catch(e) {
+        console.warn("Icon generator err:", e);
+      }
+    })();
+  </script>
+
 <div class="app-container">
 
   <!-- BANNER INSTALLAZIONE APP PWA -->
@@ -768,27 +839,6 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
   <script>
-    // --- GENERAZIONE MANIFEST PWA DINAMICO PER L'ICONA ---
-    (function generateManifest() {
-        const manifest = {
-          "name": "CescoSpot Pro",
-          "short_name": "CescoSpot",
-          "start_url": ".",
-          "display": "standalone",
-          "background_color": "#070d1d",
-          "theme_color": "#070d1d",
-          "icons": [{
-            "src": "map.png",
-            "sizes": "512x512",
-            "type": "image/png"
-          }]
-        };
-        const stringManifest = JSON.stringify(manifest);
-        const blob = new Blob([stringManifest], {type: 'application/json'});
-        const manifestURL = URL.createObjectURL(blob);
-        document.getElementById('manifestLink').setAttribute('href', manifestURL);
-    })();
-
     // --- GESTIONE PWA INSTALL BANNER ---
     let deferredPrompt;
     const installBanner = document.getElementById('installBanner');
@@ -936,16 +986,34 @@
       selectedColor = colorHex;
     }
 
-    // --- BACKUP ---
+    // --- BACKUP ESPORTA/IMPORTA JSON ---
     function exportSpots() {
-      if (spots.length === 0) { alert("Nessuno spot da esportare."); return; }
-      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(spots, null, 2));
-      const downloadAnchor = document.createElement('a');
-      downloadAnchor.setAttribute("href", dataStr);
-      downloadAnchor.setAttribute("download", `CescoSpot_Backup_${new Date().toISOString().slice(0,10)}.json`);
-      document.body.appendChild(downloadAnchor);
-      downloadAnchor.click();
-      downloadAnchor.remove();
+      if (spots.length === 0) { 
+        alert("Nessuno spot da esportare."); 
+        return; 
+      }
+      try {
+        const dataStr = JSON.stringify(spots, null, 2);
+        const blob = new Blob([dataStr], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        
+        const downloadAnchor = document.createElement('a');
+        downloadAnchor.href = url;
+        
+        const dateStr = new Date().toISOString().slice(0,10);
+        downloadAnchor.download = `CescoSpot_Backup_${dateStr}.json`;
+        
+        document.body.appendChild(downloadAnchor);
+        downloadAnchor.click();
+        
+        setTimeout(() => {
+          document.body.removeChild(downloadAnchor);
+          URL.revokeObjectURL(url);
+        }, 100);
+      } catch (err) {
+        console.error("Errore esportazione:", err);
+        alert("Errore durante l'esportazione.");
+      }
     }
 
     function importSpots(event) {
@@ -1508,6 +1576,5 @@
     
     setTimeout(() => { updateForecastData(null); }, 1000);
   </script>
-
 </body>
 </html>
