@@ -12,9 +12,9 @@
   <meta name="apple-mobile-web-app-title" content="CescoSpot">
   <meta name="theme-color" content="#070d1d">
   
-  <!-- ICONA DELLA SCHERMATA HOME -->
-  <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/3063/3063065.png" />
-  <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3063/3063065.png" />
+  <!-- ICONA DELLA SCHERMATA HOME AUTOGENERATA (Testo CescoSpot) -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj4KICA8cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgZmlsbD0iIzBmMTcyYSIvPgogIDx0ZXh0IHg9IjI1NiIgeT0iMjQwIiBmb250LWZhbWlseT0ic3lzdGVtLXVpLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjkwIiBmb250LXdlaWdodD0iOTAwIiBmaWxsPSIjMzhiZGY4IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5DZXNjbzx0c3BhbiBmaWxsPSIjMjJjNTVlIj5TcG90PC90c3Bhbj48L3RleHQ+CiAgPHRleHQgeD0iMjU2IiB5PSIzMjAiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNDAiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSIjOTRhM2I4IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5QUk88L3RleHQ+Cjwvc3ZnPg==" />
+  <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj4KICA8cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgZmlsbD0iIzBmMTcyYSIvPgogIDx0ZXh0IHg9IjI1NiIgeT0iMjQwIiBmb250LWZhbWlseT0ic3lzdGVtLXVpLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjkwIiBmb250LXdlaWdodD0iOTAwIiBmaWxsPSIjMzhiZGY4IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5DZXNjbzx0c3BhbiBmaWxsPSIjMjJjNTVlIj5TcG90PC90c3Bhbj48L3RleHQ+CiAgPHRleHQgeD0iMjU2IiB5PSIzMjAiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNDAiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSIjOTRhM2I4IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5QUk88L3RleHQ+Cjwvc3ZnPg==" />
 
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
@@ -82,7 +82,7 @@
     .btn-install { background: #fff; color: var(--accent-blue); border: none; padding: 8px 16px; border-radius: 20px; font-weight: 800; font-size: 0.85rem; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
     .btn-close-banner { background: none; border: none; color: rgba(255,255,255,0.7); font-size: 1.4rem; cursor: pointer; padding: 0 0 0 14px; }
 
-    /* Top Compass Bar con Safe Area Inset Corretta */
+    /* Top Compass Bar con Safe Area Inset */
     .top-telemetry-bar {
       background: rgba(15, 23, 42, 0.85);
       backdrop-filter: blur(16px);
@@ -102,7 +102,7 @@
       width: 100%;
       max-width: 380px;
       margin-bottom: 14px;
-      padding-bottom: 18px; /* Spazio per la freccia rossa */
+      padding-bottom: 18px;
     }
 
     .compass-ticks {
@@ -121,7 +121,7 @@
       align-items: center;
       transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
       transform-origin: center bottom;
-      width: 25px; /* Larghezza fissa per centratura */
+      width: 25px;
     }
     
     .compass-ticks span::after {
@@ -134,11 +134,10 @@
       transition: background 0.3s;
     }
 
-    /* Freccia Rossa della Rotta */
     .compass-pointer {
       position: absolute;
       bottom: -6px;
-      left: 50%; /* Punto di partenza */
+      left: 50%;
       transform: translateX(-50%);
       color: var(--accent-red);
       font-size: 1.6rem;
@@ -303,7 +302,7 @@
     }
     .fab-add:active { transform: scale(0.9); }
 
-    /* Bottom Nav Bar con Area Sicura Aggiornata */
+    /* Bottom Nav Bar */
     nav.bottom-nav {
       background: rgba(15, 23, 42, 0.95);
       backdrop-filter: blur(20px);
@@ -439,7 +438,7 @@
       filter: drop-shadow(0px 3px 2px rgba(0,0,0,0.4));
     }
 
-    .form-group { margin-bottom: 16px; }
+    .form-group { margin-bottom: 16px; position: relative; }
     .form-control { 
       width: 100%; 
       padding: 14px 16px; 
@@ -454,6 +453,34 @@
       transition: border-color 0.2s;
     }
     .form-control:focus { border-color: var(--accent-light-blue); }
+
+    /* Custom Autocomplete per Specie Target su Mobile */
+    .autocomplete-items {
+      position: absolute;
+      border: 1px solid var(--border-color);
+      border-top: none;
+      z-index: 3000;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: var(--card-bg);
+      max-height: 200px;
+      overflow-y: auto;
+      border-radius: 0 0 12px 12px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.6);
+      display: none;
+    }
+    .autocomplete-items div {
+      padding: 12px 16px;
+      cursor: pointer;
+      color: var(--text-light);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      font-size: 0.95rem;
+    }
+    .autocomplete-items div:hover, .autocomplete-items div:active {
+      background-color: var(--panel-bg);
+      color: var(--accent-light-blue);
+    }
     
     .btn-submit { 
       width: 100%; 
@@ -556,6 +583,7 @@
       display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s;
     }
     .btn-refresh-weather:active { transform: scale(0.98); }
+    .btn-refresh-weather:disabled { opacity: 0.6; cursor: not-allowed; }
 
     /* Leaflet Control Tweaks */
     .leaflet-control-scale { margin-bottom: 24px !important; margin-left: 14px !important; }
@@ -578,37 +606,10 @@
     </div>
   </div>
 
-  <!-- Libreria Nomi Specie Fiume (Datalist Autocomplete) -->
-  <datalist id="fishSpeciesLibrary">
-    <option value="Amur (Carpa Erbivora)"></option>
-    <option value="Anguilla"></option>
-    <option value="Barbo"></option>
-    <option value="Carassio"></option>
-    <option value="Carpa Comune"></option>
-    <option value="Carpa Specchio"></option>
-    <option value="Cavedano"></option>
-    <option value="Cheppia"></option>
-    <option value="Luccio"></option>
-    <option value="Luccioperca (Sandra)"></option>
-    <option value="Persico Reale"></option>
-    <option value="Persico Trota (Black Bass)"></option>
-    <option value="Pesce Gatto"></option>
-    <option value="Scardola"></option>
-    <option value="Siluro"></option>
-    <option value="Storione"></option>
-    <option value="Temolo"></option>
-    <option value="Tinca"></option>
-    <option value="Trota Fario"></option>
-    <option value="Trota Iridea"></option>
-    <option value="Trota Marmorata"></option>
-    <option value="Vairone"></option>
-  </datalist>
-
   <!-- Top Compass Bar -->
   <div class="top-telemetry-bar">
     <div class="compass-track">
       <div class="compass-ticks" id="compassTicks">
-        <!-- 9 posizioni (da N a N) per calcolare i 360 gradi completi -->
         <span>N</span><span>NE</span><span>E</span><span>SE</span><span>S</span><span>SW</span><span>W</span><span>NW</span><span>N</span>
       </div>
       <div class="compass-pointer" id="compassPointer"><i class="fa-solid fa-caret-up"></i></div>
@@ -740,7 +741,8 @@
 
       <div class="form-group">
         <label style="font-size:0.75rem; font-weight:800; color:var(--text-muted);">SPECIE TARGET</label>
-        <input type="text" class="form-control" id="spotTarget" list="fishSpeciesLibrary" placeholder="Inizia a digitare (es. Carpa, Luccio...)">
+        <input type="text" class="form-control" id="spotTarget" autocomplete="off" placeholder="Inizia a digitare (es. Carpa, Luccio...)">
+        <div id="autocomplete-list" class="autocomplete-items"></div>
       </div>
 
       <div class="form-group">
@@ -810,6 +812,38 @@
       installBanner.classList.remove('show');
       setTimeout(() => installBanner.style.display = 'none', 400);
     }
+
+    // --- AUTOCOMPLETE SPECIE TARGET (CUSTOM PER MOBILE) ---
+    const speciesArray = ["Amur (Carpa Erbivora)", "Anguilla", "Barbo", "Carassio", "Carpa Comune", "Carpa Specchio", "Cavedano", "Cheppia", "Luccio", "Luccioperca (Sandra)", "Persico Reale", "Persico Trota (Black Bass)", "Pesce Gatto", "Scardola", "Siluro", "Storione", "Temolo", "Tinca", "Trota Fario", "Trota Iridea", "Trota Marmorata", "Vairone"];
+    const targetInput = document.getElementById('spotTarget');
+    const autoList = document.getElementById('autocomplete-list');
+
+    function updateAutocomplete() {
+        const val = targetInput.value.toLowerCase();
+        autoList.innerHTML = '';
+        if (!val) { autoList.style.display = 'none'; return; }
+        
+        let matches = speciesArray.filter(s => s.toLowerCase().includes(val));
+        if (matches.length === 0) { autoList.style.display = 'none'; return; }
+        
+        autoList.style.display = 'block';
+        matches.forEach(match => {
+            const d = document.createElement('div');
+            d.innerHTML = match;
+            d.onclick = function() {
+                targetInput.value = match;
+                autoList.style.display = 'none';
+            };
+            autoList.appendChild(d);
+        });
+    }
+
+    targetInput.addEventListener('input', updateAutocomplete);
+    targetInput.addEventListener('focus', updateAutocomplete);
+    document.addEventListener('click', function(e) {
+        if (e.target !== targetInput) autoList.style.display = 'none';
+    });
+
 
     // --- MAPPA E LIVELLI (Leaflet) ---
     const map = L.map('map', { zoomControl: false, attributionControl: false }).setView([41.9028, 12.4964], 6);
@@ -1344,7 +1378,7 @@
       }
     }
 
-    // --- GPS REAL-TIME ---
+    // --- GPS REAL-TIME (PRECISIONE E CENTRATURA CORRETTA) ---
     let watchId = null;
     let userMarker = null;
     let userAccuracyCircle = null;
@@ -1368,7 +1402,7 @@
           
           if(!userMarker) {
             userMarker = L.circleMarker([lat, lng], { radius: 8, color: '#fff', weight: 2, fillColor: '#0284c7', fillOpacity: 1 }).addTo(map);
-            userAccuracyCircle = L.circle([lat, lng], { radius: accuracy, color: '#38bdf8', fillColor: '#38bdf8', fillOpacity: 0.2 }).addTo(map);
+            userAccuracyCircle = L.circle([lat, lng], { radius: accuracy, color: '#38bdf8', fillColor: '#38bdf8', fillOpacity: 0.2, weight: 1 }).addTo(map);
             map.flyTo([lat, lng], 15);
           } else {
             userMarker.setLatLng([lat, lng]);
@@ -1376,7 +1410,7 @@
             userAccuracyCircle.setRadius(accuracy);
           }
         }, (err) => { 
-          alert("Errore GPS: Permesso negato o segnale assente."); 
+          alert("Errore GPS: Assicurati di aver dato i permessi e di avere segnale."); 
           btn.classList.remove('active'); 
           watchId = null;
         }, { enableHighAccuracy: true, maximumAge: 0 });
@@ -1437,7 +1471,6 @@
         const spans = document.querySelectorAll('.compass-ticks span');
         
         spans.forEach((span, i) => {
-          // Accendi se è l'indice calcolato, ma poiché la griglia ha 9 span (N è sia lo 0 che l'8), gestisco l'eccezione
           if (i === index || (index === 0 && i === 8)) {
             span.style.color = 'var(--accent-light-blue)';
             span.style.transform = 'scale(1.4)';
@@ -1464,7 +1497,7 @@
     setTimeout(() => { updateForecastData(null); }, 1000);
   </script>
   
-  <!-- MANIFEST CREATO INLINE PER PWA -->
+  <!-- MANIFEST CREATO INLINE PER PWA (Logo CescoSpot) -->
   <script>
     const manifest = {
       "name": "CescoSpot Pro",
@@ -1474,9 +1507,9 @@
       "background_color": "#070d1d",
       "theme_color": "#070d1d",
       "icons": [{
-        "src": "https://cdn-icons-png.flaticon.com/512/3063/3063065.png",
+        "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj4KICA8cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgZmlsbD0iIzBmMTcyYSIvPgogIDx0ZXh0IHg9IjI1NiIgeT0iMjQwIiBmb250LWZhbWlseT0ic3lzdGVtLXVpLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjkwIiBmb250LXdlaWdodD0iOTAwIiBmaWxsPSIjMzhiZGY4IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5DZXNjbzx0c3BhbiBmaWxsPSIjMjJjNTVlIj5TcG90PC90c3Bhbj48L3RleHQ+CiAgPHRleHQgeD0iMjU2IiB5PSIzMjAiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNDAiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSIjOTRhM2I4IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5QUk88L3RleHQ+Cjwvc3ZnPg==",
         "sizes": "512x512",
-        "type": "image/png"
+        "type": "image/svg+xml"
       }]
     };
     const stringManifest = JSON.stringify(manifest);
