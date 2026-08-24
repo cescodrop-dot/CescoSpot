@@ -6,15 +6,15 @@
   <title>CescoSpot Pro - Fish on!</title>
   
   <!-- IMPOSTAZIONI APP NATIVA PER SCHERMATA HOME E PWA -->
-  <link rel="manifest" id="manifestLink" href="manifest.json">
+  <link rel="manifest" id="manifestLink" href="">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="CescoSpot">
   <meta name="theme-color" content="#070d1d">
   
-  <!-- ICONE PLACEHOLDER CHE VERRANNO AGGIORNATE IN ALTA DEFINIZIONE PNG -->
-  <link rel="icon" type="image/png" id="faviconTag" />
-  <link rel="apple-touch-icon" type="image/png" id="appleTouchIconTag" />
+  <!-- ICONE PLACEHOLDER CHE VERRANNO SOSTITUITE ISTANTANEAMENTE DAL MOTORE GRAFICO -->
+  <link rel="icon" type="image/png" id="favicon" href="" />
+  <link rel="apple-touch-icon" type="image/png" id="appleTouchIcon" href="" />
 
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
@@ -46,7 +46,8 @@
       height: 100%;
       height: 100dvh;
       width: 100vw;
-      background-color: var(--bg-dark);
+      /* Background gradient oceanico molto più moderno */
+      background: linear-gradient(135deg, #070d1d 0%, #0f172a 100%);
       color: var(--text-light);
       display: flex;
       flex-direction: column;
@@ -84,16 +85,16 @@
 
     /* Top Compass Bar con Safe Area Inset */
     .top-telemetry-bar {
-      background: rgba(15, 23, 42, 0.85);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       padding: calc(15px + env(safe-area-inset-top)) 20px 15px 20px;
       display: flex;
       flex-direction: column;
       align-items: center;
       border-bottom: 1px solid rgba(255,255,255,0.05);
       z-index: 1000;
-      box-shadow: 0 4px 25px rgba(0,0,0,0.5);
+      box-shadow: 0 4px 30px rgba(0,0,0,0.6);
     }
     
     /* Griglia Bussola e Freccia Rossa */
@@ -454,7 +455,7 @@
     }
     .form-control:focus { border-color: var(--accent-light-blue); }
 
-    /* Custom Autocomplete per Specie Target su Mobile */
+    /* Menù Autocomplete Mobile Perfetto */
     .autocomplete-items {
       position: absolute;
       border: 1px solid var(--border-color);
@@ -464,10 +465,10 @@
       left: 0;
       right: 0;
       background: var(--card-bg);
-      max-height: 200px;
+      max-height: 220px;
       overflow-y: auto;
       border-radius: 0 0 12px 12px;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.6);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.8);
       display: none;
     }
     .autocomplete-items div {
@@ -596,6 +597,76 @@
 </head>
 <body>
 
+  <!-- MOTORE GRAFICO: Generazione Icona Vettoriale PNG -->
+  <script>
+    (function generateAppIcon() {
+      try {
+        const canvas = document.createElement('canvas');
+        canvas.width = 512;
+        canvas.height = 512;
+        const ctx = canvas.getContext('2d');
+
+        // Sfondo Icona
+        const grad = ctx.createLinearGradient(0, 0, 0, 512);
+        grad.addColorStop(0, '#070d1d');
+        grad.addColorStop(1, '#1e293b');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, 512, 512);
+
+        // Bordo/Cornice
+        ctx.strokeStyle = '#38bdf8';
+        ctx.lineWidth = 16;
+        ctx.lineJoin = 'round';
+        ctx.strokeRect(24, 24, 464, 464);
+
+        // Disegno Onda Astratta (Sonar/Acqua)
+        ctx.beginPath();
+        ctx.arc(256, 256, 140, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(2, 132, 199, 0.4)';
+        ctx.lineWidth = 10;
+        ctx.stroke();
+
+        // Scritta "Cesco"
+        ctx.font = 'bold 80px -apple-system, sans-serif';
+        ctx.fillStyle = '#ffffff';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('Cesco', 256, 180);
+
+        // Scritta "Spot"
+        ctx.fillStyle = '#22c55e';
+        ctx.fillText('Spot', 256, 270);
+
+        // Scritta "PRO"
+        ctx.font = '900 50px -apple-system, sans-serif';
+        ctx.fillStyle = '#f97316';
+        ctx.fillText('PRO', 256, 370);
+
+        // Conversione in PNG ad alta risoluzione
+        const dataURL = canvas.toDataURL('image/png');
+        
+        // Assegnazione ai tag Head (Risolve il bug di Safari iOS)
+        document.getElementById('appleTouchIcon').href = dataURL;
+        document.getElementById('favicon').href = dataURL;
+        
+        // Manifest Dinamico
+        const manifest = {
+          "name": "CescoSpot Pro",
+          "short_name": "CescoSpot",
+          "start_url": ".",
+          "display": "standalone",
+          "background_color": "#070d1d",
+          "theme_color": "#070d1d",
+          "icons": [{ "src": dataURL, "sizes": "512x512", "type": "image/png" }]
+        };
+        const manifestBlob = new Blob([JSON.stringify(manifest)], {type: 'application/json'});
+        document.getElementById('manifestLink').setAttribute('href', URL.createObjectURL(manifestBlob));
+      } catch(e) {
+        console.warn("Icon generator err:", e);
+      }
+    })();
+  </script>
+
 <div class="app-container">
 
   <!-- BANNER INSTALLAZIONE APP PWA -->
@@ -714,9 +785,9 @@
   <div class="modal" id="modalAddSpot">
     <div class="modal-drag-handle"></div>
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-      <button style="background:none; border:none; font-size:1.6rem; color:var(--text-muted); cursor:pointer; padding:5px;" onclick="closeModals()"><i class="fa-solid fa-xmark"></i></button>
+      <button type="button" style="background:none; border:none; font-size:1.6rem; color:var(--text-muted); cursor:pointer; padding:5px;" onclick="closeModals()"><i class="fa-solid fa-xmark"></i></button>
       <h4 style="font-size:1.2rem; color:#fff; font-weight:800;" id="modalTitle">Salva Posizione</h4>
-      <button style="background:var(--accent-blue); border:none; width:38px; height:38px; border-radius:50%; color:#fff; cursor:pointer; box-shadow:0 4px 10px rgba(2,132,199,0.5);" onclick="saveSpotFromModal()"><i class="fa-solid fa-check"></i></button>
+      <button type="button" style="background:var(--accent-blue); border:none; width:38px; height:38px; border-radius:50%; color:#fff; cursor:pointer; box-shadow:0 4px 10px rgba(2,132,199,0.5);" onclick="saveSpotFromModal()"><i class="fa-solid fa-check"></i></button>
     </div>
 
     <form id="spotForm" onsubmit="event.preventDefault(); saveSpotFromModal();">
@@ -733,6 +804,7 @@
         <input type="text" class="form-control" id="spotZone" placeholder="Ricerca in corso o inserisci manualmente...">
       </div>
 
+      <!-- Autocomplete Specie Target Ottimizzato per Mobile -->
       <div class="form-group">
         <label style="font-size:0.75rem; font-weight:800; color:var(--text-muted);">SPECIE TARGET</label>
         <input type="text" class="form-control" id="spotTarget" autocomplete="off" placeholder="Inizia a digitare (es. Carpa, Luccio...)">
@@ -759,7 +831,7 @@
       <label style="font-size:0.75rem; font-weight:800; color:var(--text-muted); display:block; margin-bottom:8px;">ICONA: <span id="selectedIconLabel" style="color:var(--accent-light-blue);">Pin Esatto</span></label>
       <div class="icon-picker-grid" id="iconPicker"></div>
 
-      <button type="submit" class="btn-submit" id="btnSubmitForm">Salva nel Database</button>
+      <button type="button" class="btn-submit" onclick="saveSpotFromModal()">Salva nel Database</button>
     </form>
   </div>
 
@@ -768,74 +840,6 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
   <script>
-    // --- GENERATORE DINAMICO ICONA PNG NATIVA (CESCOSPOT BADGE) ---
-    function generateCescoSpotPNG() {
-      const canvas = document.createElement('canvas');
-      canvas.width = 512;
-      canvas.height = 512;
-      const ctx = canvas.getContext('2d');
-
-      // Sfondo gradiente scuro ad alta risoluzione
-      const grad = ctx.createLinearGradient(0, 0, 512, 512);
-      grad.addColorStop(0, '#070d1d');
-      grad.addColorStop(1, '#0f172a');
-      ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, 512, 512);
-
-      // Cornice azzurra satinata
-      ctx.strokeStyle = '#0284c7';
-      ctx.lineWidth = 16;
-      ctx.strokeRect(8, 8, 496, 496);
-
-      // Icona grafica (Amo / Pesce stilizzato)
-      ctx.font = '120px "Segoe UI", Roboto, sans-serif';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText('🎣', 256, 170);
-
-      // Scritta CescoSpot
-      ctx.font = 'bold 64px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
-      ctx.fillStyle = '#38bdf8';
-      ctx.fillText('Cesco', 185, 330);
-      
-      ctx.fillStyle = '#22c55e';
-      ctx.fillText('Spot', 345, 330);
-
-      // Badge PRO
-      ctx.fillStyle = '#f97316';
-      ctx.font = '900 36px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
-      ctx.fillText('PRO', 256, 410);
-
-      const pngData = canvas.toDataURL('image/png');
-      
-      // Assegna sia a Safari iOS che ad Android/Chrome
-      document.getElementById('faviconTag').href = pngData;
-      document.getElementById('appleTouchIconTag').href = pngData;
-      
-      return pngData;
-    }
-
-    const appIconPNG = generateCescoSpotPNG();
-
-    // MANIFEST DINAMICO CON PNG REALE
-    const manifest = {
-      "name": "CescoSpot Pro",
-      "short_name": "CescoSpot",
-      "start_url": ".",
-      "display": "standalone",
-      "background_color": "#070d1d",
-      "theme_color": "#070d1d",
-      "icons": [{
-        "src": appIconPNG,
-        "sizes": "512x512",
-        "type": "image/png"
-      }]
-    };
-    const stringManifest = JSON.stringify(manifest);
-    const blob = new Blob([stringManifest], {type: 'application/json'});
-    const manifestURL = URL.createObjectURL(blob);
-    document.getElementById('manifestLink').setAttribute('href', manifestURL);
-
     // --- GESTIONE PWA INSTALL BANNER ---
     let deferredPrompt;
     const installBanner = document.getElementById('installBanner');
@@ -875,7 +879,7 @@
       setTimeout(() => installBanner.style.display = 'none', 400);
     }
 
-    // --- AUTOCOMPLETE SPECIE TARGET (CUSTOM PER MOBILE) ---
+    // --- AUTOCOMPLETE SPECIE TARGET (ROBUSTO PER MOBILE) ---
     const speciesArray = ["Amur (Carpa Erbivora)", "Anguilla", "Barbo", "Carassio", "Carpa Comune", "Carpa Specchio", "Cavedano", "Cheppia", "Luccio", "Luccioperca (Sandra)", "Persico Reale", "Persico Trota (Black Bass)", "Pesce Gatto", "Scardola", "Siluro", "Storione", "Temolo", "Tinca", "Trota Fario", "Trota Iridea", "Trota Marmorata", "Vairone"];
     const targetInput = document.getElementById('spotTarget');
     const autoList = document.getElementById('autocomplete-list');
@@ -892,19 +896,20 @@
         matches.forEach(match => {
             const d = document.createElement('div');
             d.innerHTML = match;
-            d.onclick = function() {
+            
+            // Usiamo pointerdown per prevenire che la tastiera mobile si chiuda prima del tocco
+            d.addEventListener('pointerdown', function(e) {
+                e.preventDefault(); 
                 targetInput.value = match;
                 autoList.style.display = 'none';
-            };
+            });
             autoList.appendChild(d);
         });
     }
 
     targetInput.addEventListener('input', updateAutocomplete);
     targetInput.addEventListener('focus', updateAutocomplete);
-    document.addEventListener('click', function(e) {
-        if (e.target !== targetInput) autoList.style.display = 'none';
-    });
+    targetInput.addEventListener('blur', () => { setTimeout(() => { autoList.style.display = 'none'; }, 200); });
 
     // --- MAPPA E LIVELLI (Leaflet) ---
     const map = L.map('map', { zoomControl: false, attributionControl: false }).setView([41.9028, 12.4964], 6);
@@ -925,7 +930,7 @@
       isSat = !isSat;
     }
 
-    // --- ELENCO ICONE (EMOJI GENERICHE E AMBIENTALI 3D NATIVE) ---
+    // --- ELENCO ICONE (EMOJI GENERICHE E AMBIENTALI) ---
     const iconList = [
       { id: '📍', type: 'emoji', name: 'Pin Esatto' },
       { id: '🐟', type: 'emoji', name: 'Pesce Generico' },
@@ -1034,7 +1039,6 @@
     function openAddSpotModal(lat, lng) {
       editingSpotId = null;
       document.getElementById('modalTitle').innerText = "Salva Posizione";
-      document.getElementById('btnSubmitForm').innerText = "Salva nel Database";
       
       const center = lat && lng ? { lat, lng } : map.getCenter();
       document.getElementById('tempLat').value = center.lat;
@@ -1109,7 +1113,6 @@
       editingSpotId = id;
       
       document.getElementById('modalTitle').innerText = "Modifica Spot";
-      document.getElementById('btnSubmitForm').innerText = "Aggiorna Dati";
       document.getElementById('spotName').value = spot.name;
       document.getElementById('spotZone').value = spot.zone || 'Generale';
       document.getElementById('spotTarget').value = spot.target || '';
