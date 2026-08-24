@@ -16,6 +16,7 @@
       --accent-blue: #0284c7;
       --accent-light-blue: #38bdf8;
       --accent-green: #22c55e;
+      --accent-amber: #eab308;
       --accent-red: #ef4444;
       --text-light: #f8fafc;
       --text-muted: #94a3b8;
@@ -51,17 +52,18 @@
 
     /* Top Compass Bar Migliorata */
     .top-telemetry-bar {
-      background: rgba(11, 19, 41, 0.95);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      padding: 12px 20px;
+      background: rgba(11, 19, 41, 0.96);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 14px 20px;
       display: flex;
       flex-direction: column;
       align-items: center;
       border-bottom: 1px solid var(--border-color);
       z-index: 1000;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
     }
+    
     .compass-ticks {
       display: flex;
       justify-content: space-between;
@@ -70,23 +72,29 @@
       font-weight: 800;
       color: var(--text-muted);
       letter-spacing: 2px;
-      font-size: 0.75rem;
-      margin-bottom: 8px;
-    }
-    .compass-ticks span {
+      font-size: 0.8rem;
+      margin-bottom: 10px;
       position: relative;
+    }
+    
+    .compass-ticks span {
       display: flex;
       flex-direction: column;
       align-items: center;
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      transform-origin: center bottom;
     }
+    
     .compass-ticks span::after {
       content: '';
       width: 2px;
-      height: 4px;
-      background: var(--text-muted);
-      margin-top: 4px;
+      height: 5px;
+      background: currentColor;
+      margin-top: 5px;
       border-radius: 2px;
+      transition: background 0.3s;
     }
+
     .compass-main {
       display: flex;
       align-items: center;
@@ -94,34 +102,39 @@
       width: 100%;
       max-width: 380px;
     }
+    
     .telemetry-val {
-      font-size: 1.4rem;
-      font-weight: 800;
-      color: var(--accent-light-blue);
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: var(--text-light);
       letter-spacing: 1px;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.5);
     }
+    
     .telemetry-val small {
-      font-size: 0.7rem;
-      color: var(--text-muted);
-      font-weight: 600;
+      font-size: 0.75rem;
+      color: var(--accent-light-blue);
+      font-weight: 700;
       text-transform: uppercase;
     }
+    
     .btn-compass-perm {
       background: var(--card-bg);
       color: var(--text-light);
       border: 1px solid var(--border-color);
-      padding: 8px 14px;
-      border-radius: 10px;
-      font-size: 0.8rem;
-      font-weight: 700;
+      padding: 10px 16px;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      font-weight: 800;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
       transition: all 0.2s;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     }
     .btn-compass-perm:hover { background: var(--border-color); color: #fff; }
     .btn-compass-perm.active { background: rgba(34, 197, 94, 0.15); color: var(--accent-green); border-color: var(--accent-green); }
@@ -375,7 +388,7 @@
       color: white;
       box-shadow: 0 5px 12px rgba(0,0,0,0.6);
       border: 2px solid white;
-      font-size: 1.1rem;
+      font-size: 1.2rem;
     }
 
     .form-group { margin-bottom: 16px; }
@@ -414,7 +427,7 @@
     .widget-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 18px; padding: 18px; margin-bottom: 18px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
     .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 14px; margin-top: 14px; }
     .metric-box { background: var(--panel-bg); padding: 14px; border-radius: 14px; text-align: center; border: 1px solid var(--border-color); }
-    .metric-val { font-size: 1.15rem; font-weight: 800; color: var(--accent-light-blue); }
+    .metric-val { font-size: 1.15rem; font-weight: 800; color: var(--accent-light-blue); display:flex; align-items:center; justify-content:center; gap:6px; }
     .metric-lbl { font-size: 0.8rem; color: var(--text-muted); margin-top: 6px; font-weight: 600; }
     
     /* Gestione Zone (Collapsable) */
@@ -448,6 +461,7 @@
     .spot-actions button:hover { background: rgba(255,255,255,0.1); }
     .btn-edit { color: var(--accent-light-blue); }
     .btn-delete { color: var(--accent-red); }
+    .btn-nav { color: var(--accent-green); }
 
     /* Backup e Gestione File */
     .backup-bar {
@@ -483,7 +497,7 @@
       border: 1px solid var(--border-color);
       border-radius: 12px;
       cursor: pointer;
-      font-weight: 700;
+      font-weight: 800;
       font-size: 0.95rem;
       transition: all 0.2s;
       display: flex;
@@ -503,14 +517,40 @@
 
 <div class="app-container">
 
+  <!-- Libreria Nomi Specie Fiume (Datalist Autocomplete) -->
+  <datalist id="fishSpeciesLibrary">
+    <option value="Amur (Carpa Erbivora)">
+    <option value="Anguilla">
+    <option value="Barbo">
+    <option value="Carassio">
+    <option value="Carpa Comune">
+    <option value="Carpa Specchio">
+    <option value="Cavedano">
+    <option value="Cheppia">
+    <option value="Luccio">
+    <option value="Luccioperca (Sandra)">
+    <option value="Persico Reale">
+    <option value="Persico Trota (Black Bass)">
+    <option value="Pesce Gatto">
+    <option value="Scardola">
+    <option value="Siluro">
+    <option value="Storione">
+    <option value="Temolo">
+    <option value="Tinca">
+    <option value="Trota Fario">
+    <option value="Trota Iridea">
+    <option value="Trota Marmorata">
+    <option value="Vairone">
+  </datalist>
+
   <!-- Top Compass Bar -->
   <div class="top-telemetry-bar">
-    <div class="compass-ticks">
+    <div class="compass-ticks" id="compassTicks">
       <span>N</span><span>NE</span><span>E</span><span>SE</span><span>S</span><span>SW</span><span>W</span><span>NW</span>
     </div>
     <div class="compass-main">
       <div class="telemetry-val" id="hdgVal">
-        <i class="fa-regular fa-compass" style="font-size: 1.1rem; color: var(--text-muted);"></i>
+        <i class="fa-regular fa-compass" style="font-size: 1.4rem; color: var(--text-muted);"></i>
         --° <small>HDG</small>
       </div>
       <div id="compassControlContainer">
@@ -555,11 +595,11 @@
 
     <!-- TAB PREVISIONI METEO E SOLUNARI -->
     <div id="tabForecasts" class="tab-content" style="padding:16px;">
-      <h3 style="margin-bottom:16px; margin-top:8px;">Condizioni Attuali & Solunare</h3>
+      <h3 style="margin-bottom:16px; margin-top:8px;">Previsioni Solunari & Meteo</h3>
       
       <div class="widget-card">
-        <h4><i class="fa-solid fa-fish"></i> Previsione Attività Pesci</h4>
-        <p style="color:var(--accent-green); font-size:1.3rem; font-weight:900; margin-top:10px;" id="fishActivityText">Calcolo in corso...</p>
+        <h4><i class="fa-solid fa-fish"></i> Attività Pesci Stimata</h4>
+        <p style="font-size:1.4rem; font-weight:900; margin-top:10px; transition: color 0.3s;" id="fishActivityText">Calcolo in corso...</p>
         <p style="font-size:0.85rem; color:var(--text-muted); margin-top:6px; font-weight:600;" id="moonPhaseText">Fase Lunare: --</p>
         <div class="metric-grid">
           <div class="metric-box"><div class="metric-val" id="major1">--:--</div><div class="metric-lbl">Major 1</div></div>
@@ -577,7 +617,7 @@
           <div class="metric-box"><div class="metric-val" id="wWind">-- km/h</div><div class="metric-lbl">Vento</div></div>
           <div class="metric-box"><div class="metric-val" id="wClouds">--%</div><div class="metric-lbl">Nuvole</div></div>
         </div>
-        <button class="btn-refresh-weather" onclick="updateForecastData(this)"><i class="fa-solid fa-arrows-rotate"></i> Aggiorna Meteo</button>
+        <button class="btn-refresh-weather" id="btnUpdateWeather" onclick="updateForecastData(this)"><i class="fa-solid fa-arrows-rotate"></i> Aggiorna Dati Meteo</button>
       </div>
     </div>
 
@@ -629,7 +669,8 @@
 
       <div class="form-group">
         <label style="font-size:0.75rem; font-weight:800; color:var(--text-muted);">SPECIE TARGET</label>
-        <input type="text" class="form-control" id="spotTarget" placeholder="Es. Spigola, Luccio, Black Bass...">
+        <!-- Collegamento alla libreria di specie italiane integrata in alto tramite l'attributo list -->
+        <input type="text" class="form-control" id="spotTarget" list="fishSpeciesLibrary" placeholder="Inizia a digitare (es. Carpa, Luccio, Cavedano...)">
       </div>
 
       <div class="form-group">
@@ -649,7 +690,7 @@
         <div class="color-opt" style="background:#475569;" onclick="selectColor('#475569', this)" data-color="#475569"></div>
       </div>
 
-      <label style="font-size:0.75rem; font-weight:800; color:var(--text-muted); display:block; margin-bottom:8px;">ICONA: <span id="selectedIconLabel" style="color:var(--accent-light-blue);">Pesce 1</span></label>
+      <label style="font-size:0.75rem; font-weight:800; color:var(--text-muted); display:block; margin-bottom:8px;">ICONA: <span id="selectedIconLabel" style="color:var(--accent-light-blue);">Pesce Generico / Cavedano</span></label>
       <div class="icon-picker-grid" id="iconPicker"></div>
 
       <button type="submit" class="btn-submit" id="btnSubmitForm">Salva nel Database</button>
@@ -678,21 +719,24 @@
       isSat = !isSat;
     }
 
-    // --- ELENCO ICONE E VARIABILI DI STATO ---
+    // --- ELENCO ICONE MISTO (EMOJI HD E FONT AWESOME) ---
     const iconList = [
-      { id: 'fa-fish', name: 'Pesce 1' },
-      { id: 'fa-fish-fins', name: 'Pesce 2' },
-      { id: 'fa-anchor', name: 'Ancora / Porto' },
-      { id: 'fa-water', name: 'Artificiale' },
-      { id: 'fa-dharmachakra', name: 'Galleggiante' },
-      { id: 'fa-tree', name: 'Ostacolo' },
-      { id: 'fa-bridge', name: 'Ponte' },
-      { id: 'fa-location-dot', name: 'Pin Standard' },
-      { id: 'fa-shrimp', name: 'Gambero' }
+      { id: '🐟', type: 'emoji', name: 'Pesce / Cavedano' },
+      { id: '🐡', type: 'emoji', name: 'Carpa / Tinca' },
+      { id: '🦈', type: 'emoji', name: 'Luccio / Siluro' },
+      { id: '🦐', type: 'emoji', name: 'Gambero' },
+      { id: '🪱', type: 'emoji', name: 'Lombrichi' },
+      { id: '🪰', type: 'emoji', name: 'Mosca / Insetto' },
+      { id: '🐸', type: 'emoji', name: 'Rana (Bass)' },
+      { id: 'fa-anchor', type: 'fa', name: 'Ancora / Porto' },
+      { id: 'fa-tree', type: 'fa', name: 'Ostacolo' },
+      { id: 'fa-water', type: 'fa', name: 'Correntina' },
+      { id: 'fa-location-dot', type: 'fa', name: 'Pin Standard' }
     ];
 
     let selectedColor = '#22c55e';
-    let selectedIcon = 'fa-fish';
+    let selectedIcon = '🐟';
+    let selectedIconType = 'emoji';
     let spots = [];
     let mapMarkers = {};
     let editingSpotId = null;
@@ -703,7 +747,7 @@
       const savedData = localStorage.getItem('cescospot_data');
       if (savedData) spots = JSON.parse(savedData);
     } catch(e) {
-      console.warn("Avviso: LocalStorage non accessibile.");
+      console.warn("Avviso: LocalStorage non accessibile per le impostazioni correnti del browser.");
     }
 
     // Creazione interfaccia Picker Icone
@@ -712,11 +756,15 @@
       const card = document.createElement('div');
       card.className = `icon-card ${index === 0 ? 'selected' : ''}`;
       card.dataset.icon = item.id;
-      card.innerHTML = `<i class="fa-solid ${item.id}"></i><span>${item.name}</span>`;
+      
+      let iconHtml = item.type === 'emoji' ? `<span style="font-size:1.5rem; margin-bottom:4px;">${item.id}</span>` : `<i class="fa-solid ${item.id}"></i>`;
+      
+      card.innerHTML = `${iconHtml}<span>${item.name}</span>`;
       card.onclick = () => {
         document.querySelectorAll('.icon-card').forEach(c => c.classList.remove('selected'));
         card.classList.add('selected');
         selectedIcon = item.id;
+        selectedIconType = item.type;
         document.getElementById('selectedIconLabel').innerText = item.name;
       };
       iconPickerEl.appendChild(card);
@@ -771,16 +819,25 @@
       reader.readAsText(file);
     }
 
-    // --- NAVIGAZIONE ISTANTANEA ALLO SPOT ---
+    // --- NAVIGAZIONE MAPPE E NAVIGATORE GOOGLE MAPS ---
     function focusSpot(id) {
       const spot = spots.find(s => s.id === id);
       if (!spot) return;
       
+      // Passa automaticamente alla scheda Mappa
       switchTab('tabMap', document.querySelectorAll('.nav-item')[0]);
+      
+      // Vola sulle coordinate dello spot ed apri il Popup
       map.setView([spot.lat, spot.lng], 16);
       if (mapMarkers[id]) {
-        setTimeout(() => mapMarkers[id].openPopup(), 400);
+        setTimeout(() => mapMarkers[id].openPopup(), 400); // Lieve ritardo per far completare l'animazione mappa
       }
+    }
+
+    // NUOVA FUNZIONE: Apri le coordinate nelle mappe esterne (Google Maps/Apple Maps)
+    function openInMaps(lat, lng) {
+      const url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+      window.open(url, '_blank');
     }
 
     // --- GESTIONE MODAL E SALVATAGGIO DATI (CRUD) ---
@@ -789,10 +846,12 @@
       document.getElementById('modalTitle').innerText = "Salva Posizione";
       document.getElementById('btnSubmitForm').innerText = "Salva nel Database";
       
+      // Imposta coordinate
       const center = lat && lng ? { lat, lng } : map.getCenter();
       document.getElementById('tempLat').value = center.lat;
       document.getElementById('tempLng').value = center.lng;
       
+      // Pulisci campi precedenti
       document.getElementById('spotName').value = '';
       document.getElementById('spotZone').value = '';
       document.getElementById('spotTarget').value = '';
@@ -803,6 +862,7 @@
 
     function closeModals() {
       document.querySelectorAll('.modal').forEach(m => m.classList.remove('open'));
+      // Rimuovi ping temporaneo se il modale viene chiuso senza salvare
       if(tempMarker) { map.removeLayer(tempMarker); tempMarker = null; }
       editingSpotId = null;
     }
@@ -816,11 +876,13 @@
       const lng = parseFloat(document.getElementById('tempLng').value);
 
       if (editingSpotId) {
+        // Aggiorna spot esistente
         const idx = spots.findIndex(s => s.id === editingSpotId);
         if (idx !== -1) {
           spots[idx] = { ...spots[idx], name, zone, target, notes, color: selectedColor, icon: selectedIcon };
         }
       } else {
+        // Crea nuovo elemento
         spots.push({
           id: Date.now().toString(),
           name, zone, target, notes,
@@ -841,6 +903,7 @@
       if(!spot) return;
       editingSpotId = id;
       
+      // Popolamento form
       document.getElementById('modalTitle').innerText = "Modifica Spot";
       document.getElementById('btnSubmitForm').innerText = "Aggiorna Dati";
       document.getElementById('spotName').value = spot.name;
@@ -850,12 +913,14 @@
       document.getElementById('tempLat').value = spot.lat;
       document.getElementById('tempLng').value = spot.lng;
       
+      // Resetta controlli visivi colori/icone
       selectColor(spot.color, document.querySelector(`.color-opt[data-color="${spot.color}"]`));
       document.querySelectorAll('.icon-card').forEach(c => {
         c.classList.remove('selected');
         if(c.dataset.icon === spot.icon) {
           c.classList.add('selected');
           selectedIcon = spot.icon;
+          selectedIconType = spot.icon.startsWith('fa-') ? 'fa' : 'emoji';
           document.getElementById('selectedIconLabel').innerText = iconList.find(i => i.id === spot.icon)?.name || '';
         }
       });
@@ -872,17 +937,25 @@
     }
 
     function renderMapSpots() {
+      // Svuota strato marker corrente
       Object.values(mapMarkers).forEach(m => map.removeLayer(m));
       mapMarkers = {};
 
+      // Rigenera tutti i marker
       spots.forEach(s => {
+        
+        // Controlla se la vecchia icona salvata è un emoji o una classe font-awesome
+        const isEmoji = s.icon && !s.icon.startsWith('fa-');
+        const iconHtml = isEmoji ? `<span style="font-size:1.2rem;">${s.icon}</span>` : `<i class="fa-solid ${s.icon}"></i>`;
+
         const customIcon = L.divIcon({
           className: '',
-          html: `<div class="custom-map-icon" style="background-color: ${s.color};"><i class="fa-solid ${s.icon}"></i></div>`,
+          html: `<div class="custom-map-icon" style="background-color: ${s.color};">${iconHtml}</div>`,
           iconSize: [38, 38],
           iconAnchor: [19, 19]
         });
 
+        // Contenuto Popup Informativo
         let popup = `<b style="font-size:1.1rem;">${s.name}</b><br><small>Zona: ${s.zone || 'Generale'}</small>`;
         if(s.target) popup += `<br><small>Target: ${s.target}</small>`;
         if(s.notes) popup += `<br><small><i>${s.notes}</i></small>`;
@@ -916,6 +989,7 @@
         return;
       }
 
+      // Raggruppa l'array spots in base al parametro .zone
       const grouped = {};
       spots.forEach(s => {
         const zone = s.zone || 'Altre Zone (Generale)';
@@ -924,8 +998,10 @@
       });
 
       container.innerHTML = '';
+      
+      // Cicla sulle zone per creare le fisarmoniche
       Object.keys(grouped).sort().forEach((zone, index) => {
-        const safeZoneId = 'zone_' + index;
+        const safeZoneId = 'zone_' + index; // ID HTML Sicuro
         
         let htmlSec = `
           <div class="zone-section">
@@ -936,11 +1012,15 @@
             <div class="zone-content" id="zone-content-${safeZoneId}">
         `;
         
+        // Cicla gli spot di questa zona
         grouped[zone].forEach(s => {
+          const isEmoji = s.icon && !s.icon.startsWith('fa-');
+          const iconHtml = isEmoji ? `<span style="font-size:1.3rem;">${s.icon}</span>` : `<i class="fa-solid ${s.icon}"></i>`;
+
           htmlSec += `
             <div class="widget-card" style="display:flex; justify-content:space-between; align-items:center; padding:14px; margin-bottom:12px; background:var(--panel-bg); border-radius:12px; border:1px solid var(--border-color);">
               <div onclick="focusSpot('${s.id}')" style="display:flex; align-items:center; gap:14px; flex:1; cursor:pointer; overflow:hidden;">
-                <div class="custom-map-icon" style="background-color: ${s.color}; position:static; width:40px; height:40px; font-size:1.1rem; flex-shrink:0;"><i class="fa-solid ${s.icon}"></i></div>
+                <div class="custom-map-icon" style="background-color: ${s.color}; position:static; width:40px; height:40px; font-size:1.1rem; flex-shrink:0;">${iconHtml}</div>
                 <div style="overflow:hidden;">
                   <b style="color:#fff; display:block; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; font-size:1.05rem;">${s.name}</b>
                   ${s.target ? `<small style="color:var(--accent-light-blue); display:block; font-weight:600;">Target: ${s.target}</small>` : ''}
@@ -948,6 +1028,7 @@
                 </div>
               </div>
               <div class="spot-actions" style="display:flex; gap:4px; flex-shrink:0;">
+                <button class="btn-nav" onclick="openInMaps(${s.lat}, ${s.lng})" title="Naviga in Google Maps"><i class="fa-solid fa-route"></i></button>
                 <button class="btn-edit" onclick="editSpot('${s.id}')" title="Modifica"><i class="fa-solid fa-pen"></i></button>
                 <button class="btn-delete" onclick="deleteSpot('${s.id}')" title="Elimina"><i class="fa-solid fa-trash"></i></button>
               </div>
@@ -999,6 +1080,7 @@
           document.getElementById('measureBox').innerText = dist > 1000 ? `Distanza: ${(dist/1000).toFixed(2)} km` : `Distanza: ${Math.round(dist)} m`;
         }
       } else {
+        // Se non sto misurando, genera un Ping Temporaneo Pulsante e apri il modale di aggiunta
         if(tempMarker) map.removeLayer(tempMarker);
         
         const tempIcon = L.divIcon({
@@ -1014,50 +1096,81 @@
 
     // --- AGGIORNAMENTO DINAMICO DATI METEO & SOLUNARI ---
     function updateForecastData(btnElement) {
-      // Feedback visivo sul pulsante per mostrare il caricamento
       let originalHtml = '';
       if(btnElement) {
         originalHtml = btnElement.innerHTML;
-        btnElement.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Aggiornamento...';
+        btnElement.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Aggiornamento in corso...';
         btnElement.disabled = true;
       }
 
       const center = map.getCenter();
       
-      // Calcolo Fasi Lunari Semplificato
+      // Calcolo Fasi Lunari Algoritmico Avanzato (Ciclo di 29.53 giorni)
       const now = new Date();
-      const day = now.getDate();
-      const phases = ['Luna Nuova', 'Crescente', 'Primo Quarto', 'Crescente', 'Luna Piena', 'Calante', 'Ultimo Quarto', 'Calante'];
-      const phaseIndex = Math.floor((day % 29) / 3.6);
+      const lp = 2551443; 
+      const newMoon = new Date(1970, 0, 7, 20, 35, 0).getTime();
+      const phase = ((now.getTime() - newMoon) / 1000) % lp;
+      const phaseIndex = Math.floor((phase / lp) * 8); 
+      
+      const phases = ['Luna Nuova', 'Crescente', 'Primo Quarto', 'Crescente Gibbosa', 'Luna Piena', 'Calante Gibbosa', 'Ultimo Quarto', 'Calante'];
       document.getElementById('moonPhaseText').innerText = 'Fase Lunare: ' + (phases[phaseIndex] || 'Stabile');
       
-      if (phaseIndex === 0 || phaseIndex === 4) {
-        document.getElementById('fishActivityText').innerText = '95% - Eccellente';
-        document.getElementById('fishActivityText').style.color = '#22c55e';
+      // Calcolo Attività Pesci in base alla Luna
+      let activityScore = 50; // Base
+      if (phaseIndex === 0 || phaseIndex === 4) activityScore += 40; // Nuova o Piena
+      else if (phaseIndex === 2 || phaseIndex === 6) activityScore += 20; // Quarti
+      else activityScore += 10; // Fasi intermedie
+
+      const activityTextEl = document.getElementById('fishActivityText');
+      if (activityScore >= 80) {
+        activityTextEl.innerText = `${activityScore}% - Eccellente`;
+        activityTextEl.style.color = '#22c55e'; // Verde
+      } else if (activityScore >= 60) {
+        activityTextEl.innerText = `${activityScore}% - Buona`;
+        activityTextEl.style.color = '#38bdf8'; // Azzurro
       } else {
-        document.getElementById('fishActivityText').innerText = '60% - Moderata';
-        document.getElementById('fishActivityText').style.color = '#eab308';
+        activityTextEl.innerText = `${activityScore}% - Moderata`;
+        activityTextEl.style.color = '#eab308'; // Giallo
       }
 
-      let h1 = (now.getHours() + 2) % 24;
-      let h2 = (now.getHours() + 10) % 24;
-      document.getElementById('major1').innerText = `${String(h1).padStart(2,'0')}:00 - ${String(h1+2).padStart(2,'0')}:00`;
-      document.getElementById('major2').innerText = `${String(h2).padStart(2,'0')}:00 - ${String((h2+2)%24).padStart(2,'0')}:00`;
-      document.getElementById('minor1').innerText = `${String((h1+5)%24).padStart(2,'0')}:30 - ${String((h1+6)%24).padStart(2,'0')}:30`;
-      document.getElementById('minor2').innerText = `${String((h2+5)%24).padStart(2,'0')}:30 - ${String((h2+6)%24).padStart(2,'0')}:30`;
+      // Stima degli orari Major/Minor dinamica
+      let h1 = (now.getDate() * 50) % 1440; // Calcolo dei minuti fittizio ma dinamico basato sul giorno
+      let hMajor1 = new Date(); hMajor1.setHours(Math.floor(h1/60), h1%60);
+      let hMajor2 = new Date(); hMajor2.setHours(Math.floor(h1/60) + 12, h1%60);
+      
+      function formatTimeSpan(d) {
+        let m = new Date(d.getTime() + 120 * 60000); // 2 ore di span
+        return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')} - ${String(m.getHours()).padStart(2,'0')}:${String(m.getMinutes()).padStart(2,'0')}`;
+      }
 
-      // Richiesta API Meteo Reale Open-Meteo
-      fetch(`https://api.open-meteo.com/v1/forecast?latitude=${center.lat}&longitude=${center.lng}&current_weather=true&hourly=surface_pressure,cloudcover`)
+      document.getElementById('major1').innerText = formatTimeSpan(hMajor1);
+      document.getElementById('major2').innerText = formatTimeSpan(hMajor2);
+      
+      let hMinor1 = new Date(hMajor1.getTime() + 5.5 * 3600000);
+      let hMinor2 = new Date(hMajor2.getTime() + 5.5 * 3600000);
+      function formatTimeSpanMin(d) {
+        let m = new Date(d.getTime() + 60 * 60000); // 1 ora di span
+        return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')} - ${String(m.getHours()).padStart(2,'0')}:${String(m.getMinutes()).padStart(2,'0')}`;
+      }
+      document.getElementById('minor1').innerText = formatTimeSpanMin(hMinor1);
+      document.getElementById('minor2').innerText = formatTimeSpanMin(hMinor2);
+
+      // Richiesta API Meteo Reale Open-Meteo per Vento, Temperatura, ecc.
+      // Parametri Aggiornati per far funzionare correttamente la velocità del vento
+      fetch(`https://api.open-meteo.com/v1/forecast?latitude=${center.lat}&longitude=${center.lng}&current=temperature_2m,wind_speed_10m,wind_direction_10m,surface_pressure,cloud_cover`)
         .then(res => res.json())
         .then(data => {
-            document.getElementById('wTemp').innerText = Math.round(data.current_weather.temperature) + '°C';
-            document.getElementById('wWind').innerText = Math.round(data.current_weather.windspeed) + ' km/h';
-            document.getElementById('wPressure').innerText = Math.round(data.hourly.surface_pressure[0]) + ' hPa';
-            document.getElementById('wClouds').innerText = data.hourly.cloudcover[0] + '%';
+            document.getElementById('wTemp').innerText = Math.round(data.current.temperature_2m) + '°C';
             
-            // Ripristino pulsante con stato "Aggiornato"
+            // Inserisce la velocità del vento e una freccia dinamica direzionale
+            const windDir = data.current.wind_direction_10m;
+            document.getElementById('wWind').innerHTML = `${Math.round(data.current.wind_speed_10m)} km/h <i class="fa-solid fa-arrow-up" style="transform: rotate(${windDir}deg); margin-left:6px; font-size:0.9rem;"></i>`;
+            
+            document.getElementById('wPressure').innerText = Math.round(data.current.surface_pressure) + ' hPa';
+            document.getElementById('wClouds').innerText = data.current.cloud_cover + '%';
+            
             if(btnElement) {
-              btnElement.innerHTML = '<i class="fa-solid fa-check"></i> Aggiornato!';
+              btnElement.innerHTML = '<i class="fa-solid fa-check"></i> Aggiornamento Completato';
               setTimeout(() => {
                 btnElement.innerHTML = originalHtml;
                 btnElement.disabled = false;
@@ -1068,7 +1181,7 @@
             console.error('Meteo non raggiungibile', e);
             document.getElementById('wTemp').innerText = 'Err';
             if(btnElement) {
-              btnElement.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Errore Rete';
+              btnElement.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Errore di Connessione';
               setTimeout(() => {
                 btnElement.innerHTML = originalHtml;
                 btnElement.disabled = false;
@@ -1089,11 +1202,11 @@
       }
       
       if(tabId === 'tabForecasts') {
-        updateForecastData(); 
+        updateForecastData(); // Richiama i dati meteo in tempo reale quando si apre la tab
       }
     }
 
-    // --- GPS REAL-TIME & BUSSOLA ---
+    // --- GPS REAL-TIME ---
     let watchId = null;
     let userMarker = null;
 
@@ -1129,6 +1242,7 @@
       }
     }
 
+    // --- BUSSOLA ROTANTE ED ILLUMINAZIONE LETTERE ---
     function initCompass() {
       const btn = document.querySelector('.btn-compass-perm');
       if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
@@ -1138,7 +1252,7 @@
             btn.classList.add('active');
             btn.innerHTML = '<i class="fa-solid fa-compass"></i> Attiva';
           } else {
-            alert("Devi concedere il permesso per leggere i sensori di movimento.");
+            alert("Devi concedere il permesso per leggere i sensori di orientamento.");
           }
         }).catch(console.error);
       } else if (window.DeviceOrientationEvent) {
@@ -1157,8 +1271,26 @@
       } else if (event.alpha !== null) {
         heading = 360 - event.alpha;
       }
+      
       if (heading !== null && !isNaN(heading)) {
-        document.getElementById('hdgVal').innerText = Math.round(heading) + "°";
+        // Scrive il grado
+        document.getElementById('hdgVal').innerHTML = `<i class="fa-regular fa-compass" style="font-size: 1.4rem; color: var(--text-muted);"></i> ${Math.round(heading)}° <small>HDG</small>`;
+        
+        // Logica per illuminare ed ingrandire la lettera cardinale esatta sulla UI della bussola
+        const index = Math.round(heading / 45) % 8; // 0=N, 1=NE, 2=E, 3=SE, 4=S, 5=SW, 6=W, 7=NW
+        const spans = document.querySelectorAll('.compass-ticks span');
+        
+        spans.forEach((span, i) => {
+          if (i === index) {
+            span.style.color = 'var(--accent-light-blue)';
+            span.style.transform = 'scale(1.4)';
+            span.style.fontWeight = '900';
+          } else {
+            span.style.color = 'var(--text-muted)';
+            span.style.transform = 'scale(1)';
+            span.style.fontWeight = '800';
+          }
+        });
       }
     }
 
@@ -1166,13 +1298,14 @@
     style.innerHTML = `@keyframes pulse { from { transform: scale(1); opacity: 1; } to { transform: scale(1.3); opacity: 0.7; } }`;
     document.head.appendChild(style);
 
-    // Boot App
+    // Avvio e Inizializzazione Applicazione
     renderMapSpots();
     if(spots.length > 0) {
       map.setView([spots[spots.length-1].lat, spots[spots.length-1].lng], 13);
     }
     
-    updateForecastData();
+    // Al caricamento, eseguiamo subito un pre-fetch dei dati Meteo (senza mostrare il bottone in update)
+    setTimeout(() => { updateForecastData(null); }, 1000);
   </script>
 </body>
 </html>
