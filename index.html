@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>CescoSpotPro</title>
+  <title>CescoSpot Pro - Fish on!</title>
   
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
@@ -41,7 +41,6 @@
       overflow: hidden;
     }
 
-    /* L'app container occupa tutto lo schermo, garantendo un'esperienza full-screen sia su PC che Smartphone */
     .app-container {
       width: 100%;
       height: 100%;
@@ -50,51 +49,82 @@
       flex-direction: column;
     }
 
-    /* Top Telemetry & Compass Bar */
+    /* Top Compass Bar Migliorata */
     .top-telemetry-bar {
       background: rgba(11, 19, 41, 0.95);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
-      padding: 10px 14px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid var(--border-color);
-      z-index: 1000;
-    }
-    .telemetry-item {
+      padding: 12px 20px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      flex: 1;
+      border-bottom: 1px solid var(--border-color);
+      z-index: 1000;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
     }
-    .telemetry-label {
-      font-size: 0.65rem;
-      text-transform: uppercase;
+    .compass-ticks {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 380px;
+      font-weight: 800;
       color: var(--text-muted);
-      letter-spacing: 0.5px;
+      letter-spacing: 2px;
+      font-size: 0.75rem;
+      margin-bottom: 8px;
+    }
+    .compass-ticks span {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .compass-ticks span::after {
+      content: '';
+      width: 2px;
+      height: 4px;
+      background: var(--text-muted);
+      margin-top: 4px;
+      border-radius: 2px;
+    }
+    .compass-main {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 380px;
     }
     .telemetry-val {
-      font-size: 0.95rem;
-      font-weight: 700;
-      color: #fff;
-      margin-top: 2px;
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--accent-light-blue);
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .telemetry-val small {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
     }
     .btn-compass-perm {
-      background: var(--accent-blue);
-      color: #fff;
-      border: none;
-      padding: 6px 10px;
-      border-radius: 8px;
-      font-size: 0.75rem;
-      font-weight: 600;
+      background: var(--card-bg);
+      color: var(--text-light);
+      border: 1px solid var(--border-color);
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-size: 0.8rem;
+      font-weight: 700;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 5px;
-      transition: background 0.2s;
+      gap: 6px;
+      transition: all 0.2s;
     }
-    .btn-compass-perm:hover { background: #0369a1; }
+    .btn-compass-perm:hover { background: var(--border-color); color: #fff; }
+    .btn-compass-perm.active { background: rgba(34, 197, 94, 0.15); color: var(--accent-green); border-color: var(--accent-green); }
 
     .app-body { flex: 1; position: relative; overflow: hidden; width: 100%; }
 
@@ -109,7 +139,7 @@
 
     #map { height: 100%; width: 100%; z-index: 1; background: #0f172a; }
 
-    /* Controlli UI sulla Mappa */
+    /* UI Controls */
     .left-controls {
       position: absolute;
       top: 14px;
@@ -130,41 +160,43 @@
     }
     
     .map-btn {
-      width: 44px;
-      height: 44px;
+      width: 46px;
+      height: 46px;
       border-radius: 50%;
-      background: rgba(15, 23, 42, 0.9);
-      backdrop-filter: blur(5px);
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(8px);
       color: var(--text-light);
       border: 1px solid var(--border-color);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.15rem;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      font-size: 1.2rem;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.4);
       cursor: pointer;
       transition: all 0.2s;
     }
-    .map-btn:hover { background: var(--panel-bg); }
-    .map-btn:active { transform: scale(0.95); }
+    .map-btn:hover { background: var(--panel-bg); border-color: var(--text-muted); }
+    .map-btn:active { transform: scale(0.92); }
     .map-btn.active { background: var(--accent-blue); border-color: var(--accent-light-blue); color: #fff; }
 
     .map-btn-group {
-      background: rgba(15, 23, 42, 0.9);
-      backdrop-filter: blur(5px);
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(8px);
       border: 1px solid var(--border-color);
       border-radius: 24px;
       display: flex;
       flex-direction: column;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.4);
       overflow: hidden;
     }
     .map-btn-group .map-btn {
       border-radius: 0;
       border: none;
       box-shadow: none;
+      background: transparent;
     }
     .map-btn-group .map-btn:first-child { border-bottom: 1px solid var(--border-color); }
+    .map-btn-group .map-btn:hover { background: rgba(255,255,255,0.1); }
 
     .bottom-left-gps {
       position: absolute;
@@ -179,20 +211,20 @@
       left: 50%;
       transform: translateX(-50%);
       z-index: 1000;
-      background: rgba(11, 19, 41, 0.9);
+      background: rgba(11, 19, 41, 0.95);
       backdrop-filter: blur(10px);
-      padding: 8px 22px;
+      padding: 10px 24px;
       border-radius: 30px;
-      border: 1px solid rgba(56, 189, 248, 0.3);
-      font-size: 1.25rem;
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      font-size: 1.3rem;
       font-weight: 800;
       color: #fff;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.6);
       display: flex;
       align-items: baseline;
-      gap: 4px;
+      gap: 6px;
     }
-    .speed-badge small { font-size: 0.75rem; color: var(--accent-light-blue); font-weight: 600; }
+    .speed-badge small { font-size: 0.8rem; color: var(--accent-light-blue); font-weight: 700; text-transform: uppercase; }
 
     .measure-box {
       position: absolute;
@@ -202,13 +234,13 @@
       z-index: 1000;
       background: rgba(11, 19, 41, 0.95);
       color: var(--accent-light-blue);
-      padding: 8px 16px;
-      border-radius: 12px;
+      padding: 10px 20px;
+      border-radius: 14px;
       border: 1px solid var(--accent-light-blue);
-      font-size: 0.9rem;
+      font-size: 0.95rem;
       font-weight: bold;
       display: none;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.6);
     }
 
     .fab-add {
@@ -216,17 +248,17 @@
       bottom: 24px;
       right: 16px;
       z-index: 1000;
-      width: 58px;
-      height: 58px;
+      width: 60px;
+      height: 60px;
       border-radius: 50%;
       background: var(--accent-blue);
       color: #fff;
       border: none;
-      font-size: 1.5rem;
+      font-size: 1.6rem;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 6px 20px rgba(2, 132, 199, 0.5);
+      box-shadow: 0 6px 25px rgba(2, 132, 199, 0.6);
       cursor: pointer;
       transition: transform 0.2s, background 0.2s;
     }
@@ -240,15 +272,15 @@
       border-top: 1px solid var(--border-color);
       display: flex;
       justify-content: space-around;
-      padding-top: 10px;
-      padding-bottom: calc(14px + env(safe-area-inset-bottom));
+      padding-top: 12px;
+      padding-bottom: calc(16px + env(safe-area-inset-bottom));
       z-index: 1000;
     }
     .nav-item {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 4px;
+      gap: 5px;
       color: var(--text-muted);
       font-size: 0.75rem;
       cursor: pointer;
@@ -257,7 +289,7 @@
       flex: 1;
       transition: color 0.3s;
     }
-    .nav-item i { font-size: 1.3rem; margin-bottom: 2px; }
+    .nav-item i { font-size: 1.35rem; margin-bottom: 2px; }
     .nav-item:hover { color: #fff; }
     .nav-item.active { color: var(--accent-light-blue); font-weight: bold; }
 
@@ -270,14 +302,14 @@
       z-index: 2000;
       background: #111c38; 
       color: var(--text-light);
-      border-top-left-radius: 24px; 
-      border-top-right-radius: 24px;
-      padding: 20px; 
+      border-top-left-radius: 28px; 
+      border-top-right-radius: 28px;
+      padding: 24px; 
       padding-bottom: calc(24px + env(safe-area-inset-bottom));
-      transition: bottom 0.35s cubic-bezier(0.1, 0.9, 0.2, 1); 
+      transition: bottom 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); 
       max-height: 90vh; 
       overflow-y: auto;
-      box-shadow: 0 -10px 40px rgba(0,0,0,0.7);
+      box-shadow: 0 -10px 50px rgba(0,0,0,0.8);
       border-top: 1px solid var(--border-color);
       margin: 0 auto;
       max-width: 800px;
@@ -288,36 +320,38 @@
       display: flex;
       gap: 12px;
       overflow-x: auto;
-      padding: 6px 0;
+      padding: 8px 0;
       margin-bottom: 16px;
     }
     .color-opt {
-      width: 38px; height: 38px; border-radius: 50%; flex-shrink: 0; cursor: pointer;
-      display: flex; align-items: center; justify-content: center; color: #fff; font-size: 0.9rem;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+      width: 42px; height: 42px; border-radius: 50%; flex-shrink: 0; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.1rem;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.4);
+      transition: transform 0.2s;
     }
+    .color-opt:active { transform: scale(0.9); }
     .color-opt.selected { border: 3px solid #fff; }
 
     .icon-picker-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(75px, 1fr));
       gap: 10px;
-      max-height: 200px;
+      max-height: 220px;
       overflow-y: auto;
-      padding: 8px;
+      padding: 10px;
       background: var(--bg-dark);
-      border-radius: 12px;
+      border-radius: 14px;
       border: 1px solid var(--border-color);
-      margin-bottom: 12px;
+      margin-bottom: 16px;
     }
     .icon-card {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 10px 6px;
+      padding: 12px 6px;
       background: var(--panel-bg);
-      border-radius: 10px;
+      border-radius: 12px;
       border: 1px solid var(--border-color);
       cursor: pointer;
       transition: all 0.2s;
@@ -326,69 +360,72 @@
     .icon-card.selected {
       border-color: var(--accent-light-blue);
       background: rgba(56, 189, 248, 0.15);
+      transform: scale(0.95);
     }
-    .icon-card i { font-size: 1.3rem; color: var(--text-light); margin-bottom: 4px; }
-    .icon-card span { font-size: 0.65rem; color: var(--text-muted); font-weight: 600; text-align: center; }
+    .icon-card i { font-size: 1.5rem; color: var(--text-light); margin-bottom: 6px; }
+    .icon-card span { font-size: 0.65rem; color: var(--text-muted); font-weight: 700; text-align: center; }
 
     .custom-map-icon {
-      width: 36px;
-      height: 36px;
+      width: 38px;
+      height: 38px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       color: white;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+      box-shadow: 0 5px 12px rgba(0,0,0,0.6);
       border: 2px solid white;
-      font-size: 1rem;
+      font-size: 1.1rem;
     }
 
-    .form-group { margin-bottom: 14px; }
+    .form-group { margin-bottom: 16px; }
     .form-control { 
       width: 100%; 
-      padding: 12px 14px; 
-      border-radius: 10px; 
+      padding: 14px 16px; 
+      border-radius: 12px; 
       background: var(--bg-dark); 
       border: 1px solid var(--border-color); 
       color: var(--text-light); 
-      font-size: 1rem; 
+      font-size: 1.05rem; 
       outline: none;
-      margin-top: 6px;
+      margin-top: 8px;
       font-family: inherit;
+      transition: border-color 0.2s;
     }
     .form-control:focus { border-color: var(--accent-light-blue); }
     
     .btn-submit { 
       width: 100%; 
-      padding: 15px; 
-      border-radius: 12px; 
+      padding: 16px; 
+      border-radius: 14px; 
       border: none; 
       background: var(--accent-blue); 
       color: #fff; 
-      font-weight: 700; 
-      font-size: 1.05rem;
+      font-weight: 800; 
+      font-size: 1.1rem;
       cursor: pointer; 
       margin-top: 10px;
-      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.4);
-      transition: background 0.2s;
+      box-shadow: 0 6px 15px rgba(2, 132, 199, 0.4);
+      transition: background 0.2s, transform 0.2s;
     }
     .btn-submit:hover { background: #0369a1; }
+    .btn-submit:active { transform: scale(0.98); }
 
-    .widget-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
-    .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 12px; margin-top: 12px; }
-    .metric-box { background: var(--panel-bg); padding: 12px; border-radius: 12px; text-align: center; border: 1px solid var(--border-color); }
-    .metric-val { font-size: 1.1rem; font-weight: bold; color: var(--accent-light-blue); }
-    .metric-lbl { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; }
+    .widget-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 18px; padding: 18px; margin-bottom: 18px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+    .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 14px; margin-top: 14px; }
+    .metric-box { background: var(--panel-bg); padding: 14px; border-radius: 14px; text-align: center; border: 1px solid var(--border-color); }
+    .metric-val { font-size: 1.15rem; font-weight: 800; color: var(--accent-light-blue); }
+    .metric-lbl { font-size: 0.8rem; color: var(--text-muted); margin-top: 6px; font-weight: 600; }
     
     /* Gestione Zone (Collapsable) */
-    .zone-section { margin-bottom: 16px; background: var(--card-bg); border-radius: 14px; overflow: hidden; border: 1px solid var(--border-color); }
+    .zone-section { margin-bottom: 16px; background: var(--card-bg); border-radius: 16px; overflow: hidden; border: 1px solid var(--border-color); box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
     .zone-header {
       font-size: 0.95rem;
-      font-weight: 700;
+      font-weight: 800;
       color: var(--accent-light-blue);
       text-transform: uppercase;
       letter-spacing: 1px;
-      padding: 14px 16px;
+      padding: 16px 18px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -397,15 +434,15 @@
       transition: background 0.2s;
     }
     .zone-header:hover { background: rgba(0,0,0,0.4); }
-    .zone-content { padding: 0 10px 10px 10px; }
+    .zone-content { padding: 0 12px 12px 12px; }
 
     .spot-actions button {
       background: none;
       border: none;
       cursor: pointer;
-      font-size: 1.1rem;
-      padding: 8px;
-      border-radius: 8px;
+      font-size: 1.2rem;
+      padding: 10px;
+      border-radius: 10px;
       transition: background 0.2s;
     }
     .spot-actions button:hover { background: rgba(255,255,255,0.1); }
@@ -415,18 +452,18 @@
     /* Backup e Gestione File */
     .backup-bar {
       display: flex;
-      gap: 10px;
-      margin-bottom: 20px;
+      gap: 12px;
+      margin-bottom: 24px;
     }
     .btn-backup {
       flex: 1;
-      padding: 10px;
-      border-radius: 10px;
+      padding: 12px;
+      border-radius: 12px;
       border: 1px solid var(--border-color);
       background: var(--panel-bg);
       color: #fff;
-      font-weight: 600;
-      font-size: 0.8rem;
+      font-weight: 700;
+      font-size: 0.85rem;
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -434,7 +471,28 @@
       gap: 8px;
       transition: background 0.2s;
     }
-    .btn-backup:hover { background: var(--card-bg); }
+    .btn-backup:hover { background: var(--card-bg); border-color: var(--accent-light-blue); }
+
+    /* Bottone Aggiorna Meteo */
+    .btn-refresh-weather {
+      width: 100%;
+      margin-top: 16px;
+      padding: 14px;
+      background: var(--panel-bg);
+      color: var(--accent-light-blue);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 0.95rem;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .btn-refresh-weather:hover { background: var(--border-color); color: #fff; }
+    .btn-refresh-weather:disabled { opacity: 0.6; cursor: not-allowed; }
 
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: transparent; }
@@ -445,18 +503,19 @@
 
 <div class="app-container">
 
-  <!-- Top Telemetry & Compass Bar -->
+  <!-- Top Compass Bar -->
   <div class="top-telemetry-bar">
-    <div class="telemetry-item">
-      <span class="telemetry-label">Rotta (COG)</span>
-      <span class="telemetry-val" id="cogVal">--°</span>
+    <div class="compass-ticks">
+      <span>N</span><span>NE</span><span>E</span><span>SE</span><span>S</span><span>SW</span><span>W</span><span>NW</span>
     </div>
-    <div class="telemetry-item" style="border-left:1px solid var(--border-color); border-right:1px solid var(--border-color);">
-      <span class="telemetry-label">Bussola (HDG)</span>
-      <span class="telemetry-val" id="hdgVal">--°</span>
-    </div>
-    <div class="telemetry-item" id="compassControlContainer">
-      <button class="btn-compass-perm" onclick="initCompass()"><i class="fa-solid fa-compass"></i> Attiva</button>
+    <div class="compass-main">
+      <div class="telemetry-val" id="hdgVal">
+        <i class="fa-regular fa-compass" style="font-size: 1.1rem; color: var(--text-muted);"></i>
+        --° <small>HDG</small>
+      </div>
+      <div id="compassControlContainer">
+        <button class="btn-compass-perm" onclick="initCompass()"><i class="fa-solid fa-location-arrow"></i> Attiva Bussola</button>
+      </div>
     </div>
   </div>
 
@@ -500,8 +559,8 @@
       
       <div class="widget-card">
         <h4><i class="fa-solid fa-fish"></i> Previsione Attività Pesci</h4>
-        <p style="color:var(--accent-green); font-size:1.2rem; font-weight:bold; margin-top:8px;" id="fishActivityText">Calcolo in corso...</p>
-        <p style="font-size:0.8rem; color:var(--text-muted); margin-top:4px;" id="moonPhaseText">Fase Lunare: --</p>
+        <p style="color:var(--accent-green); font-size:1.3rem; font-weight:900; margin-top:10px;" id="fishActivityText">Calcolo in corso...</p>
+        <p style="font-size:0.85rem; color:var(--text-muted); margin-top:6px; font-weight:600;" id="moonPhaseText">Fase Lunare: --</p>
         <div class="metric-grid">
           <div class="metric-box"><div class="metric-val" id="major1">--:--</div><div class="metric-lbl">Major 1</div></div>
           <div class="metric-box"><div class="metric-val" id="major2">--:--</div><div class="metric-lbl">Major 2</div></div>
@@ -518,13 +577,13 @@
           <div class="metric-box"><div class="metric-val" id="wWind">-- km/h</div><div class="metric-lbl">Vento</div></div>
           <div class="metric-box"><div class="metric-val" id="wClouds">--%</div><div class="metric-lbl">Nuvole</div></div>
         </div>
-        <button onclick="updateForecastData()" style="width:100%; margin-top:12px; padding:10px; background:var(--panel-bg); color:var(--accent-light-blue); border:1px solid var(--border-color); border-radius:8px; cursor:pointer;"><i class="fa-solid fa-arrows-rotate"></i> Aggiorna Meteo</button>
+        <button class="btn-refresh-weather" onclick="updateForecastData(this)"><i class="fa-solid fa-arrows-rotate"></i> Aggiorna Meteo</button>
       </div>
     </div>
 
     <!-- TAB I MIEI SPOT E BACKUP -->
     <div id="tabMe" class="tab-content" style="padding:16px;">
-      <h3 style="margin-bottom:12px; margin-top:8px;">I Tuoi Spot Salvati</h3>
+      <h3 style="margin-bottom:16px; margin-top:8px;">I Tuoi Spot Salvati</h3>
       
       <!-- Pulsanti Backup -->
       <div class="backup-bar">
@@ -548,10 +607,10 @@
 
   <!-- Modal Aggiungi/Modifica Spot -->
   <div class="modal" id="modalAddSpot">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-      <button style="background:none; border:none; font-size:1.4rem; color:var(--text-muted); cursor:pointer; padding:5px;" onclick="closeModals()"><i class="fa-solid fa-xmark"></i></button>
-      <h4 style="font-size:1.1rem; color:#fff;" id="modalTitle">Salva Posizione</h4>
-      <button style="background:var(--accent-blue); border:none; width:32px; height:32px; border-radius:50%; color:#fff; cursor:pointer;" onclick="saveSpotFromModal()"><i class="fa-solid fa-check"></i></button>
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+      <button style="background:none; border:none; font-size:1.5rem; color:var(--text-muted); cursor:pointer; padding:5px;" onclick="closeModals()"><i class="fa-solid fa-xmark"></i></button>
+      <h4 style="font-size:1.2rem; color:#fff; font-weight:800;" id="modalTitle">Salva Posizione</h4>
+      <button style="background:var(--accent-blue); border:none; width:36px; height:36px; border-radius:50%; color:#fff; cursor:pointer; box-shadow:0 4px 10px rgba(2,132,199,0.5);" onclick="saveSpotFromModal()"><i class="fa-solid fa-check"></i></button>
     </div>
 
     <form id="spotForm" onsubmit="event.preventDefault(); saveSpotFromModal();">
@@ -559,26 +618,26 @@
       <input type="hidden" id="tempLng">
       
       <div class="form-group">
-        <label style="font-size:0.75rem; font-weight:700; color:var(--text-muted);">NOME SPOT *</label>
+        <label style="font-size:0.75rem; font-weight:800; color:var(--text-muted);">NOME SPOT *</label>
         <input type="text" class="form-control" id="spotName" placeholder="Es. Secca del Largo, Buca profonda..." required>
       </div>
 
       <div class="form-group">
-        <label style="font-size:0.75rem; font-weight:700; color:var(--text-muted);">ZONA / AREA GEOGRAFICA</label>
+        <label style="font-size:0.75rem; font-weight:800; color:var(--text-muted);">ZONA / AREA GEOGRAFICA</label>
         <input type="text" class="form-control" id="spotZone" placeholder="Es. Lago Trasimeno, Costa Est, Fiume...">
       </div>
 
       <div class="form-group">
-        <label style="font-size:0.75rem; font-weight:700; color:var(--text-muted);">SPECIE TARGET</label>
+        <label style="font-size:0.75rem; font-weight:800; color:var(--text-muted);">SPECIE TARGET</label>
         <input type="text" class="form-control" id="spotTarget" placeholder="Es. Spigola, Luccio, Black Bass...">
       </div>
 
       <div class="form-group">
-        <label style="font-size:0.75rem; font-weight:700; color:var(--text-muted);">NOTE / DESCRIZIONE</label>
+        <label style="font-size:0.75rem; font-weight:800; color:var(--text-muted);">NOTE / DESCRIZIONE</label>
         <textarea class="form-control" id="spotNotes" rows="2" placeholder="Profondità, fondale, esche suggerite..."></textarea>
       </div>
 
-      <label style="font-size:0.75rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:6px;">COLORE MARKER</label>
+      <label style="font-size:0.75rem; font-weight:800; color:var(--text-muted); display:block; margin-bottom:8px;">COLORE MARKER</label>
       <div class="color-picker-grid">
         <div class="color-opt selected" style="background:#22c55e;" onclick="selectColor('#22c55e', this)" data-color="#22c55e"><i class="fa-solid fa-check"></i></div>
         <div class="color-opt" style="background:#eab308;" onclick="selectColor('#eab308', this)" data-color="#eab308"></div>
@@ -590,7 +649,7 @@
         <div class="color-opt" style="background:#475569;" onclick="selectColor('#475569', this)" data-color="#475569"></div>
       </div>
 
-      <label style="font-size:0.75rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:6px;">ICONA: <span id="selectedIconLabel" style="color:var(--accent-light-blue);">Pesce 1</span></label>
+      <label style="font-size:0.75rem; font-weight:800; color:var(--text-muted); display:block; margin-bottom:8px;">ICONA: <span id="selectedIconLabel" style="color:var(--accent-light-blue);">Pesce 1</span></label>
       <div class="icon-picker-grid" id="iconPicker"></div>
 
       <button type="submit" class="btn-submit" id="btnSubmitForm">Salva nel Database</button>
@@ -641,10 +700,10 @@
     
     // Recupero permanente dati tramite LocalStorage
     try {
-      const savedData = localStorage.getItem('navifish_spots');
+      const savedData = localStorage.getItem('cescospot_data');
       if (savedData) spots = JSON.parse(savedData);
     } catch(e) {
-      console.warn("Avviso: LocalStorage non accessibile per le impostazioni correnti del browser.");
+      console.warn("Avviso: LocalStorage non accessibile.");
     }
 
     // Creazione interfaccia Picker Icone
@@ -681,7 +740,7 @@
       const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(spots, null, 2));
       const downloadAnchor = document.createElement('a');
       downloadAnchor.setAttribute("href", dataStr);
-      downloadAnchor.setAttribute("download", `navifish_backup_${new Date().toISOString().slice(0,10)}.json`);
+      downloadAnchor.setAttribute("download", `CescoSpot_Backup_${new Date().toISOString().slice(0,10)}.json`);
       document.body.appendChild(downloadAnchor);
       downloadAnchor.click();
       downloadAnchor.remove();
@@ -700,7 +759,7 @@
             } else {
               importedData.forEach(imp => { if (!spots.some(s => s.id === imp.id)) spots.push(imp); });
             }
-            localStorage.setItem('navifish_spots', JSON.stringify(spots));
+            localStorage.setItem('cescospot_data', JSON.stringify(spots));
             renderMapSpots();
             alert("Backup importato con successo!");
           } else {
@@ -717,13 +776,10 @@
       const spot = spots.find(s => s.id === id);
       if (!spot) return;
       
-      // Passa automaticamente alla scheda Mappa
       switchTab('tabMap', document.querySelectorAll('.nav-item')[0]);
-      
-      // Vola sulle coordinate dello spot ed apri il Popup
       map.setView([spot.lat, spot.lng], 16);
       if (mapMarkers[id]) {
-        setTimeout(() => mapMarkers[id].openPopup(), 400); // Lieve ritardo per far completare l'animazione mappa
+        setTimeout(() => mapMarkers[id].openPopup(), 400);
       }
     }
 
@@ -733,12 +789,10 @@
       document.getElementById('modalTitle').innerText = "Salva Posizione";
       document.getElementById('btnSubmitForm').innerText = "Salva nel Database";
       
-      // Imposta coordinate
       const center = lat && lng ? { lat, lng } : map.getCenter();
       document.getElementById('tempLat').value = center.lat;
       document.getElementById('tempLng').value = center.lng;
       
-      // Pulisci campi precedenti
       document.getElementById('spotName').value = '';
       document.getElementById('spotZone').value = '';
       document.getElementById('spotTarget').value = '';
@@ -749,7 +803,6 @@
 
     function closeModals() {
       document.querySelectorAll('.modal').forEach(m => m.classList.remove('open'));
-      // Rimuovi ping temporaneo se il modale viene chiuso senza salvare
       if(tempMarker) { map.removeLayer(tempMarker); tempMarker = null; }
       editingSpotId = null;
     }
@@ -763,13 +816,11 @@
       const lng = parseFloat(document.getElementById('tempLng').value);
 
       if (editingSpotId) {
-        // Aggiorna spot esistente
         const idx = spots.findIndex(s => s.id === editingSpotId);
         if (idx !== -1) {
           spots[idx] = { ...spots[idx], name, zone, target, notes, color: selectedColor, icon: selectedIcon };
         }
       } else {
-        // Crea nuovo elemento
         spots.push({
           id: Date.now().toString(),
           name, zone, target, notes,
@@ -780,7 +831,7 @@
         });
       }
       
-      localStorage.setItem('navifish_spots', JSON.stringify(spots));
+      localStorage.setItem('cescospot_data', JSON.stringify(spots));
       renderMapSpots();
       closeModals();
     }
@@ -790,7 +841,6 @@
       if(!spot) return;
       editingSpotId = id;
       
-      // Popolamento form
       document.getElementById('modalTitle').innerText = "Modifica Spot";
       document.getElementById('btnSubmitForm').innerText = "Aggiorna Dati";
       document.getElementById('spotName').value = spot.name;
@@ -800,7 +850,6 @@
       document.getElementById('tempLat').value = spot.lat;
       document.getElementById('tempLng').value = spot.lng;
       
-      // Resetta controlli visivi colori/icone
       selectColor(spot.color, document.querySelector(`.color-opt[data-color="${spot.color}"]`));
       document.querySelectorAll('.icon-card').forEach(c => {
         c.classList.remove('selected');
@@ -817,27 +866,24 @@
     function deleteSpot(id) {
       if(confirm("Sei sicuro di voler eliminare definitivamente questo spot?")) {
         spots = spots.filter(s => s.id !== id);
-        localStorage.setItem('navifish_spots', JSON.stringify(spots));
+        localStorage.setItem('cescospot_data', JSON.stringify(spots));
         renderMapSpots();
       }
     }
 
     function renderMapSpots() {
-      // Svuota strato marker corrente
       Object.values(mapMarkers).forEach(m => map.removeLayer(m));
       mapMarkers = {};
 
-      // Rigenera tutti i marker
       spots.forEach(s => {
         const customIcon = L.divIcon({
           className: '',
           html: `<div class="custom-map-icon" style="background-color: ${s.color};"><i class="fa-solid ${s.icon}"></i></div>`,
-          iconSize: [36, 36],
-          iconAnchor: [18, 18]
+          iconSize: [38, 38],
+          iconAnchor: [19, 19]
         });
 
-        // Contenuto Popup Informativo
-        let popup = `<b>${s.name}</b><br><small>Zona: ${s.zone || 'Generale'}</small>`;
+        let popup = `<b style="font-size:1.1rem;">${s.name}</b><br><small>Zona: ${s.zone || 'Generale'}</small>`;
         if(s.target) popup += `<br><small>Target: ${s.target}</small>`;
         if(s.notes) popup += `<br><small><i>${s.notes}</i></small>`;
 
@@ -866,11 +912,10 @@
       if(!container) return;
       
       if(spots.length === 0) {
-        container.innerHTML = '<p style="color:var(--text-muted); text-align:center; margin-top:30px;">Nessun spot registrato.</p>';
+        container.innerHTML = '<p style="color:var(--text-muted); text-align:center; margin-top:30px; font-weight:600;">Nessun spot registrato. Aggiungine uno dalla Mappa!</p>';
         return;
       }
 
-      // Raggruppa l'array spots in base al parametro .zone
       const grouped = {};
       spots.forEach(s => {
         const zone = s.zone || 'Altre Zone (Generale)';
@@ -879,33 +924,30 @@
       });
 
       container.innerHTML = '';
-      
-      // Cicla sulle zone per creare le fisarmoniche
       Object.keys(grouped).sort().forEach((zone, index) => {
-        const safeZoneId = 'zone_' + index; // ID HTML Sicuro
+        const safeZoneId = 'zone_' + index;
         
         let htmlSec = `
           <div class="zone-section">
             <div class="zone-header" onclick="toggleZoneList('${safeZoneId}')">
-              <span><i class="fa-solid fa-map-pin" style="margin-right:6px;"></i> ${zone} (${grouped[zone].length})</span>
+              <span><i class="fa-solid fa-map-pin" style="margin-right:8px;"></i> ${zone} (${grouped[zone].length})</span>
               <i class="fa-solid fa-chevron-down" id="zone-icon-${safeZoneId}"></i>
             </div>
             <div class="zone-content" id="zone-content-${safeZoneId}">
         `;
         
-        // Cicla gli spot di questa zona
         grouped[zone].forEach(s => {
           htmlSec += `
-            <div class="widget-card" style="display:flex; justify-content:space-between; align-items:center; padding:12px; margin-bottom:10px; background:var(--panel-bg);">
-              <div onclick="focusSpot('${s.id}')" style="display:flex; align-items:center; gap:12px; flex:1; cursor:pointer; overflow:hidden;">
-                <div class="custom-map-icon" style="background-color: ${s.color}; position:static; width:36px; height:36px; font-size:1rem; flex-shrink:0;"><i class="fa-solid ${s.icon}"></i></div>
+            <div class="widget-card" style="display:flex; justify-content:space-between; align-items:center; padding:14px; margin-bottom:12px; background:var(--panel-bg); border-radius:12px; border:1px solid var(--border-color);">
+              <div onclick="focusSpot('${s.id}')" style="display:flex; align-items:center; gap:14px; flex:1; cursor:pointer; overflow:hidden;">
+                <div class="custom-map-icon" style="background-color: ${s.color}; position:static; width:40px; height:40px; font-size:1.1rem; flex-shrink:0;"><i class="fa-solid ${s.icon}"></i></div>
                 <div style="overflow:hidden;">
-                  <b style="color:#fff; display:block; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;">${s.name}</b>
-                  ${s.target ? `<small style="color:var(--accent-light-blue); display:block;">Target: ${s.target}</small>` : ''}
+                  <b style="color:#fff; display:block; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; font-size:1.05rem;">${s.name}</b>
+                  ${s.target ? `<small style="color:var(--accent-light-blue); display:block; font-weight:600;">Target: ${s.target}</small>` : ''}
                   <small style="color:var(--text-muted)">Lat: ${s.lat.toFixed(3)}, Lng: ${s.lng.toFixed(3)}</small>
                 </div>
               </div>
-              <div class="spot-actions" style="display:flex; gap:2px; flex-shrink:0;">
+              <div class="spot-actions" style="display:flex; gap:4px; flex-shrink:0;">
                 <button class="btn-edit" onclick="editSpot('${s.id}')" title="Modifica"><i class="fa-solid fa-pen"></i></button>
                 <button class="btn-delete" onclick="deleteSpot('${s.id}')" title="Elimina"><i class="fa-solid fa-trash"></i></button>
               </div>
@@ -957,13 +999,12 @@
           document.getElementById('measureBox').innerText = dist > 1000 ? `Distanza: ${(dist/1000).toFixed(2)} km` : `Distanza: ${Math.round(dist)} m`;
         }
       } else {
-        // Se non sto misurando, genera un Ping Temporaneo Pulsante e apri il modale di aggiunta
         if(tempMarker) map.removeLayer(tempMarker);
         
         const tempIcon = L.divIcon({
           className: '',
-          html: `<div style="width:22px; height:22px; background:var(--accent-blue); border:3px solid #fff; border-radius:50%; box-shadow:0 0 15px rgba(2,132,199,1); animation: pulse 1s infinite alternate;"></div>`,
-          iconSize: [22, 22], iconAnchor: [11, 11]
+          html: `<div style="width:24px; height:24px; background:var(--accent-blue); border:3px solid #fff; border-radius:50%; box-shadow:0 0 15px rgba(2,132,199,1); animation: pulse 1s infinite alternate;"></div>`,
+          iconSize: [24, 24], iconAnchor: [12, 12]
         });
         
         tempMarker = L.marker(e.latlng, {icon: tempIcon}).addTo(map);
@@ -972,27 +1013,32 @@
     });
 
     // --- AGGIORNAMENTO DINAMICO DATI METEO & SOLUNARI ---
-    function updateForecastData() {
-      // Prendi il centro della mappa come riferimento (o il GPS se l'utente preferisce)
+    function updateForecastData(btnElement) {
+      // Feedback visivo sul pulsante per mostrare il caricamento
+      let originalHtml = '';
+      if(btnElement) {
+        originalHtml = btnElement.innerHTML;
+        btnElement.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Aggiornamento...';
+        btnElement.disabled = true;
+      }
+
       const center = map.getCenter();
       
-      // Calcolo Fasi Lunari Semplificato (Pseudo-Solunare)
+      // Calcolo Fasi Lunari Semplificato
       const now = new Date();
       const day = now.getDate();
       const phases = ['Luna Nuova', 'Crescente', 'Primo Quarto', 'Crescente', 'Luna Piena', 'Calante', 'Ultimo Quarto', 'Calante'];
       const phaseIndex = Math.floor((day % 29) / 3.6);
       document.getElementById('moonPhaseText').innerText = 'Fase Lunare: ' + (phases[phaseIndex] || 'Stabile');
       
-      // Algoritmo mock orari: se è luna piena/nuova, l'attività è eccellente, altrimenti media
       if (phaseIndex === 0 || phaseIndex === 4) {
         document.getElementById('fishActivityText').innerText = '95% - Eccellente';
-        document.getElementById('fishActivityText').style.color = '#22c55e'; // verde
+        document.getElementById('fishActivityText').style.color = '#22c55e';
       } else {
         document.getElementById('fishActivityText').innerText = '60% - Moderata';
-        document.getElementById('fishActivityText').style.color = '#eab308'; // giallo
+        document.getElementById('fishActivityText').style.color = '#eab308';
       }
 
-      // Generazione orari fittizi ma credibili basati sull'ora locale
       let h1 = (now.getHours() + 2) % 24;
       let h2 = (now.getHours() + 10) % 24;
       document.getElementById('major1').innerText = `${String(h1).padStart(2,'0')}:00 - ${String(h1+2).padStart(2,'0')}:00`;
@@ -1008,10 +1054,26 @@
             document.getElementById('wWind').innerText = Math.round(data.current_weather.windspeed) + ' km/h';
             document.getElementById('wPressure').innerText = Math.round(data.hourly.surface_pressure[0]) + ' hPa';
             document.getElementById('wClouds').innerText = data.hourly.cloudcover[0] + '%';
+            
+            // Ripristino pulsante con stato "Aggiornato"
+            if(btnElement) {
+              btnElement.innerHTML = '<i class="fa-solid fa-check"></i> Aggiornato!';
+              setTimeout(() => {
+                btnElement.innerHTML = originalHtml;
+                btnElement.disabled = false;
+              }, 2000);
+            }
         })
         .catch(e => {
             console.error('Meteo non raggiungibile', e);
             document.getElementById('wTemp').innerText = 'Err';
+            if(btnElement) {
+              btnElement.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Errore Rete';
+              setTimeout(() => {
+                btnElement.innerHTML = originalHtml;
+                btnElement.disabled = false;
+              }, 2000);
+            }
         });
     }
 
@@ -1027,7 +1089,7 @@
       }
       
       if(tabId === 'tabForecasts') {
-        updateForecastData(); // Richiama i dati meteo in tempo reale quando si apre la tab
+        updateForecastData(); 
       }
     }
 
@@ -1042,7 +1104,6 @@
         watchId = null;
         btn.classList.remove('active');
         document.getElementById('speedVal').innerText = "0.0";
-        document.getElementById('cogVal').innerText = "--°";
         if(userMarker) map.removeLayer(userMarker);
         return;
       }
@@ -1051,20 +1112,15 @@
       
       if ("geolocation" in navigator) {
         watchId = navigator.geolocation.watchPosition((pos) => {
-          const { latitude: lat, longitude: lng, speed, heading } = pos.coords;
+          const { latitude: lat, longitude: lng, speed } = pos.coords;
           if(!userMarker) {
             userMarker = L.circleMarker([lat, lng], { radius: 8, color: '#fff', weight: 2, fillColor: '#0284c7', fillOpacity: 1 }).addTo(map);
             map.flyTo([lat, lng], 15);
           } else {
             userMarker.setLatLng([lat, lng]);
           }
-          // Conversione Velocità in Nodi
           if(speed !== null && speed >= 0) {
             document.getElementById('speedVal').innerText = (speed * 1.94384).toFixed(1);
-          }
-          // Course Over Ground
-          if(heading !== null && !isNaN(heading)) {
-            document.getElementById('cogVal').innerText = Math.round(heading) + "°";
           }
         }, () => { 
           alert("Permesso Geolocalizzazione negato o GPS disattivato."); 
@@ -1073,20 +1129,22 @@
       }
     }
 
-    // Inizializzazione bussola mobile con richiesta permesso esplicita (richiesta da iOS >= 13)
     function initCompass() {
+      const btn = document.querySelector('.btn-compass-perm');
       if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
         DeviceOrientationEvent.requestPermission().then(response => {
           if (response === 'granted') {
             window.addEventListener('deviceorientation', handleOrientation, true);
-            document.getElementById('compassControlContainer').innerHTML = '<span class="telemetry-val" style="color:var(--accent-green)">Attiva</span>';
+            btn.classList.add('active');
+            btn.innerHTML = '<i class="fa-solid fa-compass"></i> Attiva';
           } else {
             alert("Devi concedere il permesso per leggere i sensori di movimento.");
           }
         }).catch(console.error);
       } else if (window.DeviceOrientationEvent) {
         window.addEventListener('deviceorientation', handleOrientation, true);
-        document.getElementById('compassControlContainer').innerHTML = '<span class="telemetry-val" style="color:var(--accent-green)">Attiva</span>';
+        btn.classList.add('active');
+        btn.innerHTML = '<i class="fa-solid fa-compass"></i> Attiva';
       } else {
         alert("Sensore bussola non supportato da questo browser.");
       }
@@ -1095,16 +1153,15 @@
     function handleOrientation(event) {
       let heading = null;
       if (event.webkitCompassHeading) {
-        heading = event.webkitCompassHeading; // Compatibilità iOS
+        heading = event.webkitCompassHeading;
       } else if (event.alpha !== null) {
-        heading = 360 - event.alpha; // Compatibilità generica Android
+        heading = 360 - event.alpha;
       }
       if (heading !== null && !isNaN(heading)) {
         document.getElementById('hdgVal').innerText = Math.round(heading) + "°";
       }
     }
 
-    // Iniettiamo un'animazione CSS keyframes per il ping
     const style = document.createElement('style');
     style.innerHTML = `@keyframes pulse { from { transform: scale(1); opacity: 1; } to { transform: scale(1.3); opacity: 0.7; } }`;
     document.head.appendChild(style);
@@ -1115,7 +1172,6 @@
       map.setView([spots[spots.length-1].lat, spots[spots.length-1].lng], 13);
     }
     
-    // Scarica meteo all'avvio silente se posizionato su un centro valido
     updateForecastData();
   </script>
 </body>
