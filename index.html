@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>CescoSpot Pro - Fish on!</title>
   
-  <!-- IMPOSTAZIONI APP NATIVA PER SCHERMATA HOME -->
+  <!-- IMPOSTAZIONI APP NATIVA PER SCHERMATA HOME E PWA -->
+  <link rel="manifest" href="manifest.json">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="CescoSpot">
@@ -60,7 +61,28 @@
       flex-direction: column;
     }
 
-    /* Top Compass Bar (Glassmorphism Ottimizzato) */
+    /* PWA Install Banner */
+    .install-banner {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      background: var(--accent-blue);
+      color: #fff;
+      padding: calc(12px + env(safe-area-inset-top)) 20px 12px 20px;
+      z-index: 4000;
+      display: none;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+      transform: translateY(-100%);
+      transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .install-banner.show { transform: translateY(0); display: flex; }
+    .install-banner-text { font-size: 0.95rem; font-weight: 800; line-height: 1.3; }
+    .install-banner-text small { font-size: 0.75rem; font-weight: 600; opacity: 0.9; }
+    .btn-install { background: #fff; color: var(--accent-blue); border: none; padding: 8px 16px; border-radius: 20px; font-weight: 800; font-size: 0.85rem; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+    .btn-close-banner { background: none; border: none; color: rgba(255,255,255,0.7); font-size: 1.4rem; cursor: pointer; padding: 0 0 0 14px; }
+
+    /* Top Compass Bar */
     .top-telemetry-bar {
       background: rgba(15, 23, 42, 0.85);
       backdrop-filter: blur(16px);
@@ -220,27 +242,6 @@
       left: 14px;
       z-index: 1000;
     }
-
-    .speed-badge {
-      position: absolute;
-      bottom: 24px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 1000;
-      background: rgba(11, 19, 41, 0.95);
-      backdrop-filter: blur(12px);
-      padding: 10px 24px;
-      border-radius: 30px;
-      border: 1px solid rgba(56, 189, 248, 0.4);
-      font-size: 1.4rem;
-      font-weight: 800;
-      color: #fff;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.6);
-      display: flex;
-      align-items: baseline;
-      gap: 6px;
-    }
-    .speed-badge small { font-size: 0.8rem; color: var(--accent-light-blue); font-weight: 700; text-transform: uppercase; }
 
     .measure-box {
       position: absolute;
@@ -411,7 +412,7 @@
       transform: translateX(-50%);
       border-left: 8px solid transparent;
       border-right: 8px solid transparent;
-      border-top: 10px solid inherit; /* Prende il colore assegnato da JS */
+      border-top: 10px solid inherit;
       filter: drop-shadow(0px 3px 2px rgba(0,0,0,0.4));
     }
 
@@ -545,6 +546,15 @@
 
 <div class="app-container">
 
+  <!-- BANNER INSTALLAZIONE APP PWA -->
+  <div class="install-banner" id="installBanner">
+    <div class="install-banner-text" id="installText">Vuoi l'app?<br><small>Aggiungi CescoSpot alla tua Home!</small></div>
+    <div style="display:flex; align-items:center;">
+      <button class="btn-install" id="installBtn">Installa</button>
+      <button class="btn-close-banner" onclick="closeInstallBanner()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+  </div>
+
   <!-- Libreria Nomi Specie Fiume (Datalist Autocomplete) -->
   <datalist id="fishSpeciesLibrary">
     <option value="Amur (Carpa Erbivora)"></option>
@@ -611,9 +621,6 @@
       <div class="bottom-left-gps">
         <button class="map-btn" onclick="startTracking()" id="gpsBtn" title="Traccia la Posizione GPS"><i class="fa-solid fa-location-crosshairs"></i></button>
       </div>
-
-      <!-- Tachimetro -->
-      <div class="speed-badge"><span id="speedVal">0.0</span> <small>kn</small></div>
 
       <!-- Tasto Aggiungi Spot (+) -->
       <button class="fab-add" onclick="openAddSpotModal()" title="Aggiungi uno Spot"><i class="fa-solid fa-plus"></i></button>
@@ -725,7 +732,7 @@
         <div class="color-opt" style="background:#f8fafc; color:#0f172a;" onclick="selectColor('#f8fafc', this)" data-color="#f8fafc"></div>
       </div>
 
-      <label style="font-size:0.75rem; font-weight:800; color:var(--text-muted); display:block; margin-bottom:8px;">ICONA: <span id="selectedIconLabel" style="color:var(--accent-light-blue);">Pin</span></label>
+      <label style="font-size:0.75rem; font-weight:800; color:var(--text-muted); display:block; margin-bottom:8px;">ICONA: <span id="selectedIconLabel" style="color:var(--accent-light-blue);">Pin Esatto</span></label>
       <div class="icon-picker-grid" id="iconPicker"></div>
 
       <button type="submit" class="btn-submit" id="btnSubmitForm">Salva nel Database</button>
@@ -737,6 +744,45 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
   <script>
+    // --- GESTIONE PWA INSTALL BANNER ---
+    let deferredPrompt;
+    const installBanner = document.getElementById('installBanner');
+    const installBtn = document.getElementById('installBtn');
+    const installText = document.getElementById('installText');
+
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+
+    if (isIOS && !isStandalone) {
+      installBanner.style.display = 'flex';
+      setTimeout(() => installBanner.classList.add('show'), 500);
+      installText.innerHTML = `Installa CescoSpot!<br><small>Tocca <i class="fa-solid fa-arrow-up-from-bracket"></i> e poi "Aggiungi alla schermata Home"</small>`;
+      installBtn.style.display = 'none'; 
+    }
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      installBanner.style.display = 'flex';
+      setTimeout(() => installBanner.classList.add('show'), 500);
+    });
+
+    installBtn.addEventListener('click', async () => {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        if (outcome === 'accepted') {
+          closeInstallBanner();
+        }
+        deferredPrompt = null;
+      }
+    });
+
+    function closeInstallBanner() {
+      installBanner.classList.remove('show');
+      setTimeout(() => installBanner.style.display = 'none', 400);
+    }
+
     // --- MAPPA E LIVELLI (Leaflet) ---
     const map = L.map('map', { zoomControl: false, attributionControl: false }).setView([41.9028, 12.4964], 6);
 
@@ -748,7 +794,6 @@
     const topoLayer = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', { maxZoom: 17 });
     let isSat = true;
 
-    // Aggiungi la barra della Scala (misuratore visivo)
     L.control.scale({ imperial: false, position: 'bottomleft' }).addTo(map);
 
     function toggleMapType() {
@@ -778,13 +823,11 @@
     let editingSpotId = null;
     let tempMarker = null;
     
-    // Recupero dati
     try {
       const savedData = localStorage.getItem('cescospot_data');
       if (savedData) spots = JSON.parse(savedData);
     } catch(e) { console.warn("LocalStorage non accessibile."); }
 
-    // Generazione Picker Icone
     const iconPickerEl = document.getElementById('iconPicker');
     iconList.forEach((item, index) => {
       const card = document.createElement('div');
@@ -811,7 +854,6 @@
       });
       if(el) {
         el.classList.add('selected');
-        // Se il colore è bianco o molto chiaro, check scuro, altrimenti bianco
         el.innerHTML = colorHex === '#f8fafc' ? '<i class="fa-solid fa-check" style="color:#0f172a"></i>' : '<i class="fa-solid fa-check"></i>';
       }
       selectedColor = colorHex;
@@ -852,7 +894,6 @@
       reader.readAsText(file);
     }
 
-    // --- NAVIGAZIONE MAPPE E NAVIGATORE GOOGLE MAPS ---
     function focusSpot(id) {
       const spot = spots.find(s => s.id === id);
       if (!spot) return;
@@ -881,7 +922,6 @@
       document.getElementById('spotTarget').value = '';
       document.getElementById('spotNotes').value = '';
 
-      // Reverse Geocoding per trovare Nome Comune/Provincia automaticamente
       fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${center.lat}&lon=${center.lng}&zoom=14`)
         .then(res => res.json())
         .then(data => {
@@ -933,7 +973,6 @@
       renderMapSpots();
       closeModals();
       
-      // Resetta il campo di ricerca per mostrare tutti gli spot
       const searchInput = document.getElementById('searchSpotInput');
       if (searchInput) {
           searchInput.value = '';
@@ -984,9 +1023,8 @@
       spots.forEach(s => {
         const isEmoji = s.icon && !s.icon.startsWith('fa-');
         const iconHtml = isEmoji ? `<span style="font-size:1.3rem;">${s.icon}</span>` : `<i class="fa-solid ${s.icon}"></i>`;
-        const markerBorder = s.color === '#f8fafc' ? '#0f172a' : 'white'; // Bordo scuro se il colore scelto è bianco
+        const markerBorder = s.color === '#f8fafc' ? '#0f172a' : 'white';
 
-        // Marker a "Goccia" (Pin Map Reale) generato via CSS
         const customIcon = L.divIcon({
           className: '',
           html: `
@@ -994,8 +1032,8 @@
                 ${iconHtml}
                 <div style="position: absolute; bottom: -12px; left: 50%; transform: translateX(-50%); border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 10px solid ${s.color}; filter: drop-shadow(0px 3px 2px rgba(0,0,0,0.4));"></div>
             </div>`,
-          iconSize: [38, 50], // Altezza maggiore per comprendere la punta
-          iconAnchor: [19, 48], // Ancora settata sulla punta in basso
+          iconSize: [38, 50],
+          iconAnchor: [19, 48],
           popupAnchor: [0, -40]
         });
 
@@ -1010,7 +1048,6 @@
       renderSavedSpotsUI();
     }
 
-    // --- GESTIONE LISTA SPOT (FISARMONICA + RICERCA) ---
     function toggleZoneList(zoneId) {
       const content = document.getElementById(`zone-content-${zoneId}`);
       const icon = document.getElementById(`zone-icon-${zoneId}`);
@@ -1058,7 +1095,6 @@
           const iconHtml = isEmoji ? `<span style="font-size:1.3rem;">${s.icon}</span>` : `<i class="fa-solid ${s.icon}"></i>`;
           const markerBorder = s.color === '#f8fafc' ? '#0f172a' : 'white';
 
-          // Aggiungiamo classi dati per poter filtrare
           htmlSec += `
             <div class="widget-card spot-item" data-search-text="${(s.name + ' ' + s.target + ' ' + s.notes).toLowerCase()}" style="display:flex; justify-content:space-between; align-items:center; padding:14px; margin-bottom:12px; background:var(--panel-bg); border-radius:12px; border:1px solid var(--border-color);">
               <div onclick="focusSpot('${s.id}')" style="display:flex; align-items:center; gap:14px; flex:1; cursor:pointer; overflow:hidden;">
@@ -1082,7 +1118,6 @@
       });
     }
 
-    // Filtro Spot Live
     function filterSpots() {
       const q = document.getElementById('searchSpotInput').value.toLowerCase();
       const sections = document.querySelectorAll('.zone-section');
@@ -1100,12 +1135,10 @@
           }
         });
 
-        // Se non ci sono spot visibili nella zona e la zona non corrisponde al testo, nascondi l'intera sezione
         if (visibleCount === 0) {
           section.style.display = 'none';
         } else {
           section.style.display = 'block';
-          // Se stiamo cercando, apri sempre la fisarmonica
           if (q !== '') {
              section.querySelector('.zone-content').style.display = 'block';
              section.querySelector('.fa-chevron-right')?.classList.replace('fa-chevron-right', 'fa-chevron-down');
@@ -1167,7 +1200,7 @@
       }
     });
 
-    // --- AGGIORNAMENTO DINAMICO DATI METEO & SOLUNARI (Con Icone WMO) ---
+    // --- AGGIORNAMENTO DINAMICO DATI METEO & SOLUNARI ---
     function updateForecastData(btnElement) {
       let originalHtml = '';
       if(btnElement) {
@@ -1178,7 +1211,6 @@
 
       const center = map.getCenter();
       
-      // Calcolo Fasi Lunari Algoritmico Avanzato (Ciclo di 29.53 giorni)
       const now = new Date();
       const lp = 2551443; 
       const newMoon = new Date(1970, 0, 7, 20, 35, 0).getTime();
@@ -1188,7 +1220,6 @@
       const phases = ['Luna Nuova', 'Crescente', 'Primo Quarto', 'Crescente Gibbosa', 'Luna Piena', 'Calante Gibbosa', 'Ultimo Quarto', 'Calante'];
       document.getElementById('moonPhaseText').innerText = 'Fase Lunare: ' + (phases[phaseIndex] || 'Stabile');
       
-      // Calcolo Attività Pesci in base alla Luna
       let activityScore = 50; 
       if (phaseIndex === 0 || phaseIndex === 4) activityScore += 40; 
       else if (phaseIndex === 2 || phaseIndex === 6) activityScore += 20; 
@@ -1206,13 +1237,12 @@
         activityTextEl.style.color = '#eab308';
       }
 
-      // Stima degli orari Major/Minor dinamica
       let h1 = (now.getDate() * 50) % 1440; 
       let hMajor1 = new Date(); hMajor1.setHours(Math.floor(h1/60), h1%60);
       let hMajor2 = new Date(); hMajor2.setHours(Math.floor(h1/60) + 12, h1%60);
       
       function formatTimeSpan(d) {
-        let m = new Date(d.getTime() + 120 * 60000); // 2 ore di span
+        let m = new Date(d.getTime() + 120 * 60000); // 2 ore
         return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')} - ${String(m.getHours()).padStart(2,'0')}:${String(m.getMinutes()).padStart(2,'0')}`;
       }
 
@@ -1222,18 +1252,16 @@
       let hMinor1 = new Date(hMajor1.getTime() + 5.5 * 3600000);
       let hMinor2 = new Date(hMajor2.getTime() + 5.5 * 3600000);
       function formatTimeSpanMin(d) {
-        let m = new Date(d.getTime() + 60 * 60000); // 1 ora di span
+        let m = new Date(d.getTime() + 60 * 60000); // 1 ora
         return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')} - ${String(m.getHours()).padStart(2,'0')}:${String(m.getMinutes()).padStart(2,'0')}`;
       }
       document.getElementById('minor1').innerText = formatTimeSpanMin(hMinor1);
       document.getElementById('minor2').innerText = formatTimeSpanMin(hMinor2);
 
-      // Richiesta API Meteo Reale Open-Meteo (Incluso weathercode per icone meteo reali)
       fetch(`https://api.open-meteo.com/v1/forecast?latitude=${center.lat}&longitude=${center.lng}&current=temperature_2m,wind_speed_10m,wind_direction_10m,surface_pressure,cloud_cover,weather_code`)
         .then(res => res.json())
         .then(data => {
             
-            // Assegnazione dell'icona meteo dinamica basata sul codice WMO
             const code = data.current.weather_code || 0;
             let weatherIconStr = '<i class="fa-solid fa-sun" style="color:#eab308;"></i>';
             if(code >= 1 && code <= 3) weatherIconStr = '<i class="fa-solid fa-cloud-sun"></i>';
@@ -1272,7 +1300,7 @@
         });
     }
 
-    // --- NAVIGAZIONE TABS APPLICAZIONE ---
+    // --- NAVIGAZIONE TABS ---
     function switchTab(tabId, btn) {
       document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
       document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -1285,42 +1313,6 @@
       
       if(tabId === 'tabForecasts') {
         updateForecastData(); 
-      }
-    }
-
-    // --- GPS REAL-TIME ---
-    let watchId = null;
-    let userMarker = null;
-
-    function startTracking() {
-      const btn = document.getElementById('gpsBtn');
-      if (watchId) {
-        navigator.geolocation.clearWatch(watchId);
-        watchId = null;
-        btn.classList.remove('active');
-        document.getElementById('speedVal').innerHTML = "0.0 <small>kn</small>";
-        if(userMarker) map.removeLayer(userMarker);
-        return;
-      }
-      
-      btn.classList.add('active');
-      
-      if ("geolocation" in navigator) {
-        watchId = navigator.geolocation.watchPosition((pos) => {
-          const { latitude: lat, longitude: lng, speed } = pos.coords;
-          if(!userMarker) {
-            userMarker = L.circleMarker([lat, lng], { radius: 8, color: '#fff', weight: 2, fillColor: '#0284c7', fillOpacity: 1 }).addTo(map);
-            map.flyTo([lat, lng], 15);
-          } else {
-            userMarker.setLatLng([lat, lng]);
-          }
-          if(speed !== null && speed >= 0) {
-            document.getElementById('speedVal').innerHTML = (speed * 1.94384).toFixed(1) + ' <small>kn</small>';
-          }
-        }, () => { 
-          alert("Permesso Geolocalizzazione negato o GPS disattivato."); 
-          btn.classList.remove('active'); 
-        }, { enableHighAccuracy: true });
       }
     }
 
@@ -1358,7 +1350,7 @@
         document.getElementById('hdgVal').innerHTML = `<i class="fa-regular fa-compass" style="font-size: 1.4rem; color: var(--text-muted);"></i> ${Math.round(heading)}° <small>HDG</small>`;
         
         const normalizedHeading = (Math.round(heading) + 360) % 360;
-        const index = Math.round(normalizedHeading / 45) % 8; // 0=N, 1=NE, 2=E, 3=SE, 4=S, 5=SW, 6=W, 7=NW
+        const index = Math.round(normalizedHeading / 45) % 8; 
         const spans = document.querySelectorAll('.compass-ticks span');
         
         spans.forEach((span, i) => {
@@ -1386,6 +1378,27 @@
     }
     
     setTimeout(() => { updateForecastData(null); }, 1000);
+  </script>
+  
+  <!-- MANIFEST CREATO INLINE PER PWA -->
+  <script>
+    const manifest = {
+      "name": "CescoSpot Pro",
+      "short_name": "CescoSpot",
+      "start_url": ".",
+      "display": "standalone",
+      "background_color": "#070d1d",
+      "theme_color": "#070d1d",
+      "icons": [{
+        "src": "https://cdn-icons-png.flaticon.com/512/3063/3063065.png",
+        "sizes": "512x512",
+        "type": "image/png"
+      }]
+    };
+    const stringManifest = JSON.stringify(manifest);
+    const blob = new Blob([stringManifest], {type: 'application/json'});
+    const manifestURL = URL.createObjectURL(blob);
+    document.querySelector('link[rel="manifest"]').setAttribute('href', manifestURL);
   </script>
 </body>
 </html>
