@@ -9,12 +9,12 @@
   <link rel="manifest" id="manifestLink" href="">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="CescoSpot">
+  <meta name="apple-mobile-web-app-title" content="CescoSpot PRO">
   <meta name="theme-color" content="#070d1d">
   
-  <!-- ICONE PLACEHOLDER CHE VERRANNO SOSTITUITE ISTANTANEAMENTE DAL MOTORE GRAFICO -->
-  <link rel="icon" type="image/png" id="favicon" href="" />
-  <link rel="apple-touch-icon" type="image/png" id="appleTouchIcon" href="" />
+  <!-- ICONA DELLA SCHERMATA HOME COLLEGATA ALLA TUA IMMAGINE "map.png" -->
+  <link rel="icon" type="image/png" href="map.png" />
+  <link rel="apple-touch-icon" href="map.png" />
 
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
@@ -46,7 +46,6 @@
       height: 100%;
       height: 100dvh;
       width: 100vw;
-      /* Background gradient oceanico molto più moderno */
       background: linear-gradient(135deg, #070d1d 0%, #0f172a 100%);
       color: var(--text-light);
       display: flex;
@@ -97,7 +96,6 @@
       box-shadow: 0 4px 30px rgba(0,0,0,0.6);
     }
     
-    /* Griglia Bussola e Freccia Rossa */
     .compass-track {
       position: relative;
       width: 100%;
@@ -455,7 +453,7 @@
     }
     .form-control:focus { border-color: var(--accent-light-blue); }
 
-    /* Menù Autocomplete Mobile Perfetto */
+    /* Custom Autocomplete per Specie Target su Mobile */
     .autocomplete-items {
       position: absolute;
       border: 1px solid var(--border-color);
@@ -596,76 +594,6 @@
   </style>
 </head>
 <body>
-
-  <!-- MOTORE GRAFICO: Generazione Icona Vettoriale PNG -->
-  <script>
-    (function generateAppIcon() {
-      try {
-        const canvas = document.createElement('canvas');
-        canvas.width = 512;
-        canvas.height = 512;
-        const ctx = canvas.getContext('2d');
-
-        // Sfondo Icona
-        const grad = ctx.createLinearGradient(0, 0, 0, 512);
-        grad.addColorStop(0, '#070d1d');
-        grad.addColorStop(1, '#1e293b');
-        ctx.fillStyle = grad;
-        ctx.fillRect(0, 0, 512, 512);
-
-        // Bordo/Cornice
-        ctx.strokeStyle = '#38bdf8';
-        ctx.lineWidth = 16;
-        ctx.lineJoin = 'round';
-        ctx.strokeRect(24, 24, 464, 464);
-
-        // Disegno Onda Astratta (Sonar/Acqua)
-        ctx.beginPath();
-        ctx.arc(256, 256, 140, 0, Math.PI * 2);
-        ctx.strokeStyle = 'rgba(2, 132, 199, 0.4)';
-        ctx.lineWidth = 10;
-        ctx.stroke();
-
-        // Scritta "Cesco"
-        ctx.font = 'bold 80px -apple-system, sans-serif';
-        ctx.fillStyle = '#ffffff';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText('Cesco', 256, 180);
-
-        // Scritta "Spot"
-        ctx.fillStyle = '#22c55e';
-        ctx.fillText('Spot', 256, 270);
-
-        // Scritta "PRO"
-        ctx.font = '900 50px -apple-system, sans-serif';
-        ctx.fillStyle = '#f97316';
-        ctx.fillText('PRO', 256, 370);
-
-        // Conversione in PNG ad alta risoluzione
-        const dataURL = canvas.toDataURL('image/png');
-        
-        // Assegnazione ai tag Head (Risolve il bug di Safari iOS)
-        document.getElementById('appleTouchIcon').href = dataURL;
-        document.getElementById('favicon').href = dataURL;
-        
-        // Manifest Dinamico
-        const manifest = {
-          "name": "CescoSpot Pro",
-          "short_name": "CescoSpot",
-          "start_url": ".",
-          "display": "standalone",
-          "background_color": "#070d1d",
-          "theme_color": "#070d1d",
-          "icons": [{ "src": dataURL, "sizes": "512x512", "type": "image/png" }]
-        };
-        const manifestBlob = new Blob([JSON.stringify(manifest)], {type: 'application/json'});
-        document.getElementById('manifestLink').setAttribute('href', URL.createObjectURL(manifestBlob));
-      } catch(e) {
-        console.warn("Icon generator err:", e);
-      }
-    })();
-  </script>
 
 <div class="app-container">
 
@@ -840,6 +768,27 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
   <script>
+    // --- GENERAZIONE MANIFEST PWA DINAMICO PER L'ICONA ---
+    (function generateManifest() {
+        const manifest = {
+          "name": "CescoSpot Pro",
+          "short_name": "CescoSpot",
+          "start_url": ".",
+          "display": "standalone",
+          "background_color": "#070d1d",
+          "theme_color": "#070d1d",
+          "icons": [{
+            "src": "map.png",
+            "sizes": "512x512",
+            "type": "image/png"
+          }]
+        };
+        const stringManifest = JSON.stringify(manifest);
+        const blob = new Blob([stringManifest], {type: 'application/json'});
+        const manifestURL = URL.createObjectURL(blob);
+        document.getElementById('manifestLink').setAttribute('href', manifestURL);
+    })();
+
     // --- GESTIONE PWA INSTALL BANNER ---
     let deferredPrompt;
     const installBanner = document.getElementById('installBanner');
@@ -1326,7 +1275,7 @@
       }
     });
 
-    // --- AGGIORNAMENTO DINAMICO DATI METEO & SOLUNARI ---
+    // --- AGGIORNAMENTO DINAMICO DATI METEO E SOLUNARI ---
     function updateForecastData(btnElement) {
       let originalHtml = '';
       if(btnElement) {
@@ -1368,7 +1317,7 @@
       let hMajor2 = new Date(); hMajor2.setHours(Math.floor(h1/60) + 12, h1%60);
       
       function formatTimeSpan(d) {
-        let m = new Date(d.getTime() + 120 * 60000); // 2 ore
+        let m = new Date(d.getTime() + 120 * 60000); 
         return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')} - ${String(m.getHours()).padStart(2,'0')}:${String(m.getMinutes()).padStart(2,'0')}`;
       }
 
@@ -1378,7 +1327,7 @@
       let hMinor1 = new Date(hMajor1.getTime() + 5.5 * 3600000);
       let hMinor2 = new Date(hMajor2.getTime() + 5.5 * 3600000);
       function formatTimeSpanMin(d) {
-        let m = new Date(d.getTime() + 60 * 60000); // 1 ora
+        let m = new Date(d.getTime() + 60 * 60000); 
         return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')} - ${String(m.getHours()).padStart(2,'0')}:${String(m.getMinutes()).padStart(2,'0')}`;
       }
       document.getElementById('minor1').innerText = formatTimeSpanMin(hMinor1);
@@ -1387,7 +1336,6 @@
       fetch(`https://api.open-meteo.com/v1/forecast?latitude=${center.lat}&longitude=${center.lng}&current=temperature_2m,wind_speed_10m,wind_direction_10m,surface_pressure,cloud_cover,weather_code`)
         .then(res => res.json())
         .then(data => {
-            
             const code = data.current.weather_code || 0;
             let weatherIconStr = '<i class="fa-solid fa-sun" style="color:#eab308;"></i>';
             if(code >= 1 && code <= 3) weatherIconStr = '<i class="fa-solid fa-cloud-sun"></i>';
@@ -1560,5 +1508,6 @@
     
     setTimeout(() => { updateForecastData(null); }, 1000);
   </script>
+
 </body>
 </html>
