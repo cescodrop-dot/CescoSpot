@@ -6,15 +6,15 @@
   <title>CescoSpot Pro - Fish on!</title>
   
   <!-- IMPOSTAZIONI APP NATIVA PER SCHERMATA HOME E PWA -->
-  <link rel="manifest" href="manifest.json">
+  <link rel="manifest" id="manifestLink" href="manifest.json">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="CescoSpot">
   <meta name="theme-color" content="#070d1d">
   
-  <!-- ICONA DELLA SCHERMATA HOME AUTOGENERATA (Testo CescoSpot) -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj4KICA8cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgZmlsbD0iIzBmMTcyYSIvPgogIDx0ZXh0IHg9IjI1NiIgeT0iMjQwIiBmb250LWZhbWlseT0ic3lzdGVtLXVpLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjkwIiBmb250LXdlaWdodD0iOTAwIiBmaWxsPSIjMzhiZGY4IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5DZXNjbzx0c3BhbiBmaWxsPSIjMjJjNTVlIj5TcG90PC90c3Bhbj48L3RleHQ+CiAgPHRleHQgeD0iMjU2IiB5PSIzMjAiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNDAiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSIjOTRhM2I4IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5QUk88L3RleHQ+Cjwvc3ZnPg==" />
-  <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj4KICA8cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgZmlsbD0iIzBmMTcyYSIvPgogIDx0ZXh0IHg9IjI1NiIgeT0iMjQwIiBmb250LWZhbWlseT0ic3lzdGVtLXVpLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjkwIiBmb250LXdlaWdodD0iOTAwIiBmaWxsPSIjMzhiZGY4IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5DZXNjbzx0c3BhbiBmaWxsPSIjMjJjNTVlIj5TcG90PC90c3Bhbj48L3RleHQ+CiAgPHRleHQgeD0iMjU2IiB5PSIzMjAiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNDAiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSIjOTRhM2I4IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5QUk88L3RleHQ+Cjwvc3ZnPg==" />
+  <!-- ICONE PLACEHOLDER CHE VERRANNO AGGIORNATE IN ALTA DEFINIZIONE PNG -->
+  <link rel="icon" type="image/png" id="faviconTag" />
+  <link rel="apple-touch-icon" type="image/png" id="appleTouchIconTag" />
 
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
@@ -471,11 +471,12 @@
       display: none;
     }
     .autocomplete-items div {
-      padding: 12px 16px;
+      padding: 14px 16px;
       cursor: pointer;
       color: var(--text-light);
       border-bottom: 1px solid rgba(255,255,255,0.05);
-      font-size: 0.95rem;
+      font-size: 1rem;
+      font-weight: 600;
     }
     .autocomplete-items div:hover, .autocomplete-items div:active {
       background-color: var(--panel-bg);
@@ -632,7 +633,6 @@
     <div id="tabMap" class="tab-content active">
       <div class="measure-box" id="measureBox">Distanza: 0 m</div>
 
-      <!-- Controlli Sinistra -->
       <div class="left-controls">
         <div class="map-btn-group">
           <button class="map-btn" onclick="map.zoomIn()" title="Zoom In"><i class="fa-solid fa-plus"></i></button>
@@ -640,18 +640,15 @@
         </div>
       </div>
 
-      <!-- Controlli Destra -->
       <div class="right-controls">
         <button class="map-btn" onclick="toggleMapType()" title="Cambia Livello Mappa"><i class="fa-solid fa-layer-group"></i></button>
         <button class="map-btn" id="rulerBtn" onclick="toggleRuler()" title="Misura Distanze"><i class="fa-solid fa-ruler-combined"></i></button>
       </div>
 
-      <!-- Controlli In Basso a Sinistra -->
       <div class="bottom-left-gps">
         <button class="map-btn" onclick="startTracking()" id="gpsBtn" title="Traccia la Posizione GPS"><i class="fa-solid fa-location-crosshairs"></i></button>
       </div>
 
-      <!-- Tasto Aggiungi Spot (+) -->
       <button class="fab-add" onclick="openAddSpotModal()" title="Aggiungi uno Spot"><i class="fa-solid fa-plus"></i></button>
 
       <div id="map"></div>
@@ -689,16 +686,13 @@
     <div id="tabMe" class="tab-content" style="padding:16px;">
       <h3 style="margin-bottom:16px; margin-top:8px;">Gestione Spot</h3>
       
-      <!-- Ricerca Veloce -->
       <div class="search-bar-container">
         <i class="fa-solid fa-magnifying-glass"></i>
         <input type="text" id="searchSpotInput" onkeyup="filterSpots()" placeholder="Cerca per nome, specie o zona...">
       </div>
 
-      <!-- Lista Spot Divisa per Zone a Fisarmonica -->
       <div id="savedSpotsContainer"></div>
 
-      <!-- Pulsanti Backup -->
       <h4 style="margin-top:24px; margin-bottom:12px; color:var(--text-muted); font-size:0.85rem; text-transform:uppercase; letter-spacing:1px;">Salvataggio Dati</h4>
       <div class="backup-bar">
         <button class="btn-backup" onclick="exportSpots()"><i class="fa-solid fa-file-arrow-down" style="color:var(--accent-light-blue);"></i>Esporta Backup</button>
@@ -774,6 +768,74 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
   <script>
+    // --- GENERATORE DINAMICO ICONA PNG NATIVA (CESCOSPOT BADGE) ---
+    function generateCescoSpotPNG() {
+      const canvas = document.createElement('canvas');
+      canvas.width = 512;
+      canvas.height = 512;
+      const ctx = canvas.getContext('2d');
+
+      // Sfondo gradiente scuro ad alta risoluzione
+      const grad = ctx.createLinearGradient(0, 0, 512, 512);
+      grad.addColorStop(0, '#070d1d');
+      grad.addColorStop(1, '#0f172a');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, 512, 512);
+
+      // Cornice azzurra satinata
+      ctx.strokeStyle = '#0284c7';
+      ctx.lineWidth = 16;
+      ctx.strokeRect(8, 8, 496, 496);
+
+      // Icona grafica (Amo / Pesce stilizzato)
+      ctx.font = '120px "Segoe UI", Roboto, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('🎣', 256, 170);
+
+      // Scritta CescoSpot
+      ctx.font = 'bold 64px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+      ctx.fillStyle = '#38bdf8';
+      ctx.fillText('Cesco', 185, 330);
+      
+      ctx.fillStyle = '#22c55e';
+      ctx.fillText('Spot', 345, 330);
+
+      // Badge PRO
+      ctx.fillStyle = '#f97316';
+      ctx.font = '900 36px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+      ctx.fillText('PRO', 256, 410);
+
+      const pngData = canvas.toDataURL('image/png');
+      
+      // Assegna sia a Safari iOS che ad Android/Chrome
+      document.getElementById('faviconTag').href = pngData;
+      document.getElementById('appleTouchIconTag').href = pngData;
+      
+      return pngData;
+    }
+
+    const appIconPNG = generateCescoSpotPNG();
+
+    // MANIFEST DINAMICO CON PNG REALE
+    const manifest = {
+      "name": "CescoSpot Pro",
+      "short_name": "CescoSpot",
+      "start_url": ".",
+      "display": "standalone",
+      "background_color": "#070d1d",
+      "theme_color": "#070d1d",
+      "icons": [{
+        "src": appIconPNG,
+        "sizes": "512x512",
+        "type": "image/png"
+      }]
+    };
+    const stringManifest = JSON.stringify(manifest);
+    const blob = new Blob([stringManifest], {type: 'application/json'});
+    const manifestURL = URL.createObjectURL(blob);
+    document.getElementById('manifestLink').setAttribute('href', manifestURL);
+
     // --- GESTIONE PWA INSTALL BANNER ---
     let deferredPrompt;
     const installBanner = document.getElementById('installBanner');
@@ -843,7 +905,6 @@
     document.addEventListener('click', function(e) {
         if (e.target !== targetInput) autoList.style.display = 'none';
     });
-
 
     // --- MAPPA E LIVELLI (Leaflet) ---
     const map = L.map('map', { zoomControl: false, attributionControl: false }).setView([41.9028, 12.4964], 6);
@@ -1495,27 +1556,6 @@
     }
     
     setTimeout(() => { updateForecastData(null); }, 1000);
-  </script>
-  
-  <!-- MANIFEST CREATO INLINE PER PWA (Logo CescoSpot) -->
-  <script>
-    const manifest = {
-      "name": "CescoSpot Pro",
-      "short_name": "CescoSpot",
-      "start_url": ".",
-      "display": "standalone",
-      "background_color": "#070d1d",
-      "theme_color": "#070d1d",
-      "icons": [{
-        "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj4KICA8cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgZmlsbD0iIzBmMTcyYSIvPgogIDx0ZXh0IHg9IjI1NiIgeT0iMjQwIiBmb250LWZhbWlseT0ic3lzdGVtLXVpLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjkwIiBmb250LXdlaWdodD0iOTAwIiBmaWxsPSIjMzhiZGY4IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5DZXNjbzx0c3BhbiBmaWxsPSIjMjJjNTVlIj5TcG90PC90c3Bhbj48L3RleHQ+CiAgPHRleHQgeD0iMjU2IiB5PSIzMjAiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNDAiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSIjOTRhM2I4IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5QUk88L3RleHQ+Cjwvc3ZnPg==",
-        "sizes": "512x512",
-        "type": "image/svg+xml"
-      }]
-    };
-    const stringManifest = JSON.stringify(manifest);
-    const blob = new Blob([stringManifest], {type: 'application/json'});
-    const manifestURL = URL.createObjectURL(blob);
-    document.querySelector('link[rel="manifest"]').setAttribute('href', manifestURL);
   </script>
 </body>
 </html>
