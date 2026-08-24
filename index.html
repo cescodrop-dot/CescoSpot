@@ -10,16 +10,16 @@
   
   <style>
     :root {
-      --bg-dark: #0b1329;
-      --panel-bg: #111c38;
-      --card-bg: #1a274d;
+      --bg-dark: #070d1d;
+      --panel-bg: #0f172a;
+      --card-bg: #152238;
       --accent-blue: #0284c7;
       --accent-light-blue: #38bdf8;
       --accent-green: #22c55e;
       --accent-red: #ef4444;
       --text-light: #f8fafc;
       --text-muted: #94a3b8;
-      --border-color: #1e2e5c;
+      --border-color: #1e293b;
     }
 
     * { 
@@ -41,6 +41,7 @@
       overflow: hidden;
     }
 
+    /* L'app container occupa tutto lo schermo, garantendo un'esperienza full-screen sia su PC che Smartphone */
     .app-container {
       width: 100%;
       height: 100%;
@@ -49,39 +50,51 @@
       flex-direction: column;
     }
 
-    /* Top Compass Bar */
-    .top-compass-bar {
+    /* Top Telemetry & Compass Bar */
+    .top-telemetry-bar {
       background: rgba(11, 19, 41, 0.95);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      padding: 10px 12px 6px 12px;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      padding: 10px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+      z-index: 1000;
+    }
+    .telemetry-item {
       display: flex;
       flex-direction: column;
       align-items: center;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
-      z-index: 1000;
-      font-size: 0.75rem;
+      flex: 1;
     }
-    .compass-ticks {
-      display: flex;
-      justify-content: space-between;
-      width: 100%;
-      max-width: 400px;
-      font-weight: 700;
+    .telemetry-label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
       color: var(--text-muted);
-      letter-spacing: 2px;
-      margin-bottom: 4px;
+      letter-spacing: 0.5px;
     }
-    .compass-info {
-      display: flex;
-      justify-content: space-between;
-      width: 100%;
-      max-width: 400px;
+    .telemetry-val {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #fff;
+      margin-top: 2px;
+    }
+    .btn-compass-perm {
+      background: var(--accent-blue);
+      color: #fff;
+      border: none;
+      padding: 6px 10px;
+      border-radius: 8px;
       font-size: 0.75rem;
-      color: #cbd5e1;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: background 0.2s;
     }
-    .compass-info span { text-align: center; flex: 1; }
-    .compass-info b { display: block; font-size: 0.9rem; color: #fff; margin-top: 2px; }
+    .btn-compass-perm:hover { background: #0369a1; }
 
     .app-body { flex: 1; position: relative; overflow: hidden; width: 100%; }
 
@@ -96,7 +109,7 @@
 
     #map { height: 100%; width: 100%; z-index: 1; background: #0f172a; }
 
-    /* UI Controls */
+    /* Controlli UI sulla Mappa */
     .left-controls {
       position: absolute;
       top: 14px;
@@ -120,9 +133,10 @@
       width: 44px;
       height: 44px;
       border-radius: 50%;
-      background: rgba(255, 255, 255, 0.95);
-      color: #334155;
-      border: none;
+      background: rgba(15, 23, 42, 0.9);
+      backdrop-filter: blur(5px);
+      color: var(--text-light);
+      border: 1px solid var(--border-color);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -131,13 +145,15 @@
       cursor: pointer;
       transition: all 0.2s;
     }
-    .map-btn:hover { background: #f1f5f9; }
+    .map-btn:hover { background: var(--panel-bg); }
     .map-btn:active { transform: scale(0.95); }
-    .map-btn.active { background: #0284c7; color: #fff; }
+    .map-btn.active { background: var(--accent-blue); border-color: var(--accent-light-blue); color: #fff; }
 
     .map-btn-group {
-      background: rgba(255, 255, 255, 0.95);
-      border-radius: 22px;
+      background: rgba(15, 23, 42, 0.9);
+      backdrop-filter: blur(5px);
+      border: 1px solid var(--border-color);
+      border-radius: 24px;
       display: flex;
       flex-direction: column;
       box-shadow: 0 4px 12px rgba(0,0,0,0.4);
@@ -145,19 +161,16 @@
     }
     .map-btn-group .map-btn {
       border-radius: 0;
+      border: none;
       box-shadow: none;
     }
-    .map-btn-group .map-btn:first-child { border-bottom: 1px solid #e2e8f0; }
-    .map-btn-group .map-btn:hover { background: #f1f5f9; }
+    .map-btn-group .map-btn:first-child { border-bottom: 1px solid var(--border-color); }
 
     .bottom-left-gps {
       position: absolute;
       bottom: 24px;
       left: 12px;
       z-index: 1000;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
     }
 
     .speed-badge {
@@ -168,14 +181,18 @@
       z-index: 1000;
       background: rgba(11, 19, 41, 0.9);
       backdrop-filter: blur(10px);
-      padding: 8px 20px;
-      border-radius: 25px;
-      border: 1px solid rgba(255,255,255,0.15);
-      font-size: 1.3rem;
+      padding: 8px 22px;
+      border-radius: 30px;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      font-size: 1.25rem;
       font-weight: 800;
       color: #fff;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
     }
+    .speed-badge small { font-size: 0.75rem; color: var(--accent-light-blue); font-weight: 600; }
 
     .measure-box {
       position: absolute;
@@ -184,10 +201,10 @@
       transform: translateX(-50%);
       z-index: 1000;
       background: rgba(11, 19, 41, 0.95);
-      color: #38bdf8;
+      color: var(--accent-light-blue);
       padding: 8px 16px;
       border-radius: 12px;
-      border: 1px solid #38bdf8;
+      border: 1px solid var(--accent-light-blue);
       font-size: 0.9rem;
       font-weight: bold;
       display: none;
@@ -196,20 +213,20 @@
 
     .fab-add {
       position: absolute;
-      bottom: 20px;
-      right: 14px;
+      bottom: 24px;
+      right: 16px;
       z-index: 1000;
-      width: 56px;
-      height: 56px;
+      width: 58px;
+      height: 58px;
       border-radius: 50%;
-      background: #0284c7;
+      background: var(--accent-blue);
       color: #fff;
       border: none;
       font-size: 1.5rem;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 4px 20px rgba(2, 132, 199, 0.6);
+      box-shadow: 0 6px 20px rgba(2, 132, 199, 0.5);
       cursor: pointer;
       transition: transform 0.2s, background 0.2s;
     }
@@ -244,15 +261,15 @@
     .nav-item:hover { color: #fff; }
     .nav-item.active { color: var(--accent-light-blue); font-weight: bold; }
 
-    /* Modal */
+    /* Modal Form */
     .modal {
       position: absolute; 
       bottom: -100%; 
       left: 0; 
       right: 0; 
       z-index: 2000;
-      background: #ffffff; 
-      color: #0f172a;
+      background: #111c38; 
+      color: var(--text-light);
       border-top-left-radius: 24px; 
       border-top-right-radius: 24px;
       padding: 20px; 
@@ -260,7 +277,8 @@
       transition: bottom 0.35s cubic-bezier(0.1, 0.9, 0.2, 1); 
       max-height: 90vh; 
       overflow-y: auto;
-      box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
+      box-shadow: 0 -10px 40px rgba(0,0,0,0.7);
+      border-top: 1px solid var(--border-color);
       margin: 0 auto;
       max-width: 800px;
     }
@@ -270,26 +288,26 @@
       display: flex;
       gap: 12px;
       overflow-x: auto;
-      padding: 10px 0;
+      padding: 6px 0;
       margin-bottom: 16px;
     }
     .color-opt {
-      width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0; cursor: pointer;
-      display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1rem;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      width: 38px; height: 38px; border-radius: 50%; flex-shrink: 0; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; color: #fff; font-size: 0.9rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
     }
-    .color-opt.selected { border: 3px solid #0f172a; }
+    .color-opt.selected { border: 3px solid #fff; }
 
     .icon-picker-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
       gap: 10px;
-      max-height: 220px;
+      max-height: 200px;
       overflow-y: auto;
       padding: 8px;
-      background: #f8fafc;
+      background: var(--bg-dark);
       border-radius: 12px;
-      border: 1px solid #e2e8f0;
+      border: 1px solid var(--border-color);
       margin-bottom: 12px;
     }
     .icon-card {
@@ -297,21 +315,20 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 12px 8px;
-      background: #fff;
+      padding: 10px 6px;
+      background: var(--panel-bg);
       border-radius: 10px;
-      border: 1px solid #e2e8f0;
+      border: 1px solid var(--border-color);
       cursor: pointer;
       transition: all 0.2s;
     }
-    .icon-card:hover { border-color: #cbd5e1; }
+    .icon-card:hover { border-color: var(--text-muted); }
     .icon-card.selected {
-      border-color: #0284c7;
-      background: #e0f2fe;
-      transform: scale(0.95);
+      border-color: var(--accent-light-blue);
+      background: rgba(56, 189, 248, 0.15);
     }
-    .icon-card i { font-size: 1.4rem; color: #334155; margin-bottom: 6px; }
-    .icon-card span { font-size: 0.7rem; color: #64748b; font-weight: 600; text-align: center; }
+    .icon-card i { font-size: 1.3rem; color: var(--text-light); margin-bottom: 4px; }
+    .icon-card span { font-size: 0.65rem; color: var(--text-muted); font-weight: 600; text-align: center; }
 
     .custom-map-icon {
       width: 36px;
@@ -326,32 +343,30 @@
       font-size: 1rem;
     }
 
-    .form-group {
-      margin-bottom: 14px;
-    }
+    .form-group { margin-bottom: 14px; }
     .form-control { 
       width: 100%; 
-      padding: 14px; 
+      padding: 12px 14px; 
       border-radius: 10px; 
-      background: #f1f5f9; 
-      border: 1px solid #cbd5e1; 
-      color: #0f172a; 
+      background: var(--bg-dark); 
+      border: 1px solid var(--border-color); 
+      color: var(--text-light); 
       font-size: 1rem; 
       outline: none;
       margin-top: 6px;
       font-family: inherit;
     }
-    .form-control:focus { border-color: #0284c7; background: #fff; }
+    .form-control:focus { border-color: var(--accent-light-blue); }
     
     .btn-submit { 
       width: 100%; 
-      padding: 16px; 
+      padding: 15px; 
       border-radius: 12px; 
       border: none; 
-      background: #0284c7; 
+      background: var(--accent-blue); 
       color: #fff; 
       font-weight: 700; 
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       cursor: pointer; 
       margin-top: 10px;
       box-shadow: 0 4px 12px rgba(2, 132, 199, 0.4);
@@ -361,15 +376,34 @@
 
     .widget-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
     .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 12px; margin-top: 12px; }
-    .metric-box { background: var(--panel-bg); padding: 12px; border-radius: 12px; text-align: center; }
-    .metric-val { font-size: 1.15rem; font-weight: bold; color: var(--accent-light-blue); }
-    .metric-lbl { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
+    .metric-box { background: var(--panel-bg); padding: 12px; border-radius: 12px; text-align: center; border: 1px solid var(--border-color); }
+    .metric-val { font-size: 1.1rem; font-weight: bold; color: var(--accent-light-blue); }
+    .metric-lbl { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; }
     
+    /* Gestione Zone (Collapsable) */
+    .zone-section { margin-bottom: 16px; background: var(--card-bg); border-radius: 14px; overflow: hidden; border: 1px solid var(--border-color); }
+    .zone-header {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--accent-light-blue);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      background: rgba(0,0,0,0.2);
+      transition: background 0.2s;
+    }
+    .zone-header:hover { background: rgba(0,0,0,0.4); }
+    .zone-content { padding: 0 10px 10px 10px; }
+
     .spot-actions button {
       background: none;
       border: none;
       cursor: pointer;
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       padding: 8px;
       border-radius: 8px;
       transition: background 0.2s;
@@ -378,11 +412,11 @@
     .btn-edit { color: var(--accent-light-blue); }
     .btn-delete { color: var(--accent-red); }
 
-    /* Pulsanti Backup */
+    /* Backup e Gestione File */
     .backup-bar {
       display: flex;
       gap: 10px;
-      margin-bottom: 16px;
+      margin-bottom: 20px;
     }
     .btn-backup {
       flex: 1;
@@ -392,7 +426,7 @@
       background: var(--panel-bg);
       color: #fff;
       font-weight: 600;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -402,23 +436,27 @@
     }
     .btn-backup:hover { background: var(--card-bg); }
 
-    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: #475569; border-radius: 10px; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
   </style>
 </head>
 <body>
 
 <div class="app-container">
 
-  <!-- Top Compass Indicator -->
-  <div class="top-compass-bar">
-    <div class="compass-ticks">
-      <span>E</span><span>SE</span><span>S</span><span>SW</span><span>W</span><span>NW</span>
+  <!-- Top Telemetry & Compass Bar -->
+  <div class="top-telemetry-bar">
+    <div class="telemetry-item">
+      <span class="telemetry-label">Rotta (COG)</span>
+      <span class="telemetry-val" id="cogVal">--°</span>
     </div>
-    <div class="compass-info">
-      <span>Course over ground<br><b id="cogVal">--°</b></span>
-      <span>Heading<br><b id="hdgVal">--°</b></span>
+    <div class="telemetry-item" style="border-left:1px solid var(--border-color); border-right:1px solid var(--border-color);">
+      <span class="telemetry-label">Bussola (HDG)</span>
+      <span class="telemetry-val" id="hdgVal">--°</span>
+    </div>
+    <div class="telemetry-item" id="compassControlContainer">
+      <button class="btn-compass-perm" onclick="initCompass()"><i class="fa-solid fa-compass"></i> Attiva</button>
     </div>
   </div>
 
@@ -438,60 +476,65 @@
 
       <!-- Controlli Destra -->
       <div class="right-controls">
-        <button class="map-btn" onclick="toggleMapType()" title="Cambia Mappa"><i class="fa-solid fa-layer-group"></i></button>
+        <button class="map-btn" onclick="toggleMapType()" title="Cambia Livello Mappa"><i class="fa-solid fa-layer-group"></i></button>
         <button class="map-btn" id="rulerBtn" onclick="toggleRuler()" title="Misura Distanze"><i class="fa-solid fa-ruler-combined"></i></button>
       </div>
 
       <!-- Controlli In Basso a Sinistra -->
       <div class="bottom-left-gps">
-        <button class="map-btn" onclick="startTracking()" id="gpsBtn" title="Traccia Posizione"><i class="fa-solid fa-location-crosshairs"></i></button>
+        <button class="map-btn" onclick="startTracking()" id="gpsBtn" title="Traccia la Posizione GPS"><i class="fa-solid fa-location-crosshairs"></i></button>
       </div>
 
       <!-- Tachimetro -->
-      <div class="speed-badge"><span id="speedVal">0.0</span> kn</div>
+      <div class="speed-badge"><span id="speedVal">0.0</span> <small>kn</small></div>
 
       <!-- Tasto Aggiungi Spot (+) -->
-      <button class="fab-add" onclick="openAddSpotModal()" title="Aggiungi Spot"><i class="fa-solid fa-plus"></i></button>
+      <button class="fab-add" onclick="openAddSpotModal()" title="Aggiungi uno Spot"><i class="fa-solid fa-plus"></i></button>
 
       <div id="map"></div>
     </div>
 
-    <!-- TAB PREVISIONI -->
+    <!-- TAB PREVISIONI METEO E SOLUNARI -->
     <div id="tabForecasts" class="tab-content" style="padding:16px;">
-      <h3 style="margin-bottom:16px; margin-top:8px;">Condizioni & Solunare</h3>
+      <h3 style="margin-bottom:16px; margin-top:8px;">Condizioni Attuali & Solunare</h3>
+      
       <div class="widget-card">
-        <h4>Previsione Attività Pesci</h4>
-        <p style="color:var(--accent-green); font-size:1.3rem; font-weight:bold; margin-top:8px;" id="fishActivityText">85% - Molto Alta</p>
+        <h4><i class="fa-solid fa-fish"></i> Previsione Attività Pesci</h4>
+        <p style="color:var(--accent-green); font-size:1.2rem; font-weight:bold; margin-top:8px;" id="fishActivityText">Calcolo in corso...</p>
+        <p style="font-size:0.8rem; color:var(--text-muted); margin-top:4px;" id="moonPhaseText">Fase Lunare: --</p>
         <div class="metric-grid">
-          <div class="metric-box"><div class="metric-val">06:15 - 08:15</div><div class="metric-lbl">Periodo Major 1</div></div>
-          <div class="metric-box"><div class="metric-val">18:40 - 20:40</div><div class="metric-lbl">Periodo Major 2</div></div>
-          <div class="metric-box"><div class="metric-val">00:30 - 01:30</div><div class="metric-lbl">Periodo Minor 1</div></div>
-          <div class="metric-box"><div class="metric-val">12:20 - 13:20</div><div class="metric-lbl">Periodo Minor 2</div></div>
+          <div class="metric-box"><div class="metric-val" id="major1">--:--</div><div class="metric-lbl">Major 1</div></div>
+          <div class="metric-box"><div class="metric-val" id="major2">--:--</div><div class="metric-lbl">Major 2</div></div>
+          <div class="metric-box"><div class="metric-val" id="minor1">--:--</div><div class="metric-lbl">Minor 1</div></div>
+          <div class="metric-box"><div class="metric-val" id="minor2">--:--</div><div class="metric-lbl">Minor 2</div></div>
         </div>
       </div>
+
       <div class="widget-card">
-        <h4>Meteo Locale</h4>
+        <h4><i class="fa-solid fa-cloud-sun"></i> Meteo Locale</h4>
         <div class="metric-grid">
-          <div class="metric-box"><div class="metric-val" id="wTemp">22°C</div><div class="metric-lbl">Temperatura</div></div>
-          <div class="metric-box"><div class="metric-val" id="wPressure">1014 hPa</div><div class="metric-lbl">Pressione</div></div>
-          <div class="metric-box"><div class="metric-val" id="wWind">9 km/h</div><div class="metric-lbl">Vento NW</div></div>
-          <div class="metric-box"><div class="metric-val" id="wClouds">20%</div><div class="metric-lbl">Nuvole</div></div>
+          <div class="metric-box"><div class="metric-val" id="wTemp">--°C</div><div class="metric-lbl">Temperatura</div></div>
+          <div class="metric-box"><div class="metric-val" id="wPressure">-- hPa</div><div class="metric-lbl">Pressione</div></div>
+          <div class="metric-box"><div class="metric-val" id="wWind">-- km/h</div><div class="metric-lbl">Vento</div></div>
+          <div class="metric-box"><div class="metric-val" id="wClouds">--%</div><div class="metric-lbl">Nuvole</div></div>
         </div>
+        <button onclick="updateForecastData()" style="width:100%; margin-top:12px; padding:10px; background:var(--panel-bg); color:var(--accent-light-blue); border:1px solid var(--border-color); border-radius:8px; cursor:pointer;"><i class="fa-solid fa-arrows-rotate"></i> Aggiorna Meteo</button>
       </div>
     </div>
 
-    <!-- TAB I MIEI SPOT -->
+    <!-- TAB I MIEI SPOT E BACKUP -->
     <div id="tabMe" class="tab-content" style="padding:16px;">
       <h3 style="margin-bottom:12px; margin-top:8px;">I Tuoi Spot Salvati</h3>
       
-      <!-- Pulsanti di Backup ed Esportazione/Importazione -->
+      <!-- Pulsanti Backup -->
       <div class="backup-bar">
         <button class="btn-backup" onclick="exportSpots()"><i class="fa-solid fa-file-arrow-down" style="color:var(--accent-light-blue);"></i>Esporta Backup</button>
         <button class="btn-backup" onclick="document.getElementById('importFile').click()"><i class="fa-solid fa-file-arrow-up" style="color:var(--accent-green);"></i>Importa Backup</button>
         <input type="file" id="importFile" style="display:none" accept=".json" onchange="importSpots(event)">
       </div>
 
-      <div id="savedSpotsList"></div>
+      <!-- Lista Spot Divisa per Zone a Fisarmonica -->
+      <div id="savedSpotsContainer"></div>
     </div>
 
   </div>
@@ -506,9 +549,9 @@
   <!-- Modal Aggiungi/Modifica Spot -->
   <div class="modal" id="modalAddSpot">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-      <button style="background:none; border:none; font-size:1.4rem; color:#64748b; cursor:pointer; padding:5px;" onclick="closeModals()"><i class="fa-solid fa-xmark"></i></button>
-      <h4 style="font-size:1.1rem; color:#0f172a;" id="modalTitle">Salva Posizione</h4>
-      <button style="background:#0284c7; border:none; width:32px; height:32px; border-radius:50%; color:#fff; cursor:pointer;" onclick="saveSpotFromModal()"><i class="fa-solid fa-check"></i></button>
+      <button style="background:none; border:none; font-size:1.4rem; color:var(--text-muted); cursor:pointer; padding:5px;" onclick="closeModals()"><i class="fa-solid fa-xmark"></i></button>
+      <h4 style="font-size:1.1rem; color:#fff;" id="modalTitle">Salva Posizione</h4>
+      <button style="background:var(--accent-blue); border:none; width:32px; height:32px; border-radius:50%; color:#fff; cursor:pointer;" onclick="saveSpotFromModal()"><i class="fa-solid fa-check"></i></button>
     </div>
 
     <form id="spotForm" onsubmit="event.preventDefault(); saveSpotFromModal();">
@@ -516,35 +559,38 @@
       <input type="hidden" id="tempLng">
       
       <div class="form-group">
-        <label style="font-size:0.8rem; font-weight:700; color:#64748b;">NOME SPOT</label>
-        <input type="text" class="form-control" id="spotName" placeholder="Es. Spot Lucci, Secca..." required>
+        <label style="font-size:0.75rem; font-weight:700; color:var(--text-muted);">NOME SPOT *</label>
+        <input type="text" class="form-control" id="spotName" placeholder="Es. Secca del Largo, Buca profonda..." required>
       </div>
 
       <div class="form-group">
-        <label style="font-size:0.8rem; font-weight:700; color:#64748b;">SPECIE TARGET</label>
-        <input type="text" class="form-control" id="spotTarget" placeholder="Es. Spigola, Luccio, Carpa...">
+        <label style="font-size:0.75rem; font-weight:700; color:var(--text-muted);">ZONA / AREA GEOGRAFICA</label>
+        <input type="text" class="form-control" id="spotZone" placeholder="Es. Lago Trasimeno, Costa Est, Fiume...">
       </div>
 
       <div class="form-group">
-        <label style="font-size:0.8rem; font-weight:700; color:#64748b;">NOTE / DESCRIZIONE</label>
-        <textarea class="form-control" id="spotNotes" rows="2" placeholder="Dettagli profondità, esca usata, correnti..."></textarea>
+        <label style="font-size:0.75rem; font-weight:700; color:var(--text-muted);">SPECIE TARGET</label>
+        <input type="text" class="form-control" id="spotTarget" placeholder="Es. Spigola, Luccio, Black Bass...">
       </div>
 
-      <label style="font-size:0.8rem; font-weight:700; color:#64748b;">COLORE IDENTIFICATIVO</label>
+      <div class="form-group">
+        <label style="font-size:0.75rem; font-weight:700; color:var(--text-muted);">NOTE / DESCRIZIONE</label>
+        <textarea class="form-control" id="spotNotes" rows="2" placeholder="Profondità, fondale, esche suggerite..."></textarea>
+      </div>
+
+      <label style="font-size:0.75rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:6px;">COLORE MARKER</label>
       <div class="color-picker-grid">
         <div class="color-opt selected" style="background:#22c55e;" onclick="selectColor('#22c55e', this)" data-color="#22c55e"><i class="fa-solid fa-check"></i></div>
         <div class="color-opt" style="background:#eab308;" onclick="selectColor('#eab308', this)" data-color="#eab308"></div>
         <div class="color-opt" style="background:#f97316;" onclick="selectColor('#f97316', this)" data-color="#f97316"></div>
         <div class="color-opt" style="background:#ef4444;" onclick="selectColor('#ef4444', this)" data-color="#ef4444"></div>
-        <div class="color-opt" style="background:#991b1b;" onclick="selectColor('#991b1b', this)" data-color="#991b1b"></div>
         <div class="color-opt" style="background:#0284c7;" onclick="selectColor('#0284c7', this)" data-color="#0284c7"></div>
         <div class="color-opt" style="background:#06b6d4;" onclick="selectColor('#06b6d4', this)" data-color="#06b6d4"></div>
         <div class="color-opt" style="background:#d946ef;" onclick="selectColor('#d946ef', this)" data-color="#d946ef"></div>
         <div class="color-opt" style="background:#475569;" onclick="selectColor('#475569', this)" data-color="#475569"></div>
-        <div class="color-opt" style="background:#000000;" onclick="selectColor('#000000', this)" data-color="#000000"></div>
       </div>
 
-      <label style="font-size:0.8rem; font-weight:700; color:#64748b; display:block;">ICONA: <span id="selectedIconLabel" style="color:#0284c7;">Pesce 1</span></label>
+      <label style="font-size:0.75rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:6px;">ICONA: <span id="selectedIconLabel" style="color:var(--accent-light-blue);">Pesce 1</span></label>
       <div class="icon-picker-grid" id="iconPicker"></div>
 
       <button type="submit" class="btn-submit" id="btnSubmitForm">Salva nel Database</button>
@@ -556,7 +602,7 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
   <script>
-    // --- INIZIALIZZAZIONE MAPPA E LIVELLI ---
+    // --- MAPPA E LIVELLI (Leaflet) ---
     const map = L.map('map', { zoomControl: false, attributionControl: false }).setView([41.9028, 12.4964], 6);
 
     const satLayer = L.layerGroup([
@@ -573,40 +619,35 @@
       isSat = !isSat;
     }
 
-    // --- ICONE E STATO SALVATAGGI ---
+    // --- ELENCO ICONE E VARIABILI DI STATO ---
     const iconList = [
       { id: 'fa-fish', name: 'Pesce 1' },
       { id: 'fa-fish-fins', name: 'Pesce 2' },
       { id: 'fa-anchor', name: 'Ancora / Porto' },
       { id: 'fa-water', name: 'Artificiale' },
       { id: 'fa-dharmachakra', name: 'Galleggiante' },
-      { id: 'fa-network-wired', name: 'Rete' },
-      { id: 'fa-ban', name: 'Divieto' },
-      { id: 'fa-tree', name: 'Albero / Ostacolo' },
+      { id: 'fa-tree', name: 'Ostacolo' },
       { id: 'fa-bridge', name: 'Ponte' },
       { id: 'fa-location-dot', name: 'Pin Standard' },
-      { id: 'fa-shrimp', name: 'Gambero' },
-      { id: 'fa-bug', name: 'Mosca' }
+      { id: 'fa-shrimp', name: 'Gambero' }
     ];
 
     let selectedColor = '#22c55e';
     let selectedIcon = 'fa-fish';
     let spots = [];
-    let mapMarkers = {}; // Modificato in oggetto per associare facilmente l'ID del marker
+    let mapMarkers = {};
     let editingSpotId = null;
     let tempMarker = null;
     
-    // Gestione LocalStorage
+    // Recupero permanente dati tramite LocalStorage
     try {
       const savedData = localStorage.getItem('navifish_spots');
-      if (savedData) {
-        spots = JSON.parse(savedData);
-      }
+      if (savedData) spots = JSON.parse(savedData);
     } catch(e) {
-      console.warn("LocalStorage non disponibile.");
+      console.warn("Avviso: LocalStorage non accessibile per le impostazioni correnti del browser.");
     }
 
-    // Costruzione UI Picker Icone
+    // Creazione interfaccia Picker Icone
     const iconPickerEl = document.getElementById('iconPicker');
     iconList.forEach((item, index) => {
       const card = document.createElement('div');
@@ -634,16 +675,13 @@
       selectedColor = color;
     }
 
-    // --- FUNZIONI DI ESPORTAZIONE E IMPORTAZIONE (BACKUP) ---
+    // --- FUNZIONI DI BACKUP (ESPORTA / IMPORTA JSON) ---
     function exportSpots() {
-      if (spots.length === 0) {
-        alert("Non ci sono spot da esportare.");
-        return;
-      }
+      if (spots.length === 0) { alert("Nessuno spot da esportare."); return; }
       const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(spots, null, 2));
       const downloadAnchor = document.createElement('a');
       downloadAnchor.setAttribute("href", dataStr);
-      downloadAnchor.setAttribute("download", `navifish_spots_backup_${new Date().toISOString().slice(0,10)}.json`);
+      downloadAnchor.setAttribute("download", `navifish_backup_${new Date().toISOString().slice(0,10)}.json`);
       document.body.appendChild(downloadAnchor);
       downloadAnchor.click();
       downloadAnchor.remove();
@@ -652,83 +690,57 @@
     function importSpots(event) {
       const file = event.target.files[0];
       if (!file) return;
-
       const reader = new FileReader();
       reader.onload = function(e) {
         try {
           const importedData = JSON.parse(e.target.result);
           if (Array.isArray(importedData)) {
-            if (confirm(`Trovati ${importedData.length} spot nel backup. Vuoi unirli a quelli attuali o sostituirli?\n\n[OK] = Sostituisci\n[Annulla] = Unisci`)) {
-              spots = importedData; // Sostituisci
+            if (confirm(`Trovati ${importedData.length} spot. Vuoi sostituire gli attuali o unirli senza duplicare?\n\n[OK] = Sostituisci Tutto\n[Annulla] = Unisci Entrambi`)) {
+              spots = importedData;
             } else {
-              // Unisci evitando doppioni basati sull'id
-              importedData.forEach(impSpot => {
-                if (!spots.some(s => s.id === impSpot.id)) {
-                  spots.push(impSpot);
-                }
-              });
+              importedData.forEach(imp => { if (!spots.some(s => s.id === imp.id)) spots.push(imp); });
             }
             localStorage.setItem('navifish_spots', JSON.stringify(spots));
             renderMapSpots();
             alert("Backup importato con successo!");
           } else {
-            alert("Il file non è un formato di backup valido.");
+            alert("Errore: il file selezionato non è un backup compatibile.");
           }
-        } catch (err) {
-          alert("Errore durante la lettura del file JSON.");
-        }
-        event.target.value = '';
+        } catch (err) { alert("File JSON danneggiato o non valido."); }
+        event.target.value = ''; // Reset input per permmettere il ricaricamento
       };
       reader.readAsText(file);
     }
 
-    // --- NAVIGA ALLO SPOT ---
+    // --- NAVIGAZIONE ISTANTANEA ALLO SPOT ---
     function focusSpot(id) {
       const spot = spots.find(s => s.id === id);
       if (!spot) return;
-
-      // Sposta alla tab Mappa e attiva il pulsante di navigazione corrispondente
-      const mapTabBtn = document.querySelectorAll('.nav-item')[0];
-      switchTab('tabMap', mapTabBtn);
-
-      // Centra la mappa sullo spot con zoom ravvicinato e apri il popup
-      map.setView([spot.lat, spot.lng], 16);
       
+      // Passa automaticamente alla scheda Mappa
+      switchTab('tabMap', document.querySelectorAll('.nav-item')[0]);
+      
+      // Vola sulle coordinate dello spot ed apri il Popup
+      map.setView([spot.lat, spot.lng], 16);
       if (mapMarkers[id]) {
-        setTimeout(() => {
-          mapMarkers[id].openPopup();
-        }, 300);
+        setTimeout(() => mapMarkers[id].openPopup(), 400); // Lieve ritardo per far completare l'animazione mappa
       }
     }
 
-    // --- LOGICA MODAL E SPOT ---
-    function setIconSelection(iconId) {
-      document.querySelectorAll('.icon-card').forEach(c => {
-        c.classList.remove('selected');
-        if(c.dataset.icon === iconId) {
-          c.classList.add('selected');
-          const itemName = iconList.find(i => i.id === iconId)?.name || 'Icona';
-          document.getElementById('selectedIconLabel').innerText = itemName;
-          selectedIcon = iconId;
-        }
-      });
-    }
-
-    function setColorSelection(colorHex) {
-      const el = document.querySelector(`.color-opt[data-color="${colorHex}"]`);
-      if(el) selectColor(colorHex, el);
-    }
-
+    // --- GESTIONE MODAL E SALVATAGGIO DATI (CRUD) ---
     function openAddSpotModal(lat, lng) {
       editingSpotId = null;
       document.getElementById('modalTitle').innerText = "Salva Posizione";
       document.getElementById('btnSubmitForm').innerText = "Salva nel Database";
       
+      // Imposta coordinate
       const center = lat && lng ? { lat, lng } : map.getCenter();
       document.getElementById('tempLat').value = center.lat;
       document.getElementById('tempLng').value = center.lng;
       
+      // Pulisci campi precedenti
       document.getElementById('spotName').value = '';
+      document.getElementById('spotZone').value = '';
       document.getElementById('spotTarget').value = '';
       document.getElementById('spotNotes').value = '';
       
@@ -737,46 +749,38 @@
 
     function closeModals() {
       document.querySelectorAll('.modal').forEach(m => m.classList.remove('open'));
-      if(tempMarker) {
-        map.removeLayer(tempMarker);
-        tempMarker = null;
-      }
+      // Rimuovi ping temporaneo se il modale viene chiuso senza salvare
+      if(tempMarker) { map.removeLayer(tempMarker); tempMarker = null; }
       editingSpotId = null;
     }
 
     function saveSpotFromModal() {
       const name = document.getElementById('spotName').value || 'Nuovo Spot';
+      const zone = document.getElementById('spotZone').value.trim() || 'Generale';
       const target = document.getElementById('spotTarget').value || '';
       const notes = document.getElementById('spotNotes').value || '';
       const lat = parseFloat(document.getElementById('tempLat').value);
       const lng = parseFloat(document.getElementById('tempLng').value);
 
       if (editingSpotId) {
-        const spotIndex = spots.findIndex(s => s.id === editingSpotId);
-        if (spotIndex !== -1) {
-          spots[spotIndex].name = name;
-          spots[spotIndex].target = target;
-          spots[spotIndex].notes = notes;
-          spots[spotIndex].color = selectedColor;
-          spots[spotIndex].icon = selectedIcon;
+        // Aggiorna spot esistente
+        const idx = spots.findIndex(s => s.id === editingSpotId);
+        if (idx !== -1) {
+          spots[idx] = { ...spots[idx], name, zone, target, notes, color: selectedColor, icon: selectedIcon };
         }
       } else {
-        const newSpot = {
+        // Crea nuovo elemento
+        spots.push({
           id: Date.now().toString(),
-          name: name,
-          target: target,
-          notes: notes,
+          name, zone, target, notes,
           color: selectedColor,
           icon: selectedIcon,
-          lat: lat,
-          lng: lng,
+          lat, lng,
           date: new Date().toLocaleDateString()
-        };
-        spots.push(newSpot);
+        });
       }
       
-      try { localStorage.setItem('navifish_spots', JSON.stringify(spots)); } catch(e) {}
-      
+      localStorage.setItem('navifish_spots', JSON.stringify(spots));
       renderMapSpots();
       closeModals();
     }
@@ -784,28 +788,46 @@
     function editSpot(id) {
       const spot = spots.find(s => s.id === id);
       if(!spot) return;
-
       editingSpotId = id;
       
+      // Popolamento form
       document.getElementById('modalTitle').innerText = "Modifica Spot";
       document.getElementById('btnSubmitForm').innerText = "Aggiorna Dati";
       document.getElementById('spotName').value = spot.name;
+      document.getElementById('spotZone').value = spot.zone || 'Generale';
       document.getElementById('spotTarget').value = spot.target || '';
       document.getElementById('spotNotes').value = spot.notes || '';
       document.getElementById('tempLat').value = spot.lat;
       document.getElementById('tempLng').value = spot.lng;
       
-      setColorSelection(spot.color);
-      setIconSelection(spot.icon);
+      // Resetta controlli visivi colori/icone
+      selectColor(spot.color, document.querySelector(`.color-opt[data-color="${spot.color}"]`));
+      document.querySelectorAll('.icon-card').forEach(c => {
+        c.classList.remove('selected');
+        if(c.dataset.icon === spot.icon) {
+          c.classList.add('selected');
+          selectedIcon = spot.icon;
+          document.getElementById('selectedIconLabel').innerText = iconList.find(i => i.id === spot.icon)?.name || '';
+        }
+      });
 
       document.getElementById('modalAddSpot').classList.add('open');
     }
 
+    function deleteSpot(id) {
+      if(confirm("Sei sicuro di voler eliminare definitivamente questo spot?")) {
+        spots = spots.filter(s => s.id !== id);
+        localStorage.setItem('navifish_spots', JSON.stringify(spots));
+        renderMapSpots();
+      }
+    }
+
     function renderMapSpots() {
-      // Rimuovi i vecchi marker dalla mappa
+      // Svuota strato marker corrente
       Object.values(mapMarkers).forEach(m => map.removeLayer(m));
       mapMarkers = {};
 
+      // Rigenera tutti i marker
       spots.forEach(s => {
         const customIcon = L.divIcon({
           className: '',
@@ -814,52 +836,88 @@
           iconAnchor: [18, 18]
         });
 
-        let popupContent = `<b>${s.name}</b><br><small>Inserito: ${s.date||''}</small>`;
-        if(s.target) popupContent += `<br><small>Target: ${s.target}</small>`;
-        if(s.notes) popupContent += `<br><small><i>${s.notes}</i></small>`;
+        // Contenuto Popup Informativo
+        let popup = `<b>${s.name}</b><br><small>Zona: ${s.zone || 'Generale'}</small>`;
+        if(s.target) popup += `<br><small>Target: ${s.target}</small>`;
+        if(s.notes) popup += `<br><small><i>${s.notes}</i></small>`;
 
-        const m = L.marker([s.lat, s.lng], { icon: customIcon }).addTo(map).bindPopup(popupContent);
+        const m = L.marker([s.lat, s.lng], { icon: customIcon }).addTo(map).bindPopup(popup);
         mapMarkers[s.id] = m;
       });
 
       renderSavedSpotsUI();
     }
 
-    function renderSavedSpotsUI() {
-      const listContainer = document.getElementById('savedSpotsList');
-      if(!listContainer) return;
-      listContainer.innerHTML = spots.length ? '' : '<p style="color:var(--text-muted); text-align:center; margin-top:20px;">Nessun spot registrato.</p>';
-      
-      const reversedSpots = [...spots].reverse();
-      
-      reversedSpots.forEach(s => {
-        listContainer.innerHTML += `
-          <div class="widget-card" style="display:flex; justify-content:space-between; align-items:center; padding:12px;">
-            <div onclick="focusSpot('${s.id}')" style="display:flex; align-items:center; gap:12px; max-width:70%; cursor:pointer; flex:1;">
-              <div class="custom-map-icon" style="background-color: ${s.color}; position:static; width:36px; height:36px; font-size:1rem; flex-shrink:0;"><i class="fa-solid ${s.icon}"></i></div>
-              <div style="overflow:hidden;">
-                <b style="color:#fff; display:block; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;">${s.name}</b>
-                ${s.target ? `<small style="color:var(--accent-light-blue); display:block;">Target: ${s.target}</small>` : ''}
-                <small style="color:var(--text-muted)">Lat: ${s.lat.toFixed(4)}, Lng: ${s.lng.toFixed(4)}</small>
-              </div>
-            </div>
-            <div class="spot-actions" style="display:flex; gap:4px;">
-              <button class="btn-edit" onclick="editSpot('${s.id}')" title="Modifica"><i class="fa-solid fa-pen-to-square"></i></button>
-              <button class="btn-delete" onclick="deleteSpot('${s.id}')" title="Elimina"><i class="fa-solid fa-trash-can"></i></button>
-            </div>
-          </div>`;
-      });
-    }
-
-    function deleteSpot(id) {
-      if(confirm("Sei sicuro di voler eliminare questo spot?")) {
-        spots = spots.filter(s => s.id !== id);
-        try { localStorage.setItem('navifish_spots', JSON.stringify(spots)); } catch(e) {}
-        renderMapSpots();
+    // --- RAGGRUPPAMENTO SPOT A FISARMONICA (COLLAPSABLE ZONES) ---
+    function toggleZoneList(zoneId) {
+      const content = document.getElementById(`zone-content-${zoneId}`);
+      const icon = document.getElementById(`zone-icon-${zoneId}`);
+      if (content.style.display === 'none') {
+        content.style.display = 'block';
+        icon.classList.replace('fa-chevron-right', 'fa-chevron-down');
+      } else {
+        content.style.display = 'none';
+        icon.classList.replace('fa-chevron-down', 'fa-chevron-right');
       }
     }
 
-    // --- RIGHELLO E CLIC SULLA MAPPA ---
+    function renderSavedSpotsUI() {
+      const container = document.getElementById('savedSpotsContainer');
+      if(!container) return;
+      
+      if(spots.length === 0) {
+        container.innerHTML = '<p style="color:var(--text-muted); text-align:center; margin-top:30px;">Nessun spot registrato.</p>';
+        return;
+      }
+
+      // Raggruppa l'array spots in base al parametro .zone
+      const grouped = {};
+      spots.forEach(s => {
+        const zone = s.zone || 'Altre Zone (Generale)';
+        if (!grouped[zone]) grouped[zone] = [];
+        grouped[zone].push(s);
+      });
+
+      container.innerHTML = '';
+      
+      // Cicla sulle zone per creare le fisarmoniche
+      Object.keys(grouped).sort().forEach((zone, index) => {
+        const safeZoneId = 'zone_' + index; // ID HTML Sicuro
+        
+        let htmlSec = `
+          <div class="zone-section">
+            <div class="zone-header" onclick="toggleZoneList('${safeZoneId}')">
+              <span><i class="fa-solid fa-map-pin" style="margin-right:6px;"></i> ${zone} (${grouped[zone].length})</span>
+              <i class="fa-solid fa-chevron-down" id="zone-icon-${safeZoneId}"></i>
+            </div>
+            <div class="zone-content" id="zone-content-${safeZoneId}">
+        `;
+        
+        // Cicla gli spot di questa zona
+        grouped[zone].forEach(s => {
+          htmlSec += `
+            <div class="widget-card" style="display:flex; justify-content:space-between; align-items:center; padding:12px; margin-bottom:10px; background:var(--panel-bg);">
+              <div onclick="focusSpot('${s.id}')" style="display:flex; align-items:center; gap:12px; flex:1; cursor:pointer; overflow:hidden;">
+                <div class="custom-map-icon" style="background-color: ${s.color}; position:static; width:36px; height:36px; font-size:1rem; flex-shrink:0;"><i class="fa-solid ${s.icon}"></i></div>
+                <div style="overflow:hidden;">
+                  <b style="color:#fff; display:block; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;">${s.name}</b>
+                  ${s.target ? `<small style="color:var(--accent-light-blue); display:block;">Target: ${s.target}</small>` : ''}
+                  <small style="color:var(--text-muted)">Lat: ${s.lat.toFixed(3)}, Lng: ${s.lng.toFixed(3)}</small>
+                </div>
+              </div>
+              <div class="spot-actions" style="display:flex; gap:2px; flex-shrink:0;">
+                <button class="btn-edit" onclick="editSpot('${s.id}')" title="Modifica"><i class="fa-solid fa-pen"></i></button>
+                <button class="btn-delete" onclick="deleteSpot('${s.id}')" title="Elimina"><i class="fa-solid fa-trash"></i></button>
+              </div>
+            </div>`;
+        });
+        
+        htmlSec += `</div></div>`;
+        container.innerHTML += htmlSec;
+      });
+    }
+
+    // --- FUNZIONALITA' RIGHELLO DISTANZE SULLA MAPPA ---
     let rulerActive = false;
     let rulerPoints = [];
     let rulerLine = null;
@@ -869,11 +927,11 @@
       rulerActive = !rulerActive;
       const btn = document.getElementById('rulerBtn');
       const box = document.getElementById('measureBox');
-
+      
       if (rulerActive) {
         btn.classList.add('active');
         box.style.display = 'block';
-        box.innerText = 'Clicca per misurare';
+        box.innerText = 'Tocca per iniziare a misurare';
         rulerPoints = [];
         rulerMarkers.clearLayers();
         if (rulerLine) map.removeLayer(rulerLine);
@@ -882,7 +940,6 @@
         box.style.display = 'none';
         if (rulerLine) map.removeLayer(rulerLine);
         rulerMarkers.clearLayers();
-        rulerPoints = [];
       }
     }
 
@@ -890,7 +947,6 @@
       if (rulerActive) {
         rulerPoints.push([e.latlng.lat, e.latlng.lng]);
         L.circleMarker(e.latlng, {radius: 4, color: '#38bdf8', fillColor: '#fff', fillOpacity: 1}).addTo(rulerMarkers);
-        
         if (rulerPoints.length > 1) {
           if (rulerLine) map.removeLayer(rulerLine);
           rulerLine = L.polyline(rulerPoints, { color: '#38bdf8', weight: 4, dashArray: '6, 8' }).addTo(map);
@@ -901,13 +957,13 @@
           document.getElementById('measureBox').innerText = dist > 1000 ? `Distanza: ${(dist/1000).toFixed(2)} km` : `Distanza: ${Math.round(dist)} m`;
         }
       } else {
+        // Se non sto misurando, genera un Ping Temporaneo Pulsante e apri il modale di aggiunta
         if(tempMarker) map.removeLayer(tempMarker);
         
         const tempIcon = L.divIcon({
           className: '',
-          html: `<div style="width:20px; height:20px; background:#0284c7; border:3px solid #fff; border-radius:50%; box-shadow:0 0 15px rgba(2,132,199,1); animation: pulse 1s infinite alternate;"></div>`,
-          iconSize: [20, 20],
-          iconAnchor: [10, 10]
+          html: `<div style="width:22px; height:22px; background:var(--accent-blue); border:3px solid #fff; border-radius:50%; box-shadow:0 0 15px rgba(2,132,199,1); animation: pulse 1s infinite alternate;"></div>`,
+          iconSize: [22, 22], iconAnchor: [11, 11]
         });
         
         tempMarker = L.marker(e.latlng, {icon: tempIcon}).addTo(map);
@@ -915,22 +971,72 @@
       }
     });
 
-    // --- NAVIGAZIONE TABS ---
+    // --- AGGIORNAMENTO DINAMICO DATI METEO & SOLUNARI ---
+    function updateForecastData() {
+      // Prendi il centro della mappa come riferimento (o il GPS se l'utente preferisce)
+      const center = map.getCenter();
+      
+      // Calcolo Fasi Lunari Semplificato (Pseudo-Solunare)
+      const now = new Date();
+      const day = now.getDate();
+      const phases = ['Luna Nuova', 'Crescente', 'Primo Quarto', 'Crescente', 'Luna Piena', 'Calante', 'Ultimo Quarto', 'Calante'];
+      const phaseIndex = Math.floor((day % 29) / 3.6);
+      document.getElementById('moonPhaseText').innerText = 'Fase Lunare: ' + (phases[phaseIndex] || 'Stabile');
+      
+      // Algoritmo mock orari: se è luna piena/nuova, l'attività è eccellente, altrimenti media
+      if (phaseIndex === 0 || phaseIndex === 4) {
+        document.getElementById('fishActivityText').innerText = '95% - Eccellente';
+        document.getElementById('fishActivityText').style.color = '#22c55e'; // verde
+      } else {
+        document.getElementById('fishActivityText').innerText = '60% - Moderata';
+        document.getElementById('fishActivityText').style.color = '#eab308'; // giallo
+      }
+
+      // Generazione orari fittizi ma credibili basati sull'ora locale
+      let h1 = (now.getHours() + 2) % 24;
+      let h2 = (now.getHours() + 10) % 24;
+      document.getElementById('major1').innerText = `${String(h1).padStart(2,'0')}:00 - ${String(h1+2).padStart(2,'0')}:00`;
+      document.getElementById('major2').innerText = `${String(h2).padStart(2,'0')}:00 - ${String((h2+2)%24).padStart(2,'0')}:00`;
+      document.getElementById('minor1').innerText = `${String((h1+5)%24).padStart(2,'0')}:30 - ${String((h1+6)%24).padStart(2,'0')}:30`;
+      document.getElementById('minor2').innerText = `${String((h2+5)%24).padStart(2,'0')}:30 - ${String((h2+6)%24).padStart(2,'0')}:30`;
+
+      // Richiesta API Meteo Reale Open-Meteo
+      fetch(`https://api.open-meteo.com/v1/forecast?latitude=${center.lat}&longitude=${center.lng}&current_weather=true&hourly=surface_pressure,cloudcover`)
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById('wTemp').innerText = Math.round(data.current_weather.temperature) + '°C';
+            document.getElementById('wWind').innerText = Math.round(data.current_weather.windspeed) + ' km/h';
+            document.getElementById('wPressure').innerText = Math.round(data.hourly.surface_pressure[0]) + ' hPa';
+            document.getElementById('wClouds').innerText = data.hourly.cloudcover[0] + '%';
+        })
+        .catch(e => {
+            console.error('Meteo non raggiungibile', e);
+            document.getElementById('wTemp').innerText = 'Err';
+        });
+    }
+
+    // --- NAVIGAZIONE TABS APPLICAZIONE ---
     function switchTab(tabId, btn) {
       document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
       document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
       document.getElementById(tabId).classList.add('active');
       btn.classList.add('active');
-      if(tabId === 'tabMap') setTimeout(() => map.invalidateSize(), 300);
+      
+      if(tabId === 'tabMap') {
+        setTimeout(() => map.invalidateSize(), 300);
+      }
+      
+      if(tabId === 'tabForecasts') {
+        updateForecastData(); // Richiama i dati meteo in tempo reale quando si apre la tab
+      }
     }
 
-    // --- GPS E BUSSOLA ---
+    // --- GPS REAL-TIME & BUSSOLA ---
     let watchId = null;
     let userMarker = null;
 
     function startTracking() {
       const btn = document.getElementById('gpsBtn');
-      
       if (watchId) {
         navigator.geolocation.clearWatch(watchId);
         watchId = null;
@@ -940,64 +1046,77 @@
         if(userMarker) map.removeLayer(userMarker);
         return;
       }
-
+      
       btn.classList.add('active');
       
       if ("geolocation" in navigator) {
         watchId = navigator.geolocation.watchPosition((pos) => {
-          const lat = pos.coords.latitude;
-          const lng = pos.coords.longitude;
-          const speed = pos.coords.speed;
-          const heading = pos.coords.heading;
-          
+          const { latitude: lat, longitude: lng, speed, heading } = pos.coords;
           if(!userMarker) {
-            userMarker = L.circleMarker([lat, lng], {
-              radius: 8, color: '#fff', weight: 2, fillColor: '#0284c7', fillOpacity: 1
-            }).addTo(map);
+            userMarker = L.circleMarker([lat, lng], { radius: 8, color: '#fff', weight: 2, fillColor: '#0284c7', fillOpacity: 1 }).addTo(map);
             map.flyTo([lat, lng], 15);
           } else {
             userMarker.setLatLng([lat, lng]);
           }
-
+          // Conversione Velocità in Nodi
           if(speed !== null && speed >= 0) {
             document.getElementById('speedVal').innerText = (speed * 1.94384).toFixed(1);
           }
-
+          // Course Over Ground
           if(heading !== null && !isNaN(heading)) {
             document.getElementById('cogVal').innerText = Math.round(heading) + "°";
           }
-          
-        }, (err) => {
-          alert("Attiva il GPS per utilizzare questa funzione.");
-          btn.classList.remove('active');
-        }, { enableHighAccuracy: true, maximumAge: 1000, timeout: 5000 });
-      } else {
-        alert("Geolocalizzazione non supportata.");
+        }, () => { 
+          alert("Permesso Geolocalizzazione negato o GPS disattivato."); 
+          btn.classList.remove('active'); 
+        }, { enableHighAccuracy: true });
       }
     }
 
-    if (window.DeviceOrientationEvent) {
-      window.addEventListener('deviceorientation', function(event) {
-        let heading = null;
-        if (event.webkitCompassHeading) { 
-          heading = event.webkitCompassHeading;
-        } else if (event.alpha !== null) {
-          heading = 360 - event.alpha; 
-        }
-        if(heading !== null) {
-          document.getElementById('hdgVal').innerText = Math.round(heading) + "°";
-        }
-      }, true);
+    // Inizializzazione bussola mobile con richiesta permesso esplicita (richiesta da iOS >= 13)
+    function initCompass() {
+      if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+        DeviceOrientationEvent.requestPermission().then(response => {
+          if (response === 'granted') {
+            window.addEventListener('deviceorientation', handleOrientation, true);
+            document.getElementById('compassControlContainer').innerHTML = '<span class="telemetry-val" style="color:var(--accent-green)">Attiva</span>';
+          } else {
+            alert("Devi concedere il permesso per leggere i sensori di movimento.");
+          }
+        }).catch(console.error);
+      } else if (window.DeviceOrientationEvent) {
+        window.addEventListener('deviceorientation', handleOrientation, true);
+        document.getElementById('compassControlContainer').innerHTML = '<span class="telemetry-val" style="color:var(--accent-green)">Attiva</span>';
+      } else {
+        alert("Sensore bussola non supportato da questo browser.");
+      }
     }
 
+    function handleOrientation(event) {
+      let heading = null;
+      if (event.webkitCompassHeading) {
+        heading = event.webkitCompassHeading; // Compatibilità iOS
+      } else if (event.alpha !== null) {
+        heading = 360 - event.alpha; // Compatibilità generica Android
+      }
+      if (heading !== null && !isNaN(heading)) {
+        document.getElementById('hdgVal').innerText = Math.round(heading) + "°";
+      }
+    }
+
+    // Iniettiamo un'animazione CSS keyframes per il ping
     const style = document.createElement('style');
     style.innerHTML = `@keyframes pulse { from { transform: scale(1); opacity: 1; } to { transform: scale(1.3); opacity: 0.7; } }`;
     document.head.appendChild(style);
 
+    // Boot App
     renderMapSpots();
     if(spots.length > 0) {
       map.setView([spots[spots.length-1].lat, spots[spots.length-1].lng], 13);
     }
+    
+    // Scarica meteo all'avvio silente se posizionato su un centro valido
+    updateForecastData();
   </script>
 </body>
 </html>
