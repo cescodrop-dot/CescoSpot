@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Fishing Points Clone</title>
+  <title>Fishing Points Clone - Full Fixed</title>
   
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
@@ -16,6 +16,7 @@
       --accent-blue: #0284c7;
       --accent-light-blue: #38bdf8;
       --accent-green: #22c55e;
+      --accent-red: #ef4444;
       --text-light: #f8fafc;
       --text-muted: #94a3b8;
       --border-color: #1e2e5c;
@@ -40,9 +41,9 @@
 
     body { display: flex; flex-direction: column; }
 
-    /* Top Compass Bar (Identica allo screenshot) */
+    /* Top Compass Bar */
     .top-compass-bar {
-      background: rgba(11, 19, 41, 0.9);
+      background: rgba(11, 19, 41, 0.95);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
       padding: 6px 12px;
@@ -85,10 +86,10 @@
 
     #map { height: 100%; width: 100%; z-index: 1; }
 
-    /* UI Overlay Controls */
+    /* UI Controls */
     .left-controls {
       position: absolute;
-      top: 100px;
+      top: 14px;
       left: 12px;
       z-index: 1000;
       display: flex;
@@ -97,7 +98,7 @@
     }
     .right-controls {
       position: absolute;
-      top: 12px;
+      top: 14px;
       right: 12px;
       z-index: 1000;
       display: flex;
@@ -106,8 +107,8 @@
     }
     
     .map-btn {
-      width: 40px;
-      height: 40px;
+      width: 42px;
+      height: 42px;
       border-radius: 50%;
       background: rgba(255, 255, 255, 0.95);
       color: #334155;
@@ -119,6 +120,8 @@
       box-shadow: 0 3px 10px rgba(0,0,0,0.3);
       cursor: pointer;
     }
+    .map-btn.active { background: #0284c7; color: #fff; }
+
     .map-btn-group {
       background: rgba(255, 255, 255, 0.95);
       border-radius: 20px;
@@ -154,9 +157,25 @@
       padding: 6px 16px;
       border-radius: 20px;
       border: 1px solid rgba(255,255,255,0.15);
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       font-weight: 800;
       color: #fff;
+    }
+
+    .measure-box {
+      position: absolute;
+      top: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1000;
+      background: rgba(11, 19, 41, 0.9);
+      color: #38bdf8;
+      padding: 6px 14px;
+      border-radius: 12px;
+      border: 1px solid #38bdf8;
+      font-size: 0.85rem;
+      font-weight: bold;
+      display: none;
     }
 
     .fab-add {
@@ -175,9 +194,10 @@
       align-items: center;
       justify-content: center;
       box-shadow: 0 4px 15px rgba(2, 132, 199, 0.5);
+      cursor: pointer;
     }
 
-    /* Bottom Nav Bar (Esatto design screenshot) */
+    /* Bottom Nav Bar */
     nav.bottom-nav {
       background: rgba(11, 19, 41, 0.96);
       backdrop-filter: blur(10px);
@@ -203,7 +223,7 @@
     .nav-item i { font-size: 1.2rem; }
     .nav-item.active { color: var(--accent-light-blue); font-weight: bold; }
 
-    /* Modal e Picker Stile Screenshot */
+    /* Modal */
     .modal {
       position: absolute; 
       bottom: -100%; 
@@ -217,7 +237,7 @@
       padding: 16px; 
       padding-bottom: calc(24px + env(safe-area-inset-bottom));
       transition: bottom 0.3s cubic-bezier(0.1, 0.9, 0.2, 1); 
-      max-height: 90vh; 
+      max-height: 85vh; 
       overflow-y: auto;
       box-shadow: 0 -10px 30px rgba(0,0,0,0.4);
     }
@@ -234,15 +254,15 @@
       width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0; cursor: pointer;
       display: flex; align-items: center; justify-content: center; color: #fff; font-size: 0.9rem;
     }
-    .color-opt.selected { ring: 3px solid #000; border: 2px solid #fff; }
+    .color-opt.selected { border: 3px solid #0f172a; }
 
     .icon-picker-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 10px;
-      max-height: 220px;
+      max-height: 200px;
       overflow-y: auto;
-      padding: 4px;
+      padding: 6px;
       background: #f8fafc;
       border-radius: 12px;
       border: 1px solid #e2e8f0;
@@ -262,13 +282,12 @@
       border-color: #0284c7;
       background: #e0f2fe;
     }
-    .icon-card i { font-size: 1.4rem; color: #334155; margin-bottom: 4px; }
+    .icon-card i { font-size: 1.3rem; color: #334155; margin-bottom: 4px; }
     .icon-card span { font-size: 0.65rem; color: #64748b; font-weight: 600; text-align: center; }
 
-    /* Marker Personalizzati Mappa */
     .custom-map-icon {
-      width: 32px;
-      height: 32px;
+      width: 34px;
+      height: 34px;
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -301,6 +320,12 @@
       cursor: pointer; 
       margin-top: 14px;
     }
+
+    .widget-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 14px; padding: 14px; margin-bottom: 12px; }
+    .metric-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 10px; }
+    .metric-box { background: var(--panel-bg); padding: 10px; border-radius: 10px; text-align: center; }
+    .metric-val { font-size: 1.1rem; font-weight: bold; color: var(--accent-light-blue); }
+    .metric-lbl { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
   </style>
 </head>
 <body>
@@ -320,7 +345,8 @@
     
     <!-- TAB MAPPA -->
     <div id="tabMap" class="tab-content active">
-      
+      <div class="measure-box" id="measureBox">Distanza: 0 m</div>
+
       <!-- Controlli Sinistra -->
       <div class="left-controls">
         <div class="map-btn-group">
@@ -332,14 +358,12 @@
       <!-- Controlli Destra -->
       <div class="right-controls">
         <button class="map-btn" onclick="toggleMapType()"><i class="fa-solid fa-layer-group"></i></button>
-        <button class="map-btn" onclick="toggleRuler()"><i class="fa-solid fa-sliders"></i></button>
-        <button class="map-btn" onclick="getPreciseLocation()"><i class="fa-solid fa-expand"></i></button>
+        <button class="map-btn" id="rulerBtn" onclick="toggleRuler()"><i class="fa-solid fa-ruler-combined"></i></button>
       </div>
 
       <!-- Controlli In Basso a Sinistra -->
       <div class="bottom-left-gps">
         <button class="map-btn" onclick="getPreciseLocation()"><i class="fa-solid fa-location-crosshairs"></i></button>
-        <button class="map-btn" onclick="centerMap()"><i class="fa-solid fa-arrow-turn-up"></i></button>
       </div>
 
       <!-- Tachimetro -->
@@ -353,50 +377,61 @@
 
     <!-- TAB PREVISIONI -->
     <div id="tabForecasts" class="tab-content" style="padding:16px;">
-      <h3 style="margin-bottom:12px;">Attività & Meteo</h3>
-      <div style="background:var(--card-bg); padding:16px; border-radius:12px; margin-bottom:12px;">
-        <h4>Attività Pesci Solunare</h4>
-        <p style="color:var(--accent-green); font-size:1.2rem; font-weight:bold; margin-top:6px;">85% - Molto Alta</p>
-        <small style="color:var(--text-muted)">Picco Maggiore: 06:15 - 08:15 | 18:40 - 20:40</small>
+      <h3 style="margin-bottom:12px;">Attività & Meteo Solunare</h3>
+      <div class="widget-card">
+        <h4>Previsione Attività Pesci</h4>
+        <p style="color:var(--accent-green); font-size:1.2rem; font-weight:bold; margin-top:6px;" id="fishActivityText">85% - Molto Alta</p>
+        <div class="metric-grid">
+          <div class="metric-box"><div class="metric-val">06:15 - 08:15</div><div class="metric-lbl">Periodo Major 1</div></div>
+          <div class="metric-box"><div class="metric-val">18:40 - 20:40</div><div class="metric-lbl">Periodo Major 2</div></div>
+          <div class="metric-box"><div class="metric-val">00:30 - 01:30</div><div class="metric-lbl">Periodo Minor 1</div></div>
+          <div class="metric-box"><div class="metric-val">12:20 - 13:20</div><div class="metric-lbl">Periodo Minor 2</div></div>
+        </div>
       </div>
-      <div style="background:var(--card-bg); padding:16px; border-radius:12px;">
-        <h4>Meteo Locale</h4>
-        <p style="font-size:1.1rem; margin-top:6px;">24°C - Vento 8 km/h NW</p>
-        <p style="color:var(--text-muted); font-size:0.85rem;">Pressione 1015 hPa (In Aumento)</p>
+      <div class="widget-card">
+        <h4>Meteo & Barometro</h4>
+        <div class="metric-grid">
+          <div class="metric-box"><div class="metric-val" id="wTemp">22°C</div><div class="metric-lbl">Temperatura</div></div>
+          <div class="metric-box"><div class="metric-val" id="wPressure">1014 hPa</div><div class="metric-lbl">Pressione</div></div>
+          <div class="metric-box"><div class="metric-val" id="wWind">9 km/h</div><div class="metric-lbl">Vento NW</div></div>
+          <div class="metric-box"><div class="metric-val" id="wClouds">20%</div><div class="metric-lbl">Nuvole</div></div>
+        </div>
       </div>
     </div>
 
-    <!-- TAB ACCOUNT/ME -->
+    <!-- TAB CATTURE E SPOT -->
     <div id="tabMe" class="tab-content" style="padding:16px;">
-      <h3>Il tuo Profilo & Catture</h3>
-      <p style="color:var(--text-muted); margin-top:8px;">Statistiche e diario delle catture salvate.</p>
+      <h3 style="margin-bottom:12px;">I Tuoi Spot Salvati</h3>
+      <div id="savedSpotsList"></div>
     </div>
 
   </div>
 
   <!-- Bottom Navigation Bar -->
   <nav class="bottom-nav">
-    <button class="nav-item active" onclick="switchTab('tabMap', this)"><i class="fa-solid fa-map"></i>Map</button>
-    <button class="nav-item" onclick="switchTab('tabForecasts', this)"><i class="fa-solid fa-chart-line"></i>Forecasts</button>
-    <button class="nav-item" onclick="switchTab('tabMe', this)"><i class="fa-solid fa-user"></i>Me</button>
+    <button class="nav-item active" onclick="switchTab('tabMap', this)"><i class="fa-solid fa-map"></i>Mappa</button>
+    <button class="nav-item" onclick="switchTab('tabForecasts', this)"><i class="fa-solid fa-chart-line"></i>Previsioni</button>
+    <button class="nav-item" onclick="switchTab('tabMe', this)"><i class="fa-solid fa-bookmark"></i>I Miei Spot</button>
   </nav>
 
-  <!-- Modal Aggiungi Spot con Selettore Icona e Colore (Stile Screenshot 2) -->
+  <!-- Modal Aggiungi Spot -->
   <div class="modal" id="modalAddSpot">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-      <button style="background:none; border:none; font-size:1.2rem; color:#64748b;" onclick="closeModals()"><i class="fa-solid fa-xmark"></i></button>
-      <h4 style="font-size:1rem;">Aggiungi Posizione</h4>
-      <button style="background:#0284c7; border:none; width:28px; height:28px; border-radius:50%; color:#fff;" onclick="saveSpotFromModal()"><i class="fa-solid fa-check"></i></button>
+      <button style="background:none; border:none; font-size:1.2rem; color:#64748b; cursor:pointer;" onclick="closeModals()"><i class="fa-solid fa-xmark"></i></button>
+      <h4 style="font-size:1rem;">Salva Posizione / Spot</h4>
+      <button style="background:#0284c7; border:none; width:28px; height:28px; border-radius:50%; color:#fff; cursor:pointer;" onclick="saveSpotFromModal()"><i class="fa-solid fa-check"></i></button>
     </div>
 
     <form id="spotForm" onsubmit="event.preventDefault(); saveSpotFromModal();">
+      <input type="hidden" id="tempLat">
+      <input type="hidden" id="tempLng">
+      
       <div style="margin-bottom:12px;">
         <label style="font-size:0.75rem; font-weight:700; color:#64748b;">NOME SPOT</label>
-        <input type="text" class="form-control" id="spotName" placeholder="Es. Spot Pesca 1" required>
+        <input type="text" class="form-control" id="spotName" placeholder="Es. Hotspot Lucci" required>
       </div>
 
-      <!-- Palette Colori -->
-      <label style="font-size:0.75rem; font-weight:700; color:#64748b;">SCEGLI COLORE ICONA</label>
+      <label style="font-size:0.75rem; font-weight:700; color:#64748b;">COLORE ICONA</label>
       <div class="color-picker-grid">
         <div class="color-opt selected" style="background:#22c55e;" onclick="selectColor('#22c55e', this)"><i class="fa-solid fa-check"></i></div>
         <div class="color-opt" style="background:#eab308;" onclick="selectColor('#eab308', this)"></div>
@@ -409,11 +444,8 @@
         <div class="color-opt" style="background:#475569;" onclick="selectColor('#475569', this)"></div>
       </div>
 
-      <!-- Selettore Icone -->
       <label style="font-size:0.75rem; font-weight:700; color:#64748b; margin-top:8px; display:block;">ICONA SELEZIONATA: <span id="selectedIconLabel" style="color:#0284c7;">Fish 1</span></label>
-      <div class="icon-picker-grid" id="iconPicker">
-        <!-- Generato via JS -->
-      </div>
+      <div class="icon-picker-grid" id="iconPicker"></div>
 
       <button type="submit" class="btn-submit">Salva Spot</button>
     </form>
@@ -438,7 +470,6 @@
       isSat = !isSat;
     }
 
-    // Lista icone disponibili (riproduce lo screenshot)
     const iconList = [
       { id: 'fa-fish', name: 'Fish 1' },
       { id: 'fa-fish-fins', name: 'Fish 2' },
@@ -447,28 +478,29 @@
       { id: 'fa-dharmachakra', name: 'Float' },
       { id: 'fa-network-wired', name: 'Net' },
       { id: 'fa-ban', name: 'Prohibited' },
-      { id: 'fa-otter', name: 'Squid' },
-      { id: 'fa-worm', name: 'Crab' },
-      { id: 'fa-shrimp', name: 'Shrimp' }
+      { id: 'fa-tree', name: 'Obstacle' },
+      { id: 'fa-bridge', name: 'Bridge' },
+      { id: 'fa-location-dot', name: 'Pin' }
     ];
 
     let selectedColor = '#22c55e';
-    let selectedIcon = 'fa-fish-fins';
-    let selectedIconName = 'Fish 2';
+    let selectedIcon = 'fa-fish';
     let spots = JSON.parse(localStorage.getItem('fp_spots')) || [];
     let mapMarkers = [];
+    let rulerActive = false;
+    let rulerPoints = [];
+    let rulerLine = null;
 
-    // Renderizza la griglia delle icone
+    // Inizializza Picker Icone
     const iconPickerEl = document.getElementById('iconPicker');
-    iconList.forEach(item => {
+    iconList.forEach((item, index) => {
       const card = document.createElement('div');
-      card.className = `icon-card ${item.id === selectedIcon ? 'selected' : ''}`;
+      card.className = `icon-card ${index === 0 ? 'selected' : ''}`;
       card.innerHTML = `<i class="fa-solid ${item.id}"></i><span>${item.name}</span>`;
       card.onclick = () => {
         document.querySelectorAll('.icon-card').forEach(c => c.classList.remove('selected'));
         card.classList.add('selected');
         selectedIcon = item.id;
-        selectedIconName = item.name;
         document.getElementById('selectedIconLabel').innerText = item.name;
       };
       iconPickerEl.appendChild(card);
@@ -484,7 +516,11 @@
       selectedColor = color;
     }
 
-    function openAddSpotModal() {
+    // Modal & Spot Handling
+    function openAddSpotModal(lat, lng) {
+      const center = lat && lng ? { lat, lng } : map.getCenter();
+      document.getElementById('tempLat').value = center.lat;
+      document.getElementById('tempLng').value = center.lng;
       document.getElementById('modalAddSpot').classList.add('open');
     }
 
@@ -493,16 +529,17 @@
     }
 
     function saveSpotFromModal() {
-      const name = document.getElementById('spotName').value || 'Nuovo Spot';
-      const center = map.getCenter();
-      
+      const name = document.getElementById('spotName').value || 'Spot di Pesca';
+      const lat = parseFloat(document.getElementById('tempLat').value);
+      const lng = parseFloat(document.getElementById('tempLng').value);
+
       const newSpot = {
         id: Date.now().toString(),
         name: name,
         color: selectedColor,
         icon: selectedIcon,
-        lat: center.lat,
-        lng: center.lng
+        lat: lat,
+        lng: lng
       };
 
       spots.push(newSpot);
@@ -520,14 +557,75 @@
         const customIcon = L.divIcon({
           className: '',
           html: `<div class="custom-map-icon" style="background-color: ${s.color};"><i class="fa-solid ${s.icon}"></i></div>`,
-          iconSize: [32, 32],
-          iconAnchor: [16, 16]
+          iconSize: [34, 34],
+          iconAnchor: [17, 17]
         });
 
         const m = L.marker([s.lat, s.lng], { icon: customIcon }).addTo(map).bindPopup(`<b>${s.name}</b>`);
         mapMarkers.push(m);
       });
+
+      renderSavedSpotsUI();
     }
+
+    function renderSavedSpotsUI() {
+      const listContainer = document.getElementById('savedSpotsList');
+      if(!listContainer) return;
+      listContainer.innerHTML = spots.length ? '' : '<p style="color:var(--text-muted)">Nessun punto registrato.</p>';
+      spots.forEach(s => {
+        listContainer.innerHTML += `
+          <div class="widget-card" style="display:flex; justify-content:space-between; align-items:center;">
+            <div style="display:flex; align-items:center; gap:10px;">
+              <div class="custom-map-icon" style="background-color: ${s.color}; width:28px; height:28px; font-size:0.8rem;"><i class="fa-solid ${s.icon}"></i></div>
+              <div><b>${s.name}</b><br><small style="color:var(--text-muted)">${s.lat.toFixed(4)}, ${s.lng.toFixed(4)}</small></div>
+            </div>
+            <button style="background:none; border:none; color:var(--accent-red); cursor:pointer;" onclick="deleteSpot('${s.id}')"><i class="fa-solid fa-trash"></i></button>
+          </div>`;
+      });
+    }
+
+    function deleteSpot(id) {
+      spots = spots.filter(s => s.id !== id);
+      localStorage.setItem('fp_spots', JSON.stringify(spots));
+      renderMapSpots();
+    }
+
+    // Righello per Distanze
+    function toggleRuler() {
+      rulerActive = !rulerActive;
+      const btn = document.getElementById('rulerBtn');
+      const box = document.getElementById('measureBox');
+
+      if (rulerActive) {
+        btn.classList.add('active');
+        box.style.display = 'block';
+        box.innerText = 'Clicca due punti per misurare';
+        rulerPoints = [];
+        if (rulerLine) map.removeLayer(rulerLine);
+      } else {
+        btn.classList.remove('active');
+        box.style.display = 'none';
+        if (rulerLine) map.removeLayer(rulerLine);
+        rulerPoints = [];
+      }
+    }
+
+    map.on('click', function(e) {
+      if (rulerActive) {
+        rulerPoints.push([e.latlng.lat, e.latlng.lng]);
+        if (rulerPoints.length > 1) {
+          if (rulerLine) map.removeLayer(rulerLine);
+          rulerLine = L.polyline(rulerPoints, { color: '#38bdf8', weight: 4, dashArray: '6, 8' }).addTo(map);
+          let dist = 0;
+          for (let i = 0; i < rulerPoints.length - 1; i++) {
+            dist += L.latLng(rulerPoints[i]).distanceTo(L.latLng(rulerPoints[i+1]));
+          }
+          document.getElementById('measureBox').innerText = dist > 1000 ? `Distanza: ${(dist/1000).toFixed(2)} km` : `Distanza: ${Math.round(dist)} m`;
+        }
+      } else {
+        openAddSpotModal(e.latlng.lat, e.latlng.lng);
+      }
+    });
 
     function switchTab(tabId, btn) {
       document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
@@ -541,24 +639,17 @@
       navigator.geolocation.getCurrentPosition(pos => {
         map.flyTo([pos.coords.latitude, pos.coords.longitude], 15);
         document.getElementById('speedVal').innerText = (pos.coords.speed ? (pos.coords.speed * 1.94384).toFixed(1) : '0.0');
-      });
+      }, () => alert("Errore nel recupero posizione GPS."));
     }
 
-    function centerMap() {
-      if(spots.length > 0) map.flyTo([spots[0].lat, spots[0].lng], 14);
-    }
-
-    // Demo Initial Spots
+    // Inizializzazione spot demo se vuoto
     if(spots.length === 0) {
       spots = [
         { id: '1', name: 'Bean Point Fishing', color: '#22c55e', icon: 'fa-tree', lat: 43.112, lng: 12.390 },
-        { id: '2', name: 'Bayfront Park', color: '#f97316', icon: 'fa-utensils', lat: 43.108, lng: 12.395 },
-        { id: '3', name: 'Hotspot Pesca', color: '#ef4444', icon: 'fa-fish-fins', lat: 43.115, lng: 12.385 }
+        { id: '2', name: 'Hotspot Pesca', color: '#ef4444', icon: 'fa-fish-fins', lat: 43.115, lng: 12.385 }
       ];
-      renderMapSpots();
-    } else {
-      renderMapSpots();
     }
+    renderMapSpots();
   </script>
 </body>
 </html>
