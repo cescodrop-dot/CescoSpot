@@ -12,7 +12,7 @@
   <meta name="apple-mobile-web-app-title" content="CescoSpot PRO">
   <meta name="theme-color" content="#070d1d">
   
-  <!-- ICONA DELLA SCHERMATA HOME COLLEGATA ESCLUSIVAMENTE ALLA TUA IMMAGINE "map.png" -->
+  <!-- ICONA DELLA SCHERMATA HOME COLLEGATA A "map.png" -->
   <link rel="icon" type="image/png" href="map.png" />
   <link rel="apple-touch-icon" href="map.png" />
 
@@ -40,6 +40,7 @@
       padding: 0; 
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       -webkit-tap-highlight-color: transparent;
+      -webkit-appearance: none; 
     }
 
     html, body {
@@ -51,6 +52,7 @@
       display: flex;
       flex-direction: column;
       overflow: hidden;
+      overscroll-behavior-y: none;
     }
 
     .app-container {
@@ -68,7 +70,7 @@
       background: var(--accent-blue);
       color: #fff;
       padding: calc(12px + env(safe-area-inset-top)) 20px 12px 20px;
-      z-index: 4000;
+      z-index: 5000;
       display: none;
       justify-content: space-between;
       align-items: center;
@@ -79,29 +81,29 @@
     .install-banner.show { transform: translateY(0); display: flex; }
     .install-banner-text { font-size: 0.95rem; font-weight: 800; line-height: 1.3; }
     .install-banner-text small { font-size: 0.75rem; font-weight: 600; opacity: 0.9; }
-    .btn-install { background: #fff; color: var(--accent-blue); border: none; padding: 8px 16px; border-radius: 20px; font-weight: 800; font-size: 0.85rem; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
-    .btn-close-banner { background: none; border: none; color: rgba(255,255,255,0.7); font-size: 1.4rem; cursor: pointer; padding: 0 0 0 14px; }
+    .btn-install { background: #fff; color: var(--accent-blue); border: none; padding: 10px 18px; border-radius: 20px; font-weight: 800; font-size: 0.85rem; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+    .btn-close-banner { background: none; border: none; color: rgba(255,255,255,0.7); font-size: 1.6rem; cursor: pointer; padding: 0 0 0 14px; }
 
     /* Top Compass Bar con Safe Area Inset */
     .top-telemetry-bar {
-      background: rgba(15, 23, 42, 0.75);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      padding: calc(15px + env(safe-area-inset-top)) 20px 15px 20px;
+      background: rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      padding: calc(12px + env(safe-area-inset-top)) 24px 12px 24px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
       z-index: 1000;
-      box-shadow: 0 4px 30px rgba(0,0,0,0.6);
+      box-shadow: 0 4px 30px rgba(0,0,0,0.5);
     }
     
     .compass-track {
       position: relative;
       width: 100%;
       max-width: 380px;
-      margin-bottom: 14px;
-      padding-bottom: 18px;
+      margin-bottom: 12px;
+      padding-bottom: 16px;
     }
 
     .compass-ticks {
@@ -120,7 +122,7 @@
       align-items: center;
       transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
       transform-origin: center bottom;
-      width: 25px;
+      width: 28px;
     }
     
     .compass-ticks span::after {
@@ -128,20 +130,20 @@
       width: 2px;
       height: 6px;
       background: currentColor;
-      margin-top: 4px;
+      margin-top: 5px;
       border-radius: 2px;
       transition: background 0.3s;
     }
 
     .compass-pointer {
       position: absolute;
-      bottom: -6px;
+      bottom: -8px;
       left: 50%;
       transform: translateX(-50%);
       color: var(--accent-red);
       font-size: 1.6rem;
       transition: left 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-      filter: drop-shadow(0 2px 6px rgba(239, 68, 68, 0.8));
+      filter: drop-shadow(0 2px 8px rgba(239, 68, 68, 0.9));
       z-index: 10;
     }
 
@@ -154,29 +156,29 @@
     }
     
     .telemetry-val {
-      font-size: 1.6rem;
+      font-size: 1.8rem;
       font-weight: 900;
       color: var(--text-light);
       letter-spacing: 1px;
       display: flex;
       align-items: center;
-      gap: 10px;
-      text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+      gap: 12px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.6);
     }
     
     .telemetry-val small {
-      font-size: 0.75rem;
+      font-size: 0.8rem;
       color: var(--accent-light-blue);
       font-weight: 700;
       text-transform: uppercase;
     }
     
     .btn-compass-perm {
-      background: rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.1);
       color: var(--text-light);
       border: 1px solid rgba(255,255,255,0.15);
-      padding: 10px 16px;
-      border-radius: 12px;
+      padding: 10px 18px;
+      border-radius: 14px;
       font-size: 0.85rem;
       font-weight: 800;
       cursor: pointer;
@@ -186,7 +188,7 @@
       transition: all 0.2s;
       box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     }
-    .btn-compass-perm:active { transform: scale(0.95); }
+    .btn-compass-perm:active { transform: scale(0.92); }
     .btn-compass-perm.active { background: rgba(34, 197, 94, 0.15); color: var(--accent-green); border-color: var(--accent-green); }
 
     .app-body { flex: 1; position: relative; overflow: hidden; width: 100%; }
@@ -197,7 +199,7 @@
       width: 100%; 
       overflow-y: auto; 
       -webkit-overflow-scrolling: touch;
-      padding-bottom: 20px;
+      padding-bottom: 24px;
     }
     .tab-content.active { display: block; }
 
@@ -206,21 +208,21 @@
     /* UI Controls Mappa */
     .left-controls {
       position: absolute;
-      top: 14px;
-      left: 14px;
+      top: 16px;
+      left: 16px;
       z-index: 1000;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 10px;
     }
     .right-controls {
       position: absolute;
-      top: 14px;
-      right: 14px;
+      top: 16px;
+      right: 16px;
       z-index: 1000;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 10px;
     }
     
     .map-btn {
@@ -228,24 +230,26 @@
       height: 48px;
       border-radius: 50%;
       background: rgba(15, 23, 42, 0.85);
-      backdrop-filter: blur(10px);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       color: var(--text-light);
       border: 1px solid rgba(255,255,255,0.15);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.25rem;
+      font-size: 1.3rem;
       box-shadow: 0 4px 15px rgba(0,0,0,0.5);
       cursor: pointer;
       transition: all 0.2s;
     }
-    .map-btn:hover { background: var(--panel-bg); border-color: var(--text-muted); }
-    .map-btn:active { transform: scale(0.92); }
+    .map-btn:hover { background: var(--panel-bg); }
+    .map-btn:active { transform: scale(0.9); }
     .map-btn.active { background: var(--accent-blue); border-color: var(--accent-light-blue); color: #fff; }
 
     .map-btn-group {
       background: rgba(15, 23, 42, 0.85);
-      backdrop-filter: blur(10px);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       border: 1px solid rgba(255,255,255,0.15);
       border-radius: 24px;
       display: flex;
@@ -256,28 +260,77 @@
     .map-btn-group .map-btn { border-radius: 0; border: none; box-shadow: none; background: transparent; }
     .map-btn-group .map-btn:first-child { border-bottom: 1px solid rgba(255,255,255,0.1); }
 
+    /* Barra di Ricerca Mappa */
+    .map-search-overlay {
+      position: absolute;
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-150%);
+      z-index: 2000;
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      padding: 6px;
+      border-radius: 30px;
+      display: flex;
+      align-items: center;
+      box-shadow: 0 6px 25px rgba(0,0,0,0.6);
+      border: 1px solid rgba(255,255,255,0.2);
+      width: 90%;
+      max-width: 380px;
+      transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .map-search-overlay.open { transform: translateX(-50%) translateY(0); }
+    .map-search-overlay input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: #fff;
+      padding: 10px 16px;
+      font-size: 1.05rem;
+      outline: none;
+    }
+    .map-search-overlay input::placeholder { color: var(--text-muted); }
+    .map-search-overlay button {
+      background: var(--accent-blue);
+      color: #fff;
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-left: 4px;
+    }
+    .map-search-overlay .btn-close-search { background: rgba(255,255,255,0.1); color: var(--text-light); }
+
     .bottom-left-gps {
       position: absolute;
       bottom: 24px;
-      left: 14px;
+      left: 16px;
       z-index: 1000;
     }
 
     .measure-box {
       position: absolute;
-      top: 14px;
+      top: 20px;
       left: 50%;
       transform: translateX(-50%);
       z-index: 1000;
-      background: rgba(11, 19, 41, 0.95);
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       color: var(--accent-light-blue);
-      padding: 10px 20px;
-      border-radius: 14px;
+      padding: 12px 24px;
+      border-radius: 20px;
       border: 1px solid var(--accent-light-blue);
-      font-size: 0.95rem;
-      font-weight: bold;
+      font-size: 1rem;
+      font-weight: 800;
       display: none;
-      box-shadow: 0 6px 15px rgba(0,0,0,0.6);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.6);
     }
 
     .fab-add {
@@ -285,17 +338,17 @@
       bottom: 24px;
       right: 16px;
       z-index: 1000;
-      width: 64px;
-      height: 64px;
+      width: 66px;
+      height: 66px;
       border-radius: 50%;
       background: var(--accent-blue);
       color: #fff;
       border: none;
-      font-size: 1.8rem;
+      font-size: 2rem;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 6px 25px rgba(2, 132, 199, 0.6);
+      box-shadow: 0 6px 30px rgba(2, 132, 199, 0.7);
       cursor: pointer;
       transition: transform 0.2s, background 0.2s;
     }
@@ -303,16 +356,16 @@
 
     /* Bottom Nav Bar */
     nav.bottom-nav {
-      background: rgba(15, 23, 42, 0.95);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-top: 1px solid rgba(255,255,255,0.08);
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-top: 1px solid rgba(255,255,255,0.1);
       display: flex;
       justify-content: space-around;
       padding-top: 14px;
       padding-bottom: calc(16px + env(safe-area-inset-bottom));
       z-index: 1000;
-      box-shadow: 0 -4px 25px rgba(0,0,0,0.5);
+      box-shadow: 0 -4px 30px rgba(0,0,0,0.6);
     }
     .nav-item {
       display: flex;
@@ -327,10 +380,114 @@
       flex: 1;
       transition: color 0.3s;
     }
-    .nav-item i { font-size: 1.4rem; }
-    .nav-item:hover { color: #fff; }
+    .nav-item i { font-size: 1.5rem; transition: transform 0.2s; }
     .nav-item.active { color: var(--accent-light-blue); font-weight: bold; }
-    .nav-item.active i { transform: scale(1.15); transition: 0.2s; }
+    .nav-item.active i { transform: scale(1.2); }
+
+    /* METEO SECTION */
+    .weather-hero-card {
+      background: linear-gradient(145deg, rgba(2, 132, 199, 0.2) 0%, rgba(15, 23, 42, 0.8) 100%);
+      border: 1px solid rgba(56, 189, 248, 0.2);
+      border-radius: 24px;
+      padding: 30px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      margin-bottom: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      position: relative;
+      overflow: hidden;
+    }
+    .weather-hero-card::before {
+      content:''; position:absolute; top:0; left:0; right:0; height:1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    }
+    .w-icon-huge { font-size: 4.5rem; color: var(--accent-amber); filter: drop-shadow(0 4px 10px rgba(234, 179, 8, 0.4)); margin-bottom: 10px; }
+    .w-temp-huge { font-size: 4rem; font-weight: 900; letter-spacing: -2px; margin-bottom: 4px; line-height: 1; }
+    .w-desc-text { font-size: 1.2rem; color: var(--accent-light-blue); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+
+    .widget-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); border-radius: 20px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+    .widget-title { font-size: 1.1rem; color: #fff; font-weight: 800; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+    
+    .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 14px; }
+    .metric-box { background: rgba(15, 23, 42, 0.6); padding: 16px 12px; border-radius: 16px; text-align: center; border: 1px solid rgba(255,255,255,0.05); transition: transform 0.2s; }
+    .metric-box:active { transform: scale(0.95); }
+    .metric-val { font-size: 1.3rem; font-weight: 800; color: var(--text-light); display:flex; align-items:center; justify-content:center; gap:8px; }
+    .metric-lbl { font-size: 0.75rem; color: var(--accent-light-blue); margin-top: 6px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;}
+
+    /* Cerca Spot Bar */
+    .search-bar-container {
+      display: flex;
+      align-items: center;
+      background: rgba(15, 23, 42, 0.8);
+      padding: 14px 20px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.1);
+      margin-bottom: 16px;
+    }
+    .search-bar-container i { color: var(--text-muted); margin-right: 14px; font-size: 1.2rem; }
+    .search-bar-container input {
+      border: none;
+      background: transparent;
+      color: var(--text-light);
+      width: 100%;
+      outline: none;
+      font-size: 1.1rem;
+    }
+    .search-bar-container input::placeholder { color: var(--text-muted); }
+
+    /* Backup Bar */
+    .backup-bar { display: flex; gap: 12px; margin-bottom: 24px; }
+    .btn-backup {
+      flex: 1;
+      padding: 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(30, 41, 59, 0.8);
+      color: var(--text-light);
+      font-weight: 800;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background 0.2s;
+    }
+    .btn-backup:active { transform: scale(0.96); background: var(--panel-bg); }
+
+    /* Gestione Zone (Collapsable) */
+    .zone-section { margin-bottom: 16px; background: rgba(30, 41, 59, 0.6); border-radius: 18px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); }
+    .zone-header {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--accent-light-blue);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 18px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      background: rgba(255,255,255,0.03);
+    }
+    .zone-content { padding: 0 12px 12px 12px; }
+
+    .spot-actions button {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.1);
+      cursor: pointer;
+      font-size: 1.2rem;
+      padding: 12px;
+      border-radius: 12px;
+      transition: transform 0.2s;
+    }
+    .spot-actions button:active { transform: scale(0.85); }
+    .btn-nav { color: var(--accent-green); }
+    .btn-share { color: var(--accent-amber); }
+    .btn-edit { color: var(--accent-light-blue); }
+    .btn-delete { color: var(--accent-red); }
 
     /* Modal Form */
     .modal {
@@ -338,15 +495,15 @@
       bottom: -100%; 
       left: 0; 
       right: 0; 
-      z-index: 2000;
+      z-index: 3000;
       background: var(--panel-bg); 
       color: var(--text-light);
-      border-top-left-radius: 28px; 
-      border-top-right-radius: 28px;
+      border-top-left-radius: 32px; 
+      border-top-right-radius: 32px;
       padding: 24px; 
       padding-bottom: calc(24px + env(safe-area-inset-bottom));
       transition: bottom 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); 
-      max-height: 90vh; 
+      max-height: 92vh; 
       overflow-y: auto;
       box-shadow: 0 -10px 50px rgba(0,0,0,0.8);
       border-top: 1px solid rgba(255,255,255,0.1);
@@ -356,24 +513,33 @@
     .modal.open { bottom: 0; }
     
     .modal-drag-handle {
-      width: 40px;
-      height: 5px;
-      background: rgba(255,255,255,0.2);
+      width: 48px;
+      height: 6px;
+      background: rgba(255,255,255,0.25);
       border-radius: 3px;
-      margin: 0 auto 16px auto;
+      margin: 0 auto 20px auto;
     }
 
-    .color-picker-grid {
-      display: flex;
-      gap: 12px;
-      overflow-x: auto;
-      padding: 8px 0;
-      margin-bottom: 16px;
+    .form-group { margin-bottom: 18px; position: relative; }
+    .form-control { 
+      width: 100%; 
+      padding: 16px 18px; 
+      border-radius: 14px; 
+      background: rgba(7, 13, 29, 0.6); 
+      border: 1px solid rgba(255,255,255,0.1); 
+      color: var(--text-light); 
+      font-size: 1.1rem; 
+      outline: none;
+      margin-top: 8px;
+      transition: border-color 0.2s;
     }
+    .form-control:focus { border-color: var(--accent-light-blue); background: var(--bg-dark); }
+
+    .color-picker-grid { display: flex; gap: 14px; overflow-x: auto; padding: 10px 0; margin-bottom: 20px; }
     .color-opt {
-      width: 42px; height: 42px; border-radius: 50%; flex-shrink: 0; cursor: pointer;
-      display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.1rem;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.4);
+      width: 46px; height: 46px; border-radius: 50%; flex-shrink: 0; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.2rem;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.4);
       transition: transform 0.2s;
     }
     .color-opt:active { transform: scale(0.9); }
@@ -381,212 +547,63 @@
 
     .icon-picker-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(75px, 1fr));
-      gap: 10px;
-      max-height: 220px;
+      grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+      gap: 12px;
+      max-height: 240px;
       overflow-y: auto;
-      padding: 10px;
-      background: var(--bg-dark);
-      border-radius: 14px;
-      border: 1px solid var(--border-color);
-      margin-bottom: 16px;
-    }
-    .icon-card {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 12px 6px;
-      background: var(--card-bg);
-      border-radius: 12px;
-      border: 1px solid var(--border-color);
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .icon-card.selected {
-      border-color: var(--accent-light-blue);
-      background: rgba(56, 189, 248, 0.15);
-      transform: scale(0.95);
-    }
-    .icon-card i, .icon-card span.emoji-icon { font-size: 1.6rem; color: var(--text-light); margin-bottom: 6px; }
-    .icon-card span.name { font-size: 0.65rem; color: var(--text-muted); font-weight: 700; text-align: center; }
-
-    /* Custom Marker a Goccia / Pin Reale */
-    .custom-map-icon {
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      box-shadow: 0 5px 12px rgba(0,0,0,0.6);
-      border: 2px solid white;
-      font-size: 1.2rem;
-      position: relative;
-    }
-    .custom-map-icon::after {
-      content: '';
-      position: absolute;
-      bottom: -10px;
-      left: 50%;
-      transform: translateX(-50%);
-      border-left: 8px solid transparent;
-      border-right: 8px solid transparent;
-      border-top: 10px solid inherit;
-      filter: drop-shadow(0px 3px 2px rgba(0,0,0,0.4));
-    }
-
-    .form-group { margin-bottom: 16px; position: relative; }
-    .form-control { 
-      width: 100%; 
-      padding: 14px 16px; 
-      border-radius: 12px; 
-      background: var(--bg-dark); 
-      border: 1px solid var(--border-color); 
-      color: var(--text-light); 
-      font-size: 1.05rem; 
-      outline: none;
-      margin-top: 8px;
-      font-family: inherit;
-      transition: border-color 0.2s;
-    }
-    .form-control:focus { border-color: var(--accent-light-blue); }
-
-    /* Custom Autocomplete per Specie Target su Mobile */
-    .autocomplete-items {
-      position: absolute;
-      border: 1px solid var(--border-color);
-      border-top: none;
-      z-index: 3000;
-      top: 100%;
-      left: 0;
-      right: 0;
-      background: var(--card-bg);
-      max-height: 220px;
-      overflow-y: auto;
-      border-radius: 0 0 12px 12px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.8);
-      display: none;
-    }
-    .autocomplete-items div {
-      padding: 14px 16px;
-      cursor: pointer;
-      color: var(--text-light);
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-      font-size: 1rem;
-      font-weight: 600;
-    }
-    .autocomplete-items div:hover, .autocomplete-items div:active {
-      background-color: var(--panel-bg);
-      color: var(--accent-light-blue);
-    }
-    
-    .btn-submit { 
-      width: 100%; 
-      padding: 16px; 
-      border-radius: 14px; 
-      border: none; 
-      background: var(--accent-blue); 
-      color: #fff; 
-      font-weight: 800; 
-      font-size: 1.1rem;
-      cursor: pointer; 
-      margin-top: 10px;
-      box-shadow: 0 6px 15px rgba(2, 132, 199, 0.4);
-      transition: background 0.2s, transform 0.2s;
-    }
-    .btn-submit:active { transform: scale(0.98); }
-
-    /* Stili Tab e Dashboard */
-    .widget-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 18px; padding: 18px; margin-bottom: 18px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
-    .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 14px; margin-top: 14px; }
-    .metric-box { background: var(--bg-dark); padding: 14px; border-radius: 14px; text-align: center; border: 1px solid var(--border-color); }
-    .metric-val { font-size: 1.25rem; font-weight: 800; color: var(--accent-light-blue); display:flex; align-items:center; justify-content:center; gap:8px; }
-    .metric-lbl { font-size: 0.8rem; color: var(--text-muted); margin-top: 6px; font-weight: 600; text-transform: uppercase;}
-    
-    /* Cerca Spot Bar */
-    .search-bar-container {
-      display: flex;
-      align-items: center;
-      background: var(--bg-dark);
-      padding: 14px 18px;
-      border-radius: 14px;
-      border: 1px solid var(--border-color);
+      padding: 12px;
+      background: rgba(7, 13, 29, 0.6);
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.05);
       margin-bottom: 20px;
     }
-    .search-bar-container i { color: var(--text-muted); margin-right: 12px; font-size: 1.1rem; }
-    .search-bar-container input {
-      border: none;
-      background: transparent;
-      color: var(--text-light);
-      width: 100%;
-      outline: none;
-      font-size: 1.05rem;
+    .icon-card {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 14px 6px; background: rgba(30, 41, 59, 0.6); border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.05); cursor: pointer; transition: all 0.2s;
     }
-    .search-bar-container input::placeholder { color: var(--text-muted); }
+    .icon-card.selected { border-color: var(--accent-light-blue); background: rgba(56, 189, 248, 0.2); transform: scale(0.95); }
+    .icon-card i, .icon-card span.emoji-icon { font-size: 1.8rem; margin-bottom: 8px; }
+    .icon-card span.name { font-size: 0.7rem; font-weight: 700; text-align: center; }
 
-    /* Gestione Zone (Collapsable) */
-    .zone-section { margin-bottom: 16px; background: var(--card-bg); border-radius: 16px; overflow: hidden; border: 1px solid var(--border-color); box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
-    .zone-header {
-      font-size: 0.95rem;
-      font-weight: 800;
-      color: var(--accent-light-blue);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      padding: 16px 18px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      cursor: pointer;
-      background: rgba(255,255,255,0.02);
-      transition: background 0.2s;
+    .btn-submit { 
+      width: 100%; padding: 18px; border-radius: 16px; border: none; background: var(--accent-blue); 
+      color: #fff; font-weight: 800; font-size: 1.15rem; cursor: pointer; margin-top: 10px;
+      box-shadow: 0 6px 20px rgba(2, 132, 199, 0.5); transition: transform 0.2s;
     }
-    .zone-content { padding: 0 12px 12px 12px; }
+    .btn-submit:active { transform: scale(0.96); }
 
-    .spot-actions button {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.1);
-      cursor: pointer;
-      font-size: 1.1rem;
-      padding: 10px;
-      border-radius: 10px;
-      transition: background 0.2s;
+    /* Custom Autocomplete per Specie Target */
+    .autocomplete-items {
+      position: absolute; border: 1px solid rgba(255,255,255,0.1); border-top: none; z-index: 3000;
+      top: 100%; left: 0; right: 0; background: var(--panel-bg); max-height: 220px; overflow-y: auto;
+      border-radius: 0 0 14px 14px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); display: none;
     }
-    .spot-actions button:active { transform: scale(0.9); }
-    .btn-nav { color: var(--accent-green); }
-    .btn-edit { color: var(--accent-light-blue); }
-    .btn-delete { color: var(--accent-red); }
-
-    /* Backup e Gestione File */
-    .backup-bar { display: flex; gap: 12px; margin-bottom: 24px; }
-    .btn-backup {
-      flex: 1;
-      padding: 14px;
-      border-radius: 14px;
-      border: 1px solid var(--border-color);
-      background: var(--card-bg);
-      color: var(--text-light);
-      font-weight: 700;
-      font-size: 0.9rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
+    .autocomplete-items div {
+      padding: 16px 18px; cursor: pointer; color: var(--text-light); border-bottom: 1px solid rgba(255,255,255,0.05);
+      font-size: 1.05rem; font-weight: 600;
     }
+    .autocomplete-items div:active { background-color: rgba(56,189,248,0.2); color: var(--accent-light-blue); }
 
-    /* Bottone Aggiorna Meteo */
+    /* Custom Marker Mappa */
+    .custom-map-icon {
+      width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      color: white; box-shadow: 0 6px 15px rgba(0,0,0,0.7); border: 2px solid white; font-size: 1.3rem; position: relative;
+    }
+    .custom-map-icon::after {
+      content: ''; position: absolute; bottom: -12px; left: 50%; transform: translateX(-50%);
+      border-left: 8px solid transparent; border-right: 8px solid transparent; border-top: 12px solid inherit;
+      filter: drop-shadow(0px 4px 3px rgba(0,0,0,0.5));
+    }
+    
     .btn-refresh-weather {
-      width: 100%; margin-top: 16px; padding: 16px; background: var(--bg-dark); color: var(--accent-light-blue);
-      border: 1px solid var(--border-color); border-radius: 14px; cursor: pointer; font-weight: 800; font-size: 1rem;
-      display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s;
+      width: 100%; padding: 16px; background: rgba(7, 13, 29, 0.6); color: var(--accent-light-blue);
+      border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; cursor: pointer; font-weight: 800; font-size: 1rem;
+      display: flex; align-items: center; justify-content: center; gap: 10px; transition: transform 0.2s;
     }
-    .btn-refresh-weather:active { transform: scale(0.98); }
-    .btn-refresh-weather:disabled { opacity: 0.6; cursor: not-allowed; }
+    .btn-refresh-weather:active { transform: scale(0.96); }
 
-    /* Leaflet Control Tweaks */
-    .leaflet-control-scale { margin-bottom: 24px !important; margin-left: 14px !important; }
+    .leaflet-control-scale { margin-bottom: 24px !important; margin-left: 16px !important; border-color: rgba(255,255,255,0.5) !important; color: #fff !important; }
 
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: transparent; }
@@ -595,18 +612,36 @@
 </head>
 <body>
 
+  <!-- GENERAZIONE MANIFEST PWA DINAMICO PER L'ICONA -->
+  <script>
+    (function generateManifest() {
+        const manifest = {
+          "name": "CescoSpot Pro",
+          "short_name": "CescoSpot PRO",
+          "start_url": ".",
+          "display": "standalone",
+          "background_color": "#070d1d",
+          "theme_color": "#070d1d",
+          "icons": [{ "src": "map.png", "sizes": "512x512", "type": "image/png" }]
+        };
+        const stringManifest = JSON.stringify(manifest);
+        const blob = new Blob([stringManifest], {type: 'application/json'});
+        document.getElementById('manifestLink').setAttribute('href', URL.createObjectURL(blob));
+    })();
+  </script>
+
 <div class="app-container">
 
-  <!-- BANNER INSTALLAZIONE APP PWA -->
+  <!-- BANNER INSTALLAZIONE -->
   <div class="install-banner" id="installBanner">
-    <div class="install-banner-text" id="installText">Vuoi l'app?<br><small>Aggiungi CescoSpot alla tua Home!</small></div>
+    <div class="install-banner-text" id="installText">Installa CescoSpot PRO!<br><small>Naviga, esplora, salva.</small></div>
     <div style="display:flex; align-items:center;">
       <button class="btn-install" id="installBtn">Installa</button>
       <button class="btn-close-banner" onclick="closeInstallBanner()"><i class="fa-solid fa-xmark"></i></button>
     </div>
   </div>
 
-  <!-- Top Compass Bar -->
+  <!-- Barra Bussola -->
   <div class="top-telemetry-bar">
     <div class="compass-track">
       <div class="compass-ticks" id="compassTicks">
@@ -617,22 +652,30 @@
     
     <div class="compass-main">
       <div class="telemetry-val" id="hdgVal">
-        <i class="fa-regular fa-compass" style="font-size: 1.5rem; color: var(--text-muted);"></i>
+        <i class="fa-regular fa-compass" style="font-size: 1.6rem; color: var(--text-muted);"></i>
         --° <small>HDG</small>
       </div>
       <div id="compassControlContainer">
-        <button class="btn-compass-perm" onclick="initCompass()"><i class="fa-solid fa-location-arrow"></i> Attiva Bussola</button>
+        <button class="btn-compass-perm" onclick="initCompass()"><i class="fa-solid fa-location-arrow"></i> Attiva</button>
       </div>
     </div>
   </div>
 
   <div class="app-body">
     
-    <!-- TAB MAPPA -->
+    <!-- TAB 1: MAPPA -->
     <div id="tabMap" class="tab-content active">
       <div class="measure-box" id="measureBox">Distanza: 0 m</div>
+      
+      <!-- Overlay Ricerca Luoghi (Geocoder) -->
+      <div class="map-search-overlay" id="mapSearchOverlay">
+        <input type="text" id="mapSearchInput" placeholder="Cerca indirizzo o luogo...">
+        <button onclick="performMapSearch()"><i class="fa-solid fa-magnifying-glass"></i></button>
+        <button class="btn-close-search" onclick="toggleMapSearch()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
 
       <div class="left-controls">
+        <button class="map-btn" onclick="toggleMapSearch()" title="Cerca un luogo"><i class="fa-solid fa-magnifying-glass"></i></button>
         <div class="map-btn-group">
           <button class="map-btn" onclick="map.zoomIn()" title="Zoom In"><i class="fa-solid fa-plus"></i></button>
           <button class="map-btn" onclick="map.zoomOut()" title="Zoom Out"><i class="fa-solid fa-minus"></i></button>
@@ -645,59 +688,67 @@
       </div>
 
       <div class="bottom-left-gps">
-        <button class="map-btn" onclick="startTracking()" id="gpsBtn" title="Traccia la Posizione GPS"><i class="fa-solid fa-location-crosshairs"></i></button>
+        <button class="map-btn" onclick="startTracking()" id="gpsBtn" title="Traccia Posizione"><i class="fa-solid fa-location-crosshairs"></i></button>
       </div>
 
-      <button class="fab-add" onclick="openAddSpotModal()" title="Aggiungi uno Spot"><i class="fa-solid fa-plus"></i></button>
+      <button class="fab-add" onclick="openAddSpotModal()" title="Aggiungi Spot"><i class="fa-solid fa-plus"></i></button>
 
       <div id="map"></div>
     </div>
 
-    <!-- TAB PREVISIONI METEO E SOLUNARI -->
+    <!-- TAB 2: METEO (TOTALMENTE RINNOVATO) -->
     <div id="tabForecasts" class="tab-content" style="padding:16px;">
-      <h3 style="margin-bottom:16px; margin-top:8px;">Previsioni & Solunare</h3>
       
+      <div class="weather-hero-card">
+        <div class="w-icon-huge" id="wIconLarge"><i class="fa-solid fa-cloud-sun"></i></div>
+        <div class="w-temp-huge" id="wTempLarge">--°</div>
+        <div class="w-desc-text" id="wDesc">In attesa di dati...</div>
+      </div>
+
       <div class="widget-card">
-        <h4><i class="fa-solid fa-fish"></i> Attività Pesci Stimata</h4>
-        <p style="font-size:1.5rem; font-weight:900; margin-top:10px; transition: color 0.3s;" id="fishActivityText">Calcolo in corso...</p>
-        <p style="font-size:0.85rem; color:var(--text-muted); margin-top:6px; font-weight:600;" id="moonPhaseText">Fase Lunare: --</p>
+        <div class="widget-title"><i class="fa-solid fa-temperature-half" style="color:var(--accent-light-blue);"></i> Dettagli Ambientali</div>
         <div class="metric-grid">
-          <div class="metric-box"><div class="metric-val" id="major1">--:--</div><div class="metric-lbl">Major 1</div></div>
-          <div class="metric-box"><div class="metric-val" id="major2">--:--</div><div class="metric-lbl">Major 2</div></div>
-          <div class="metric-box"><div class="metric-val" id="minor1">--:--</div><div class="metric-lbl">Minor 1</div></div>
-          <div class="metric-box"><div class="metric-val" id="minor2">--:--</div><div class="metric-lbl">Minor 2</div></div>
+          <div class="metric-box"><div class="metric-val" id="wFeelsLike">--°</div><div class="metric-lbl">Percepita</div></div>
+          <div class="metric-box"><div class="metric-val" id="wHumidity">--%</div><div class="metric-lbl">Umidità</div></div>
+          <div class="metric-box"><div class="metric-val" id="wWind">-- km/h</div><div class="metric-lbl">Vento</div></div>
+          <div class="metric-box"><div class="metric-val" id="wPressure">-- hPa</div><div class="metric-lbl">Pressione</div></div>
+          <div class="metric-box"><div class="metric-val" id="wRain">-- mm</div><div class="metric-lbl">Precipitazioni</div></div>
+          <div class="metric-box"><div class="metric-val" id="wVis">-- km</div><div class="metric-lbl">Visibilità</div></div>
         </div>
       </div>
 
       <div class="widget-card">
-        <h4><i class="fa-solid fa-cloud-sun"></i> Meteo Locale</h4>
+        <div class="widget-title"><i class="fa-solid fa-fish-fins" style="color:var(--accent-green);"></i> Solunare & Pesca</div>
+        <p style="text-align:center; font-size:1.6rem; font-weight:900; margin-bottom:4px; color:var(--text-muted);" id="fishActivityText">Calcolo...</p>
+        <p style="text-align:center; font-size:0.85rem; color:var(--text-muted); margin-bottom:16px; font-weight:600;" id="moonPhaseText">Fase Lunare: --</p>
+        
         <div class="metric-grid">
-          <div class="metric-box"><div class="metric-val" id="wTemp">--°C</div><div class="metric-lbl">Temperatura</div></div>
-          <div class="metric-box"><div class="metric-val" id="wPressure">-- hPa</div><div class="metric-lbl">Pressione</div></div>
-          <div class="metric-box"><div class="metric-val" id="wWind">-- km/h</div><div class="metric-lbl">Vento</div></div>
-          <div class="metric-box"><div class="metric-val" id="wClouds">--%</div><div class="metric-lbl">Nuvole</div></div>
+          <div class="metric-box"><div class="metric-val" style="font-size:1.1rem" id="major1">--:--</div><div class="metric-lbl">Major 1</div></div>
+          <div class="metric-box"><div class="metric-val" style="font-size:1.1rem" id="major2">--:--</div><div class="metric-lbl">Major 2</div></div>
+          <div class="metric-box"><div class="metric-val" style="font-size:1.1rem" id="minor1">--:--</div><div class="metric-lbl">Minor 1</div></div>
+          <div class="metric-box"><div class="metric-val" style="font-size:1.1rem" id="minor2">--:--</div><div class="metric-lbl">Minor 2</div></div>
         </div>
-        <button class="btn-refresh-weather" id="btnUpdateWeather" onclick="updateForecastData(this)"><i class="fa-solid fa-arrows-rotate"></i> Aggiorna Dati Meteo</button>
       </div>
+      
+      <button class="btn-refresh-weather" id="btnUpdateWeather" onclick="updateForecastData(this)"><i class="fa-solid fa-arrows-rotate"></i> Aggiorna Meteo Reale</button>
     </div>
 
-    <!-- TAB I MIEI SPOT E BACKUP -->
+    <!-- TAB 3: GESTIONE SPOT E BACKUP (RIORDINATO) -->
     <div id="tabMe" class="tab-content" style="padding:16px;">
-      <h3 style="margin-bottom:16px; margin-top:8px;">Gestione Spot</h3>
       
       <div class="search-bar-container">
         <i class="fa-solid fa-magnifying-glass"></i>
-        <input type="text" id="searchSpotInput" onkeyup="filterSpots()" placeholder="Cerca per nome, specie o zona...">
+        <input type="text" id="searchSpotInput" onkeyup="filterSpots()" placeholder="Cerca spot, specie o zona...">
+      </div>
+
+      <!-- Backup posizionato esattamente sotto la barra di ricerca -->
+      <div class="backup-bar">
+        <button class="btn-backup" onclick="exportSpots()"><i class="fa-solid fa-file-arrow-down" style="color:var(--accent-light-blue);"></i>Esporta</button>
+        <button class="btn-backup" onclick="document.getElementById('importFile').click()"><i class="fa-solid fa-file-arrow-up" style="color:var(--accent-green);"></i>Importa</button>
+        <input type="file" id="importFile" style="display:none" accept=".json" onchange="importSpots(event)">
       </div>
 
       <div id="savedSpotsContainer"></div>
-
-      <h4 style="margin-top:24px; margin-bottom:12px; color:var(--text-muted); font-size:0.85rem; text-transform:uppercase; letter-spacing:1px;">Salvataggio Dati</h4>
-      <div class="backup-bar">
-        <button class="btn-backup" onclick="exportSpots()"><i class="fa-solid fa-file-arrow-down" style="color:var(--accent-light-blue);"></i>Esporta Backup</button>
-        <button class="btn-backup" onclick="document.getElementById('importFile').click()"><i class="fa-solid fa-file-arrow-up" style="color:var(--accent-green);"></i>Importa Backup</button>
-        <input type="file" id="importFile" style="display:none" accept=".json" onchange="importSpots(event)">
-      </div>
     </div>
 
   </div>
@@ -705,7 +756,7 @@
   <!-- Bottom Navigation Bar -->
   <nav class="bottom-nav">
     <button class="nav-item active" onclick="switchTab('tabMap', this)"><i class="fa-solid fa-map-location-dot"></i>Mappa</button>
-    <button class="nav-item" onclick="switchTab('tabForecasts', this)"><i class="fa-solid fa-cloud-sun"></i>Previsioni</button>
+    <button class="nav-item" onclick="switchTab('tabForecasts', this)"><i class="fa-solid fa-cloud-sun"></i>Meteo</button>
     <button class="nav-item" onclick="switchTab('tabMe', this)"><i class="fa-solid fa-bookmark"></i>Archivio</button>
   </nav>
 
@@ -713,9 +764,9 @@
   <div class="modal" id="modalAddSpot">
     <div class="modal-drag-handle"></div>
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-      <button type="button" style="background:none; border:none; font-size:1.6rem; color:var(--text-muted); cursor:pointer; padding:5px;" onclick="closeModals()"><i class="fa-solid fa-xmark"></i></button>
-      <h4 style="font-size:1.2rem; color:#fff; font-weight:800;" id="modalTitle">Salva Posizione</h4>
-      <button type="button" style="background:var(--accent-blue); border:none; width:38px; height:38px; border-radius:50%; color:#fff; cursor:pointer; box-shadow:0 4px 10px rgba(2,132,199,0.5);" onclick="saveSpotFromModal()"><i class="fa-solid fa-check"></i></button>
+      <button type="button" style="background:none; border:none; font-size:1.8rem; color:var(--text-muted); cursor:pointer; padding:5px;" onclick="closeModals()"><i class="fa-solid fa-xmark"></i></button>
+      <h4 style="font-size:1.3rem; color:#fff; font-weight:900;" id="modalTitle">Salva Posizione</h4>
+      <button type="button" style="background:var(--accent-blue); border:none; width:44px; height:44px; border-radius:50%; color:#fff; font-size:1.2rem; cursor:pointer; box-shadow:0 4px 15px rgba(2,132,199,0.5);" onclick="saveSpotFromModal()"><i class="fa-solid fa-check"></i></button>
     </div>
 
     <form id="spotForm" onsubmit="event.preventDefault(); saveSpotFromModal();">
@@ -723,28 +774,28 @@
       <input type="hidden" id="tempLng">
       
       <div class="form-group">
-        <label style="font-size:0.75rem; font-weight:800; color:var(--text-muted);">NOME SPOT *</label>
+        <label style="font-size:0.8rem; font-weight:800; color:var(--text-muted); margin-left:4px;">NOME SPOT *</label>
         <input type="text" class="form-control" id="spotName" placeholder="Es. Secca del Largo, Buca profonda..." required>
       </div>
 
       <div class="form-group">
-        <label style="font-size:0.75rem; font-weight:800; color:var(--text-muted);">ZONA / AREA GEOGRAFICA</label>
+        <label style="font-size:0.8rem; font-weight:800; color:var(--text-muted); margin-left:4px;">ZONA / AREA GEOGRAFICA</label>
         <input type="text" class="form-control" id="spotZone" placeholder="Ricerca in corso o inserisci manualmente...">
       </div>
 
       <!-- Autocomplete Specie Target Ottimizzato per Mobile -->
       <div class="form-group">
-        <label style="font-size:0.75rem; font-weight:800; color:var(--text-muted);">SPECIE TARGET</label>
+        <label style="font-size:0.8rem; font-weight:800; color:var(--text-muted); margin-left:4px;">SPECIE TARGET</label>
         <input type="text" class="form-control" id="spotTarget" autocomplete="off" placeholder="Inizia a digitare (es. Carpa, Luccio...)">
         <div id="autocomplete-list" class="autocomplete-items"></div>
       </div>
 
       <div class="form-group">
-        <label style="font-size:0.75rem; font-weight:800; color:var(--text-muted);">NOTE / DESCRIZIONE</label>
+        <label style="font-size:0.8rem; font-weight:800; color:var(--text-muted); margin-left:4px;">NOTE / DESCRIZIONE</label>
         <textarea class="form-control" id="spotNotes" rows="2" placeholder="Profondità, fondale, esche suggerite..."></textarea>
       </div>
 
-      <label style="font-size:0.75rem; font-weight:800; color:var(--text-muted); display:block; margin-bottom:8px;">COLORE MARKER</label>
+      <label style="font-size:0.8rem; font-weight:800; color:var(--text-muted); display:block; margin-bottom:10px; margin-left:4px;">COLORE MARKER</label>
       <div class="color-picker-grid">
         <div class="color-opt selected" style="background:#22c55e;" onclick="selectColor('#22c55e', this)" data-color="#22c55e"><i class="fa-solid fa-check"></i></div>
         <div class="color-opt" style="background:#eab308;" onclick="selectColor('#eab308', this)" data-color="#eab308"></div>
@@ -756,7 +807,7 @@
         <div class="color-opt" style="background:#f8fafc; color:#0f172a;" onclick="selectColor('#f8fafc', this)" data-color="#f8fafc"></div>
       </div>
 
-      <label style="font-size:0.75rem; font-weight:800; color:var(--text-muted); display:block; margin-bottom:8px;">ICONA: <span id="selectedIconLabel" style="color:var(--accent-light-blue);">Pin Esatto</span></label>
+      <label style="font-size:0.8rem; font-weight:800; color:var(--text-muted); display:block; margin-bottom:10px; margin-left:4px;">ICONA: <span id="selectedIconLabel" style="color:var(--accent-light-blue);">Pin Esatto</span></label>
       <div class="icon-picker-grid" id="iconPicker"></div>
 
       <button type="button" class="btn-submit" onclick="saveSpotFromModal()">Salva nel Database</button>
@@ -768,28 +819,7 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
   <script>
-    // --- GENERAZIONE MANIFEST PWA DINAMICO PER L'ICONA ---
-    (function generateManifest() {
-        const manifest = {
-          "name": "CescoSpot Pro",
-          "short_name": "CescoSpot PRO",
-          "start_url": ".",
-          "display": "standalone",
-          "background_color": "#070d1d",
-          "theme_color": "#070d1d",
-          "icons": [{
-            "src": "map.png",
-            "sizes": "512x512",
-            "type": "image/png"
-          }]
-        };
-        const stringManifest = JSON.stringify(manifest);
-        const blob = new Blob([stringManifest], {type: 'application/json'});
-        const manifestURL = URL.createObjectURL(blob);
-        document.getElementById('manifestLink').setAttribute('href', manifestURL);
-    })();
-
-    // --- GESTIONE PWA INSTALL BANNER ---
+    // --- PWA E INSTALLAZIONE ---
     let deferredPrompt;
     const installBanner = document.getElementById('installBanner');
     const installBtn = document.getElementById('installBtn');
@@ -801,7 +831,7 @@
     if (isIOS && !isStandalone) {
       installBanner.style.display = 'flex';
       setTimeout(() => installBanner.classList.add('show'), 500);
-      installText.innerHTML = `Installa CescoSpot!<br><small>Tocca <i class="fa-solid fa-arrow-up-from-bracket"></i> e poi "Aggiungi alla schermata Home"</small>`;
+      installText.innerHTML = `Installa CescoSpot PRO!<br><small>Tocca <i class="fa-solid fa-arrow-up-from-bracket"></i> e "Aggiungi alla schermata Home"</small>`;
       installBtn.style.display = 'none'; 
     }
 
@@ -816,9 +846,7 @@
       if (deferredPrompt) {
         deferredPrompt.prompt();
         const { outcome } = await deferredPrompt.userChoice;
-        if (outcome === 'accepted') {
-          closeInstallBanner();
-        }
+        if (outcome === 'accepted') closeInstallBanner();
         deferredPrompt = null;
       }
     });
@@ -828,7 +856,7 @@
       setTimeout(() => installBanner.style.display = 'none', 400);
     }
 
-    // --- AUTOCOMPLETE SPECIE TARGET (ROBUSTO PER MOBILE) ---
+    // --- AUTOCOMPLETE SPECIE TARGET (OTTIMIZZATO MOBILE) ---
     const speciesArray = ["Amur (Carpa Erbivora)", "Anguilla", "Barbo", "Carassio", "Carpa Comune", "Carpa Specchio", "Cavedano", "Cheppia", "Luccio", "Luccioperca (Sandra)", "Persico Reale", "Persico Trota (Black Bass)", "Pesce Gatto", "Scardola", "Siluro", "Storione", "Temolo", "Tinca", "Trota Fario", "Trota Iridea", "Trota Marmorata", "Vairone"];
     const targetInput = document.getElementById('spotTarget');
     const autoList = document.getElementById('autocomplete-list');
@@ -845,8 +873,6 @@
         matches.forEach(match => {
             const d = document.createElement('div');
             d.innerHTML = match;
-            
-            // Usiamo pointerdown per prevenire che la tastiera mobile si chiuda prima del tocco
             d.addEventListener('pointerdown', function(e) {
                 e.preventDefault(); 
                 targetInput.value = match;
@@ -879,7 +905,37 @@
       isSat = !isSat;
     }
 
-    // --- ELENCO ICONE (EMOJI GENERICHE E AMBIENTALI) ---
+    // --- GEOCODER (RICERCA LUOGHI SULLA MAPPA) ---
+    function toggleMapSearch() {
+      const overlay = document.getElementById('mapSearchOverlay');
+      overlay.classList.toggle('open');
+      if (overlay.classList.contains('open')) {
+        document.getElementById('mapSearchInput').focus();
+      }
+    }
+
+    function performMapSearch() {
+      const q = document.getElementById('mapSearchInput').value;
+      if (!q) return;
+      
+      fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q)}&limit=1`)
+        .then(res => res.json())
+        .then(data => {
+          if (data && data.length > 0) {
+            map.flyTo([data[0].lat, data[0].lon], 13);
+            toggleMapSearch();
+            document.getElementById('mapSearchInput').value = '';
+          } else {
+            alert("Luogo non trovato. Prova con una città o indirizzo più specifico.");
+          }
+        })
+        .catch(err => {
+          console.error("Errore Geocoder:", err);
+          alert("Errore di connessione per la ricerca.");
+        });
+    }
+
+    // --- ELENCO ICONE ---
     const iconList = [
       { id: '📍', type: 'emoji', name: 'Pin Esatto' },
       { id: '🐟', type: 'emoji', name: 'Pesce Generico' },
@@ -936,34 +992,35 @@
       selectedColor = colorHex;
     }
 
-    // --- BACKUP ESPORTA/IMPORTA JSON ---
-    function exportSpots() {
-      if (spots.length === 0) { 
-        alert("Nessuno spot da esportare."); 
-        return; 
+    // --- CONDIVISIONE SPOT ---
+    function shareSpot(name, lat, lng) {
+      const shareUrl = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+      if (navigator.share) {
+        navigator.share({
+          title: 'CescoSpot PRO',
+          text: `Guarda questo spot di pesca: ${name}! 🎣`,
+          url: shareUrl
+        }).catch(err => console.log('Condivisione annullata', err));
+      } else {
+        prompt("Copia questo link per condividere lo spot:", shareUrl);
       }
+    }
+
+    // --- BACKUP ---
+    function exportSpots() {
+      if (spots.length === 0) { alert("Nessuno spot da esportare."); return; }
       try {
         const dataStr = JSON.stringify(spots, null, 2);
         const blob = new Blob([dataStr], { type: "application/json" });
         const url = URL.createObjectURL(blob);
-        
         const downloadAnchor = document.createElement('a');
         downloadAnchor.href = url;
-        
         const dateStr = new Date().toISOString().slice(0,10);
         downloadAnchor.download = `CescoSpot_Backup_${dateStr}.json`;
-        
         document.body.appendChild(downloadAnchor);
         downloadAnchor.click();
-        
-        setTimeout(() => {
-          document.body.removeChild(downloadAnchor);
-          URL.revokeObjectURL(url);
-        }, 100);
-      } catch (err) {
-        console.error("Errore esportazione:", err);
-        alert("Errore durante l'esportazione.");
-      }
+        setTimeout(() => { document.body.removeChild(downloadAnchor); URL.revokeObjectURL(url); }, 100);
+      } catch (err) { alert("Errore durante l'esportazione."); }
     }
 
     function importSpots(event) {
@@ -974,7 +1031,7 @@
         try {
           const importedData = JSON.parse(e.target.result);
           if (Array.isArray(importedData)) {
-            if (confirm(`Trovati ${importedData.length} spot. Vuoi sostituire gli attuali o unirli senza duplicare?\n\n[OK] = Sostituisci Tutto\n[Annulla] = Unisci Entrambi`)) {
+            if (confirm(`Trovati ${importedData.length} spot. Vuoi sostituire gli attuali o unirli?\n\n[OK] = Sostituisci\n[Annulla] = Unisci`)) {
               spots = importedData;
             } else {
               importedData.forEach(imp => { if (!spots.some(s => s.id === imp.id)) spots.push(imp); });
@@ -983,7 +1040,7 @@
             renderMapSpots();
             alert("Backup importato con successo!");
           } else { alert("File non compatibile."); }
-        } catch (err) { alert("File JSON danneggiato o non valido."); }
+        } catch (err) { alert("File JSON danneggiato."); }
         event.target.value = ''; 
       };
       reader.readAsText(file);
@@ -998,11 +1055,10 @@
     }
 
     function openInMaps(lat, lng) {
-      const url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
-      window.open(url, '_blank');
+      window.open(`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`, '_blank');
     }
 
-    // --- MODAL, REVERSE GEOCODING E SALVATAGGIO ---
+    // --- MODAL & CRUD ---
     function openAddSpotModal(lat, lng) {
       editingSpotId = null;
       document.getElementById('modalTitle').innerText = "Salva Posizione";
@@ -1024,9 +1080,7 @@
             let state = data.address.state || '';
             let zoneStr = [city, state].filter(Boolean).join(', ');
             document.getElementById('spotZone').value = zoneStr || 'Zona Non Definita';
-          } else {
-            document.getElementById('spotZone').value = '';
-          }
+          } else { document.getElementById('spotZone').value = ''; }
         })
         .catch(() => { document.getElementById('spotZone').value = ''; });
       
@@ -1049,18 +1103,9 @@
 
       if (editingSpotId) {
         const idx = spots.findIndex(s => s.id === editingSpotId);
-        if (idx !== -1) {
-          spots[idx] = { ...spots[idx], name, zone, target, notes, color: selectedColor, icon: selectedIcon };
-        }
+        if (idx !== -1) spots[idx] = { ...spots[idx], name, zone, target, notes, color: selectedColor, icon: selectedIcon };
       } else {
-        spots.push({
-          id: Date.now().toString(),
-          name, zone, target, notes,
-          color: selectedColor,
-          icon: selectedIcon,
-          lat, lng,
-          date: new Date().toLocaleDateString()
-        });
+        spots.push({ id: Date.now().toString(), name, zone, target, notes, color: selectedColor, icon: selectedIcon, lat, lng, date: new Date().toLocaleDateString() });
       }
       
       localStorage.setItem('cescospot_data', JSON.stringify(spots));
@@ -1068,10 +1113,7 @@
       closeModals();
       
       const searchInput = document.getElementById('searchSpotInput');
-      if (searchInput) {
-          searchInput.value = '';
-          filterSpots();
-      }
+      if (searchInput) { searchInput.value = ''; filterSpots(); }
     }
 
     function editSpot(id) {
@@ -1093,16 +1135,14 @@
         if(c.dataset.icon === spot.icon) {
           c.classList.add('selected');
           selectedIcon = spot.icon;
-          selectedIconType = spot.icon.startsWith('fa-') ? 'fa' : 'emoji';
           document.getElementById('selectedIconLabel').innerText = iconList.find(i => i.id === spot.icon)?.name || '';
         }
       });
-
       document.getElementById('modalAddSpot').classList.add('open');
     }
 
     function deleteSpot(id) {
-      if(confirm("Sei sicuro di voler eliminare definitivamente questo spot?")) {
+      if(confirm("Sei sicuro di voler eliminare questo spot?")) {
         spots = spots.filter(s => s.id !== id);
         localStorage.setItem('cescospot_data', JSON.stringify(spots));
         renderMapSpots();
@@ -1115,7 +1155,7 @@
 
       spots.forEach(s => {
         const isEmoji = s.icon && !s.icon.startsWith('fa-');
-        const iconHtml = isEmoji ? `<span style="font-size:1.3rem;">${s.icon}</span>` : `<i class="fa-solid ${s.icon}"></i>`;
+        const iconHtml = isEmoji ? `<span style="font-size:1.4rem;">${s.icon}</span>` : `<i class="fa-solid ${s.icon}"></i>`;
         const markerBorder = s.color === '#f8fafc' ? '#0f172a' : 'white';
 
         const customIcon = L.divIcon({
@@ -1123,11 +1163,11 @@
           html: `
             <div class="custom-map-icon" style="background-color: ${s.color}; border-color: ${markerBorder};">
                 ${iconHtml}
-                <div style="position: absolute; bottom: -12px; left: 50%; transform: translateX(-50%); border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 10px solid ${s.color}; filter: drop-shadow(0px 3px 2px rgba(0,0,0,0.4));"></div>
+                <div style="position: absolute; bottom: -14px; left: 50%; transform: translateX(-50%); border-left: 8px solid transparent; border-right: 8px solid transparent; border-top: 14px solid ${s.color}; filter: drop-shadow(0px 3px 2px rgba(0,0,0,0.5));"></div>
             </div>`,
-          iconSize: [38, 50],
-          iconAnchor: [19, 48],
-          popupAnchor: [0, -40]
+          iconSize: [42, 56],
+          iconAnchor: [21, 54],
+          popupAnchor: [0, -45]
         });
 
         let popup = `<b style="font-size:1.1rem;">${s.name}</b><br><small>Zona: ${s.zone || 'Generale'}</small>`;
@@ -1158,13 +1198,13 @@
       if(!container) return;
       
       if(spots.length === 0) {
-        container.innerHTML = '<p style="color:var(--text-muted); text-align:center; margin-top:30px; font-weight:600;">Nessun spot registrato. Aggiungine uno dalla Mappa!</p>';
+        container.innerHTML = '<p style="color:var(--text-muted); text-align:center; margin-top:30px; font-weight:600;">Nessun spot salvato. Aggiungine uno dalla Mappa!</p>';
         return;
       }
 
       const grouped = {};
       spots.forEach(s => {
-        const zone = s.zone || 'Altre Zone (Generale)';
+        const zone = s.zone || 'Altre Zone';
         if (!grouped[zone]) grouped[zone] = [];
         grouped[zone].push(s);
       });
@@ -1173,11 +1213,10 @@
       
       Object.keys(grouped).sort().forEach((zone, index) => {
         const safeZoneId = 'zone_' + index; 
-        
         let htmlSec = `
           <div class="zone-section" data-zone-name="${zone.toLowerCase()}">
             <div class="zone-header" onclick="toggleZoneList('${safeZoneId}')">
-              <span><i class="fa-solid fa-map-pin" style="margin-right:8px;"></i> ${zone} <span class="zone-count">(${grouped[zone].length})</span></span>
+              <span><i class="fa-solid fa-map-pin" style="margin-right:10px;"></i> ${zone} <span style="opacity:0.6;">(${grouped[zone].length})</span></span>
               <i class="fa-solid fa-chevron-down" id="zone-icon-${safeZoneId}"></i>
             </div>
             <div class="zone-content" id="zone-content-${safeZoneId}">
@@ -1185,27 +1224,27 @@
         
         grouped[zone].forEach(s => {
           const isEmoji = s.icon && !s.icon.startsWith('fa-');
-          const iconHtml = isEmoji ? `<span style="font-size:1.3rem;">${s.icon}</span>` : `<i class="fa-solid ${s.icon}"></i>`;
+          const iconHtml = isEmoji ? `<span style="font-size:1.4rem;">${s.icon}</span>` : `<i class="fa-solid ${s.icon}"></i>`;
           const markerBorder = s.color === '#f8fafc' ? '#0f172a' : 'white';
 
           htmlSec += `
-            <div class="widget-card spot-item" data-search-text="${(s.name + ' ' + s.target + ' ' + s.notes).toLowerCase()}" style="display:flex; justify-content:space-between; align-items:center; padding:14px; margin-bottom:12px; background:var(--panel-bg); border-radius:12px; border:1px solid var(--border-color);">
-              <div onclick="focusSpot('${s.id}')" style="display:flex; align-items:center; gap:14px; flex:1; cursor:pointer; overflow:hidden;">
-                <div class="custom-map-icon" style="background-color: ${s.color}; border-color: ${markerBorder}; position:static; width:40px; height:40px; font-size:1.1rem; flex-shrink:0;">${iconHtml}</div>
+            <div class="widget-card spot-item" data-search-text="${(s.name + ' ' + s.target + ' ' + s.notes).toLowerCase()}" style="display:flex; justify-content:space-between; align-items:center; padding:16px; margin-bottom:12px; background:rgba(15,23,42,0.8); border-radius:16px; border:1px solid rgba(255,255,255,0.05);">
+              <div onclick="focusSpot('${s.id}')" style="display:flex; align-items:center; gap:16px; flex:1; cursor:pointer; overflow:hidden;">
+                <div class="custom-map-icon" style="background-color: ${s.color}; border-color: ${markerBorder}; position:static; width:44px; height:44px; font-size:1.2rem; flex-shrink:0;">${iconHtml}</div>
                 <div style="overflow:hidden;">
-                  <b style="color:#fff; display:block; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; font-size:1.05rem;">${s.name}</b>
-                  ${s.target ? `<small style="color:var(--accent-light-blue); display:block; font-weight:600;">Target: ${s.target}</small>` : ''}
-                  <small style="color:var(--text-muted)">Lat: ${s.lat.toFixed(3)}, Lng: ${s.lng.toFixed(3)}</small>
+                  <b style="color:#fff; display:block; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; font-size:1.1rem;">${s.name}</b>
+                  ${s.target ? `<small style="color:var(--accent-light-blue); display:block; font-weight:700;">Target: ${s.target}</small>` : ''}
+                  <small style="color:var(--text-muted)">Lat: ${s.lat.toFixed(4)}</small>
                 </div>
               </div>
-              <div class="spot-actions" style="display:flex; gap:4px; flex-shrink:0;">
-                <button class="btn-nav" onclick="openInMaps(${s.lat}, ${s.lng})" title="Naviga in Maps"><i class="fa-solid fa-route"></i></button>
+              <div class="spot-actions" style="display:flex; gap:6px; flex-shrink:0;">
+                <button class="btn-share" onclick="shareSpot('${s.name}', ${s.lat}, ${s.lng})" title="Condividi"><i class="fa-solid fa-share-nodes"></i></button>
+                <button class="btn-nav" onclick="openInMaps(${s.lat}, ${s.lng})" title="Naviga"><i class="fa-solid fa-route"></i></button>
                 <button class="btn-edit" onclick="editSpot('${s.id}')" title="Modifica"><i class="fa-solid fa-pen"></i></button>
                 <button class="btn-delete" onclick="deleteSpot('${s.id}')" title="Elimina"><i class="fa-solid fa-trash"></i></button>
               </div>
             </div>`;
         });
-        
         htmlSec += `</div></div>`;
         container.innerHTML += htmlSec;
       });
@@ -1218,19 +1257,14 @@
       sections.forEach(section => {
         let visibleCount = 0;
         const items = section.querySelectorAll('.spot-item');
-        
         items.forEach(item => {
           if (item.getAttribute('data-search-text').includes(q) || section.getAttribute('data-zone-name').includes(q)) {
             item.style.display = 'flex';
             visibleCount++;
-          } else {
-            item.style.display = 'none';
-          }
+          } else { item.style.display = 'none'; }
         });
-
-        if (visibleCount === 0) {
-          section.style.display = 'none';
-        } else {
+        if (visibleCount === 0) { section.style.display = 'none'; } 
+        else {
           section.style.display = 'block';
           if (q !== '') {
              section.querySelector('.zone-content').style.display = 'block';
@@ -1240,7 +1274,7 @@
       });
     }
 
-    // --- FUNZIONALITA' RIGHELLO DISTANZE SULLA MAPPA ---
+    // --- RIGHELLO ---
     let rulerActive = false;
     let rulerPoints = [];
     let rulerLine = null;
@@ -1269,10 +1303,10 @@
     map.on('click', function(e) {
       if (rulerActive) {
         rulerPoints.push([e.latlng.lat, e.latlng.lng]);
-        L.circleMarker(e.latlng, {radius: 4, color: '#38bdf8', fillColor: '#fff', fillOpacity: 1}).addTo(rulerMarkers);
+        L.circleMarker(e.latlng, {radius: 5, color: '#38bdf8', fillColor: '#fff', fillOpacity: 1}).addTo(rulerMarkers);
         if (rulerPoints.length > 1) {
           if (rulerLine) map.removeLayer(rulerLine);
-          rulerLine = L.polyline(rulerPoints, { color: '#38bdf8', weight: 4, dashArray: '6, 8' }).addTo(map);
+          rulerLine = L.polyline(rulerPoints, { color: '#38bdf8', weight: 5, dashArray: '8, 8' }).addTo(map);
           let dist = 0;
           for (let i = 0; i < rulerPoints.length - 1; i++) {
             dist += L.latLng(rulerPoints[i]).distanceTo(L.latLng(rulerPoints[i+1]));
@@ -1281,24 +1315,22 @@
         }
       } else {
         if(tempMarker) map.removeLayer(tempMarker);
-        
         const tempIcon = L.divIcon({
           className: '',
           html: `<div style="width:24px; height:24px; background:var(--accent-blue); border:3px solid #fff; border-radius:50%; box-shadow:0 0 15px rgba(2,132,199,1); animation: pulse 1s infinite alternate;"></div>`,
           iconSize: [24, 24], iconAnchor: [12, 12]
         });
-        
         tempMarker = L.marker(e.latlng, {icon: tempIcon}).addTo(map);
         openAddSpotModal(e.latlng.lat, e.latlng.lng);
       }
     });
 
-    // --- AGGIORNAMENTO DINAMICO DATI METEO E SOLUNARI ---
+    // --- AGGIORNAMENTO DINAMICO DATI METEO PRO ---
     function updateForecastData(btnElement) {
       let originalHtml = '';
       if(btnElement) {
         originalHtml = btnElement.innerHTML;
-        btnElement.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Aggiornamento...';
+        btnElement.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sincronizzazione...';
         btnElement.disabled = true;
       }
 
@@ -1351,64 +1383,58 @@
       document.getElementById('minor1').innerText = formatTimeSpanMin(hMinor1);
       document.getElementById('minor2').innerText = formatTimeSpanMin(hMinor2);
 
-      fetch(`https://api.open-meteo.com/v1/forecast?latitude=${center.lat}&longitude=${center.lng}&current=temperature_2m,wind_speed_10m,wind_direction_10m,surface_pressure,cloud_cover,weather_code`)
+      fetch(`https://api.open-meteo.com/v1/forecast?latitude=${center.lat}&longitude=${center.lng}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m,wind_direction_10m,surface_pressure,cloud_cover,visibility`)
         .then(res => res.json())
         .then(data => {
             const code = data.current.weather_code || 0;
             let weatherIconStr = '<i class="fa-solid fa-sun" style="color:#eab308;"></i>';
-            if(code >= 1 && code <= 3) weatherIconStr = '<i class="fa-solid fa-cloud-sun"></i>';
-            else if(code === 45 || code === 48) weatherIconStr = '<i class="fa-solid fa-smog"></i>';
-            else if(code >= 51 && code <= 67) weatherIconStr = '<i class="fa-solid fa-cloud-rain" style="color:#38bdf8;"></i>';
-            else if(code >= 71 && code <= 77) weatherIconStr = '<i class="fa-solid fa-snowflake" style="color:#fff;"></i>';
-            else if(code >= 80 && code <= 82) weatherIconStr = '<i class="fa-solid fa-cloud-showers-heavy" style="color:#38bdf8;"></i>';
-            else if(code >= 95) weatherIconStr = '<i class="fa-solid fa-cloud-bolt" style="color:#eab308;"></i>';
+            let descText = "Sereno";
             
-            document.getElementById('wTemp').innerHTML = `${weatherIconStr} ${Math.round(data.current.temperature_2m)}°C`;
+            if(code >= 1 && code <= 3) { weatherIconStr = '<i class="fa-solid fa-cloud-sun"></i>'; descText = "Poco Nuvoloso"; }
+            else if(code === 45 || code === 48) { weatherIconStr = '<i class="fa-solid fa-smog"></i>'; descText = "Nebbia"; }
+            else if(code >= 51 && code <= 67) { weatherIconStr = '<i class="fa-solid fa-cloud-rain" style="color:#38bdf8;"></i>'; descText = "Pioggia Leggera"; }
+            else if(code >= 71 && code <= 77) { weatherIconStr = '<i class="fa-solid fa-snowflake" style="color:#fff;"></i>'; descText = "Neve"; }
+            else if(code >= 80 && code <= 82) { weatherIconStr = '<i class="fa-solid fa-cloud-showers-heavy" style="color:#38bdf8;"></i>'; descText = "Pioggia Forte"; }
+            else if(code >= 95) { weatherIconStr = '<i class="fa-solid fa-cloud-bolt" style="color:#eab308;"></i>'; descText = "Temporale"; }
+            
+            document.getElementById('wIconLarge').innerHTML = weatherIconStr;
+            document.getElementById('wTempLarge').innerText = `${Math.round(data.current.temperature_2m)}°`;
+            document.getElementById('wDesc').innerText = descText;
+
+            document.getElementById('wFeelsLike').innerText = `${Math.round(data.current.apparent_temperature)}°C`;
+            document.getElementById('wHumidity').innerText = `${data.current.relative_humidity_2m}%`;
             
             const windDir = data.current.wind_direction_10m;
-            document.getElementById('wWind').innerHTML = `${Math.round(data.current.wind_speed_10m)} km/h <i class="fa-solid fa-arrow-up" style="transform: rotate(${windDir}deg); margin-left:6px; font-size:0.9rem; color:var(--accent-light-blue);"></i>`;
+            document.getElementById('wWind').innerHTML = `${Math.round(data.current.wind_speed_10m)} <i class="fa-solid fa-arrow-up" style="transform: rotate(${windDir}deg); font-size:1rem; color:var(--accent-light-blue);"></i>`;
             
-            document.getElementById('wPressure').innerText = Math.round(data.current.surface_pressure) + ' hPa';
-            document.getElementById('wClouds').innerText = data.current.cloud_cover + '%';
+            document.getElementById('wPressure').innerText = `${Math.round(data.current.surface_pressure)} hPa`;
+            document.getElementById('wRain').innerText = `${data.current.precipitation} mm`;
+            document.getElementById('wVis').innerText = `${Math.round(data.current.visibility / 1000)} km`;
             
             if(btnElement) {
-              btnElement.innerHTML = '<i class="fa-solid fa-check"></i> Aggiornato!';
-              setTimeout(() => {
-                btnElement.innerHTML = originalHtml;
-                btnElement.disabled = false;
-              }, 2000);
+              btnElement.innerHTML = '<i class="fa-solid fa-check"></i> Meteo Aggiornato';
+              setTimeout(() => { btnElement.innerHTML = originalHtml; btnElement.disabled = false; }, 2000);
             }
         })
         .catch(e => {
-            console.error('Meteo non raggiungibile', e);
-            document.getElementById('wTemp').innerText = 'Err';
+            console.error('Meteo err:', e);
+            document.getElementById('wDesc').innerText = 'Errore di Rete';
             if(btnElement) {
-              btnElement.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Errore Meteo';
-              setTimeout(() => {
-                btnElement.innerHTML = originalHtml;
-                btnElement.disabled = false;
-              }, 2000);
+              btnElement.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Errore Server';
+              setTimeout(() => { btnElement.innerHTML = originalHtml; btnElement.disabled = false; }, 2000);
             }
         });
     }
 
-    // --- NAVIGAZIONE TABS ---
     function switchTab(tabId, btn) {
       document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
       document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
       document.getElementById(tabId).classList.add('active');
       btn.classList.add('active');
-      
-      if(tabId === 'tabMap') {
-        setTimeout(() => map.invalidateSize(), 300);
-      }
-      
-      if(tabId === 'tabForecasts') {
-        updateForecastData(); 
-      }
+      if(tabId === 'tabMap') { setTimeout(() => map.invalidateSize(), 300); }
+      if(tabId === 'tabForecasts') { updateForecastData(); }
     }
 
-    // --- GPS REAL-TIME (PRECISIONE E CENTRATURA CORRETTA) ---
     let watchId = null;
     let userMarker = null;
     let userAccuracyCircle = null;
@@ -1429,7 +1455,6 @@
       if ("geolocation" in navigator) {
         watchId = navigator.geolocation.watchPosition((pos) => {
           const { latitude: lat, longitude: lng, accuracy } = pos.coords;
-          
           if(!userMarker) {
             userMarker = L.circleMarker([lat, lng], { radius: 8, color: '#fff', weight: 2, fillColor: '#0284c7', fillOpacity: 1 }).addTo(map);
             userAccuracyCircle = L.circle([lat, lng], { radius: accuracy, color: '#38bdf8', fillColor: '#38bdf8', fillOpacity: 0.2, weight: 1 }).addTo(map);
@@ -1445,14 +1470,12 @@
           watchId = null;
         }, { enableHighAccuracy: true, maximumAge: 0 });
       } else {
-        alert("Geolocalizzazione non supportata sul tuo dispositivo.");
+        alert("Geolocalizzazione non supportata.");
         btn.classList.remove('active');
       }
     }
 
-    // --- BUSSOLA ROTANTE ED ILLUMINAZIONE LETTERE ---
     let lastHeading = 0;
-    
     function initCompass() {
       const btn = document.querySelector('.btn-compass-perm');
       if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
@@ -1461,37 +1484,24 @@
             window.addEventListener('deviceorientation', handleOrientation, true);
             btn.classList.add('active');
             btn.innerHTML = '<i class="fa-solid fa-compass"></i> Attiva';
-          } else {
-            alert("Devi concedere il permesso per leggere i sensori di orientamento.");
-          }
+          } else { alert("Permesso negato."); }
         }).catch(console.error);
       } else if (window.DeviceOrientationEvent) {
         window.addEventListener('deviceorientation', handleOrientation, true);
         btn.classList.add('active');
         btn.innerHTML = '<i class="fa-solid fa-compass"></i> Attiva';
-      } else {
-        alert("Sensore bussola non supportato da questo browser.");
-      }
+      } else { alert("Sensore non supportato."); }
     }
 
     function handleOrientation(event) {
-      let heading = null;
-      if (event.webkitCompassHeading) {
-        heading = event.webkitCompassHeading;
-      } else if (event.alpha !== null) {
-        heading = 360 - event.alpha;
-      }
-      
+      let heading = event.webkitCompassHeading || (event.alpha !== null ? 360 - event.alpha : null);
       if (heading !== null && !isNaN(heading)) {
         document.getElementById('hdgVal').innerHTML = `<i class="fa-regular fa-compass" style="font-size: 1.4rem; color: var(--text-muted);"></i> ${Math.round(heading)}° <small>HDG</small>`;
         
         const pointer = document.getElementById('compassPointer');
         if(pointer) {
-          if (Math.abs(heading - lastHeading) > 180) {
-              pointer.style.transition = 'none';
-          } else {
-              pointer.style.transition = 'left 0.3s cubic-bezier(0.25, 0.8, 0.25, 1)';
-          }
+          if (Math.abs(heading - lastHeading) > 180) { pointer.style.transition = 'none'; } 
+          else { pointer.style.transition = 'left 0.3s cubic-bezier(0.25, 0.8, 0.25, 1)'; }
           pointer.style.left = (heading / 360 * 100) + '%';
           lastHeading = heading;
         }
@@ -1518,12 +1528,8 @@
     style.innerHTML = `@keyframes pulse { from { transform: scale(1); opacity: 1; } to { transform: scale(1.3); opacity: 0.7; } }`;
     document.head.appendChild(style);
 
-    // Boot App
     renderMapSpots();
-    if(spots.length > 0) {
-      map.setView([spots[spots.length-1].lat, spots[spots.length-1].lng], 13);
-    }
-    
+    if(spots.length > 0) map.setView([spots[spots.length-1].lat, spots[spots.length-1].lng], 13);
     setTimeout(() => { updateForecastData(null); }, 1000);
   </script>
 </body>
