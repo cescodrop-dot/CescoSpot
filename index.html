@@ -807,13 +807,29 @@
       <div id="map"></div>
     </div>
 
-    <!-- TAB 2: METEO, SOLUNARE & MARE DA RIVA -->
+    <!-- TAB 2: METEO, SOLUNARE, MARE & FIUMI -->
     <div id="tabForecasts" class="tab-content" style="padding:16px;">
       
       <div class="weather-hero-card">
         <div class="w-icon-huge" id="wIconLarge"><i class="fa-solid fa-cloud-sun"></i></div>
         <div class="w-temp-huge" id="wTempLarge">--°</div>
         <div class="w-desc-text" id="wDesc">In attesa di dati...</div>
+      </div>
+
+      <!-- NUOVA SEZIONE: LIVELLO & PORTATA FIUME DA RIVA -->
+      <div class="widget-card">
+        <div class="widget-title"><i class="fa-solid fa-water-ladder" style="color:var(--accent-light-blue);"></i> Idrologia & Fiumi da Riva</div>
+        <div style="background:rgba(15,23,42,0.7); padding:14px 16px; border-radius:14px; border:1px solid rgba(255,255,255,0.05); margin-bottom:12px; display:flex; align-items:center; justify-content:space-between;">
+          <div>
+            <div style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">STATO CORSO D'ACQUA</div>
+            <div style="font-size:1.05rem; font-weight:800; color:var(--accent-light-blue);" id="riverStatusText">Calcolo idrologico in corso...</div>
+          </div>
+          <div id="riverTrendIcon" style="font-size:1.8rem; color:var(--accent-light-blue);"><i class="fa-solid fa-water"></i></div>
+        </div>
+        <div class="metric-grid">
+          <div class="metric-box"><div class="metric-val" id="riverDischarge">-- m³/s</div><div class="metric-lbl">Portata Flusso</div></div>
+          <div class="metric-box"><div class="metric-val" id="riverTrend">--</div><div class="metric-lbl">Trend Fiume</div></div>
+        </div>
       </div>
 
       <!-- Tendenza Barometrica & Dettagli Meteo -->
@@ -1763,7 +1779,7 @@
       }
     });
 
-    // --- AGGIORNAMENTO DATI METEO, ONDE, TENDENZA & MAREE ---
+    // --- AGGIORNAMENTO DATI METEO, FIUMI, ONDE, TENDENZA & MAREE ---
     function updateForecastData(btnElement) {
       let originalHtml = '';
       if(btnElement) {
@@ -1916,6 +1932,61 @@
         })
         .catch(e => {
             document.getElementById('wDesc').innerText = 'Errore di Rete';
+        });
+
+      // Fetch Idrologico Fiumi (Flood & River Discharge)
+      fetch(`https://flood-api.open-meteo.com/v1/flood?latitude=${center.lat}&longitude=${center.lng}&daily=river_discharge&past_days=2&forecast_days=3`)
+        .then(res => res.json())
+        .then(fdata => {
+          if (fdata && fdata.daily && fdata.daily.river_discharge) {
+            const discharges = fdata.daily.river_discharge.filter(v => v !== null);
+            if (discharges.length > 0) {
+              const todayVal = discharges[2] !== undefined ? discharges[2] : discharges[discharges.length - 1];
+              const pastVal = discharges[0] !== undefined ? discharges[0] : todayVal;
+              const diff = todayVal - pastVal;
+
+              document.getElementById('riverDischarge').innerText = `${todayVal.toFixed(1)} m³/s`;
+              
+              const statusEl = document.getElementById('riverStatusText');
+              const iconEl = document.getElementById('riverTrendIcon');
+              const trendEl = document.getElementById('riverTrend');
+
+              if (todayVal > 150 || diff > 40) {
+                statusEl.innerText = "Portata Alta / Possibile Piena";
+                statusEl.style.color = "var(--accent-red)";
+                iconEl.innerHTML = `<i class="fa-solid fa-triangle-exclamation" style="color:var(--accent-red);"></i>`;
+                trendEl.innerText = "In Salita / Torbido";
+                trendEl.style.color = "var(--accent-red)";
+              } else if (diff > 5) {
+                statusEl.innerText = "Livello in Aumento";
+                statusEl.style.color = "var(--accent-amber)";
+                iconEl.innerHTML = `<i class="fa-solid fa-arrow-trend-up" style="color:var(--accent-amber);"></i>`;
+                trendEl.innerText = "In Aumento";
+                trendEl.style.color = "var(--accent-amber)";
+              } else if (diff < -5) {
+                statusEl.innerText = "Livello in Calo (Acqua Schiarisce)";
+                statusEl.style.color = "var(--accent-green)";
+                iconEl.innerHTML = `<i class="fa-solid fa-arrow-trend-down" style="color:var(--accent-green);"></i>`;
+                trendEl.innerText = "In Discesa";
+                trendEl.style.color = "var(--accent-green)";
+              } else {
+                statusEl.innerText = "Fiume Pescabile / Regolare";
+                statusEl.style.color = "var(--accent-green)";
+                iconEl.innerHTML = `<i class="fa-solid fa-water" style="color:var(--accent-green);"></i>`;
+                trendEl.innerText = "Stabile";
+                trendEl.style.color = "var(--accent-light-blue)";
+              }
+            } else {
+              document.getElementById('riverDischarge').innerText = "Fiume Minore / Lago";
+              document.getElementById('riverStatusText').innerText = "Regolare / Bacino Chiuso";
+              document.getElementById('riverTrend').innerText = "Stabile";
+            }
+          }
+        })
+        .catch(() => {
+          document.getElementById('riverDischarge').innerText = "Non Rilevato";
+          document.getElementById('riverStatusText').innerText = "Dato Non Disponibile";
+          document.getElementById('riverTrend').innerText = "--";
         });
 
       // Fetch Dati Marini (Onde)
