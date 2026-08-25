@@ -28,6 +28,7 @@
       --accent-light-blue: #38bdf8;
       --accent-green: #22c55e;
       --accent-amber: #eab308;
+      --accent-orange: #f97316;
       --accent-red: #ef4444;
       --text-light: #f8fafc;
       --text-muted: #94a3b8;
@@ -389,13 +390,13 @@
       background: linear-gradient(145deg, rgba(2, 132, 199, 0.2) 0%, rgba(15, 23, 42, 0.8) 100%);
       border: 1px solid rgba(56, 189, 248, 0.2);
       border-radius: 24px;
-      padding: 30px 20px;
+      padding: 24px 20px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       text-align: center;
-      margin-bottom: 20px;
+      margin-bottom: 18px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.3);
       position: relative;
       overflow: hidden;
@@ -403,20 +404,20 @@
     .weather-hero-card::before {
       content:''; position:absolute; top:0; left:0; right:0; height:1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
     }
-    .w-icon-huge { font-size: 4.5rem; color: var(--accent-amber); filter: drop-shadow(0 4px 10px rgba(234, 179, 8, 0.4)); margin-bottom: 10px; }
-    .w-temp-huge { font-size: 4rem; font-weight: 900; letter-spacing: -2px; margin-bottom: 4px; line-height: 1; }
-    .w-desc-text { font-size: 1.2rem; color: var(--accent-light-blue); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+    .w-icon-huge { font-size: 4rem; color: var(--accent-amber); filter: drop-shadow(0 4px 10px rgba(234, 179, 8, 0.4)); margin-bottom: 8px; }
+    .w-temp-huge { font-size: 3.6rem; font-weight: 900; letter-spacing: -2px; margin-bottom: 4px; line-height: 1; }
+    .w-desc-text { font-size: 1.1rem; color: var(--accent-light-blue); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
 
-    .widget-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); border-radius: 20px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-    .widget-title { font-size: 1.1rem; color: #fff; font-weight: 800; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+    .widget-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); border-radius: 20px; padding: 18px; margin-bottom: 18px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+    .widget-title { font-size: 1.05rem; color: #fff; font-weight: 800; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
     
-    .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 14px; }
-    .metric-box { background: rgba(15, 23, 42, 0.6); padding: 16px 12px; border-radius: 16px; text-align: center; border: 1px solid rgba(255,255,255,0.05); transition: transform 0.2s; }
+    .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; }
+    .metric-box { background: rgba(15, 23, 42, 0.6); padding: 14px 10px; border-radius: 16px; text-align: center; border: 1px solid rgba(255,255,255,0.05); transition: transform 0.2s; }
     .metric-box:active { transform: scale(0.95); }
-    .metric-val { font-size: 1.3rem; font-weight: 800; color: var(--text-light); display:flex; align-items:center; justify-content:center; gap:8px; }
+    .metric-val { font-size: 1.25rem; font-weight: 800; color: var(--text-light); display:flex; align-items:center; justify-content:center; gap:8px; }
     .metric-lbl { font-size: 0.75rem; color: var(--accent-light-blue); margin-top: 6px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;}
 
-    /* Cerca Spot Bar */
+    /* Cerca Spot & Filtro Tecniche */
     .search-bar-container {
       display: flex;
       align-items: center;
@@ -424,7 +425,7 @@
       padding: 14px 20px;
       border-radius: 16px;
       border: 1px solid rgba(255,255,255,0.1);
-      margin-bottom: 16px;
+      margin-bottom: 12px;
     }
     .search-bar-container i { color: var(--text-muted); margin-right: 14px; font-size: 1.2rem; }
     .search-bar-container input {
@@ -433,12 +434,39 @@
       color: var(--text-light);
       width: 100%;
       outline: none;
-      font-size: 1.1rem;
+      font-size: 1.05rem;
     }
     .search-bar-container input::placeholder { color: var(--text-muted); }
 
+    .technique-filter-bar {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 4px 0 14px 0;
+      scrollbar-width: none;
+    }
+    .technique-filter-bar::-webkit-scrollbar { display: none; }
+    .tech-chip {
+      padding: 8px 14px;
+      border-radius: 20px;
+      background: rgba(30, 41, 59, 0.8);
+      color: var(--text-muted);
+      border: 1px solid rgba(255,255,255,0.08);
+      font-size: 0.8rem;
+      font-weight: 700;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .tech-chip.active {
+      background: var(--accent-blue);
+      color: #fff;
+      border-color: var(--accent-light-blue);
+      box-shadow: 0 2px 10px rgba(2, 132, 199, 0.4);
+    }
+
     /* Backup Bar */
-    .backup-bar { display: flex; gap: 12px; margin-bottom: 24px; }
+    .backup-bar { display: flex; gap: 12px; margin-bottom: 20px; }
     .btn-backup {
       flex: 1;
       padding: 14px;
@@ -465,7 +493,7 @@
       color: var(--accent-light-blue);
       text-transform: uppercase;
       letter-spacing: 1px;
-      padding: 18px 20px;
+      padding: 16px 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -478,18 +506,19 @@
       background: rgba(255,255,255,0.08);
       border: 1px solid rgba(255,255,255,0.1);
       cursor: pointer;
-      font-size: 1.2rem;
-      padding: 12px;
+      font-size: 1.15rem;
+      padding: 10px;
       border-radius: 12px;
       transition: transform 0.2s;
     }
     .spot-actions button:active { transform: scale(0.85); }
     .btn-nav { color: var(--accent-green); }
+    .btn-log { color: var(--accent-orange); }
     .btn-share { color: var(--accent-amber); }
     .btn-edit { color: var(--accent-light-blue); }
     .btn-delete { color: var(--accent-red); }
 
-    /* Modal Form */
+    /* Modali */
     .modal {
       position: absolute; 
       bottom: -100%; 
@@ -520,25 +549,25 @@
       margin: 0 auto 20px auto;
     }
 
-    .form-group { margin-bottom: 18px; position: relative; }
+    .form-group { margin-bottom: 16px; position: relative; }
     .form-control { 
       width: 100%; 
-      padding: 16px 18px; 
+      padding: 14px 16px; 
       border-radius: 14px; 
       background: rgba(7, 13, 29, 0.6); 
       border: 1px solid rgba(255,255,255,0.1); 
       color: var(--text-light); 
-      font-size: 1.1rem; 
+      font-size: 1.05rem; 
       outline: none;
       margin-top: 8px;
       transition: border-color 0.2s;
     }
     .form-control:focus { border-color: var(--accent-light-blue); background: var(--bg-dark); }
 
-    .color-picker-grid { display: flex; gap: 14px; overflow-x: auto; padding: 10px 0; margin-bottom: 20px; }
+    .color-picker-grid { display: flex; gap: 14px; overflow-x: auto; padding: 10px 0; margin-bottom: 16px; }
     .color-opt {
-      width: 46px; height: 46px; border-radius: 50%; flex-shrink: 0; cursor: pointer;
-      display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.2rem;
+      width: 44px; height: 44px; border-radius: 50%; flex-shrink: 0; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.1rem;
       box-shadow: 0 4px 10px rgba(0,0,0,0.4);
       transition: transform 0.2s;
     }
@@ -548,42 +577,98 @@
     .icon-picker-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-      gap: 12px;
-      max-height: 240px;
+      gap: 10px;
+      max-height: 220px;
       overflow-y: auto;
       padding: 12px;
       background: rgba(7, 13, 29, 0.6);
       border-radius: 16px;
       border: 1px solid rgba(255,255,255,0.05);
-      margin-bottom: 20px;
+      margin-bottom: 16px;
     }
     .icon-card {
       display: flex; flex-direction: column; align-items: center; justify-content: center;
-      padding: 14px 6px; background: rgba(30, 41, 59, 0.6); border-radius: 14px;
+      padding: 12px 6px; background: rgba(30, 41, 59, 0.6); border-radius: 14px;
       border: 1px solid rgba(255,255,255,0.05); cursor: pointer; transition: all 0.2s;
     }
     .icon-card.selected { border-color: var(--accent-light-blue); background: rgba(56, 189, 248, 0.2); transform: scale(0.95); }
-    .icon-card i, .icon-card span.emoji-icon { font-size: 1.8rem; margin-bottom: 8px; }
+    .icon-card i, .icon-card span.emoji-icon { font-size: 1.6rem; margin-bottom: 6px; }
     .icon-card span.name { font-size: 0.7rem; font-weight: 700; text-align: center; }
 
     .btn-submit { 
-      width: 100%; padding: 18px; border-radius: 16px; border: none; background: var(--accent-blue); 
-      color: #fff; font-weight: 800; font-size: 1.15rem; cursor: pointer; margin-top: 10px;
+      width: 100%; padding: 16px; border-radius: 16px; border: none; background: var(--accent-blue); 
+      color: #fff; font-weight: 800; font-size: 1.1rem; cursor: pointer; margin-top: 10px;
       box-shadow: 0 6px 20px rgba(2, 132, 199, 0.5); transition: transform 0.2s;
     }
     .btn-submit:active { transform: scale(0.96); }
 
-    /* Custom Autocomplete per Specie Target */
+    /* Custom Autocomplete */
     .autocomplete-items {
       position: absolute; border: 1px solid rgba(255,255,255,0.1); border-top: none; z-index: 3000;
       top: 100%; left: 0; right: 0; background: var(--panel-bg); max-height: 220px; overflow-y: auto;
       border-radius: 0 0 14px 14px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); display: none;
     }
     .autocomplete-items div {
-      padding: 16px 18px; cursor: pointer; color: var(--text-light); border-bottom: 1px solid rgba(255,255,255,0.05);
-      font-size: 1.05rem; font-weight: 600;
+      padding: 14px 16px; cursor: pointer; color: var(--text-light); border-bottom: 1px solid rgba(255,255,255,0.05);
+      font-size: 1rem; font-weight: 600;
     }
     .autocomplete-items div:active { background-color: rgba(56,189,248,0.2); color: var(--accent-light-blue); }
+
+    /* Anteprima Foto */
+    .photo-preview-box {
+      width: 100%;
+      height: 160px;
+      border-radius: 14px;
+      border: 2px dashed rgba(255,255,255,0.2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: var(--text-muted);
+      cursor: pointer;
+      background: rgba(7, 13, 29, 0.4);
+      margin-top: 8px;
+      overflow: hidden;
+      position: relative;
+    }
+    .photo-preview-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .photo-preview-box .btn-remove-photo {
+      position: absolute;
+      top: 8px; right: 8px;
+      background: rgba(239, 68, 68, 0.85);
+      color: #fff;
+      border: none;
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* Diario Catture List Card */
+    .catch-item {
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 14px;
+      margin-bottom: 12px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    .catch-thumb {
+      width: 60px; height: 60px;
+      border-radius: 12px;
+      background: var(--card-bg);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+    .catch-thumb img { width: 100%; height: 100%; object-fit: cover; }
 
     /* Custom Marker Mappa */
     .custom-map-icon {
@@ -612,7 +697,7 @@
 </head>
 <body>
 
-  <!-- GENERAZIONE MANIFEST PWA DINAMICO PER L'ICONA -->
+  <!-- GENERAZIONE MANIFEST PWA DINAMICO -->
   <script>
     (function generateManifest() {
         const manifest = {
@@ -634,7 +719,7 @@
 
   <!-- BANNER INSTALLAZIONE -->
   <div class="install-banner" id="installBanner">
-    <div class="install-banner-text" id="installText">Installa CescoSpot PRO!<br><small>Naviga, esplora, salva.</small></div>
+    <div class="install-banner-text" id="installText">Installa CescoSpot PRO!<br><small>Naviga, esplora, salva da riva.</small></div>
     <div style="display:flex; align-items:center;">
       <button class="btn-install" id="installBtn">Installa</button>
       <button class="btn-close-banner" onclick="closeInstallBanner()"><i class="fa-solid fa-xmark"></i></button>
@@ -669,7 +754,7 @@
       
       <!-- Overlay Ricerca Luoghi (Geocoder) -->
       <div class="map-search-overlay" id="mapSearchOverlay">
-        <input type="text" id="mapSearchInput" placeholder="Cerca indirizzo o luogo...">
+        <input type="text" id="mapSearchInput" placeholder="Cerca lago, fiume, spiaggia, comune...">
         <button onclick="performMapSearch()"><i class="fa-solid fa-magnifying-glass"></i></button>
         <button class="btn-close-search" onclick="toggleMapSearch()"><i class="fa-solid fa-xmark"></i></button>
       </div>
@@ -696,7 +781,7 @@
       <div id="map"></div>
     </div>
 
-    <!-- TAB 2: METEO (TOTALMENTE RINNOVATO) -->
+    <!-- TAB 2: METEO, SOLUNARE & MARE DA RIVA -->
     <div id="tabForecasts" class="tab-content" style="padding:16px;">
       
       <div class="weather-hero-card">
@@ -705,43 +790,87 @@
         <div class="w-desc-text" id="wDesc">In attesa di dati...</div>
       </div>
 
+      <!-- Tendenza Barometrica & Dettagli Meteo -->
       <div class="widget-card">
-        <div class="widget-title"><i class="fa-solid fa-temperature-half" style="color:var(--accent-light-blue);"></i> Dettagli Ambientali</div>
+        <div class="widget-title"><i class="fa-solid fa-gauge-high" style="color:var(--accent-light-blue);"></i> Barometro & Condizioni</div>
+        <div style="background:rgba(15,23,42,0.7); padding:12px 16px; border-radius:14px; border:1px solid rgba(255,255,255,0.05); margin-bottom:12px; display:flex; align-items:center; justify-content:space-between;">
+          <div>
+            <div style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">TENDENZA PRESSIONE (6H)</div>
+            <div style="font-size:1.05rem; font-weight:800; color:#fff;" id="pTrendText">Calcolo in corso...</div>
+          </div>
+          <div id="pTrendIcon" style="font-size:1.8rem; color:var(--accent-light-blue);"><i class="fa-solid fa-arrows-left-right"></i></div>
+        </div>
+        
         <div class="metric-grid">
           <div class="metric-box"><div class="metric-val" id="wFeelsLike">--°</div><div class="metric-lbl">Percepita</div></div>
           <div class="metric-box"><div class="metric-val" id="wHumidity">--%</div><div class="metric-lbl">Umidità</div></div>
           <div class="metric-box"><div class="metric-val" id="wWind">-- km/h</div><div class="metric-lbl">Vento</div></div>
           <div class="metric-box"><div class="metric-val" id="wPressure">-- hPa</div><div class="metric-lbl">Pressione</div></div>
-          <div class="metric-box"><div class="metric-val" id="wRain">-- mm</div><div class="metric-lbl">Precipitazioni</div></div>
-          <div class="metric-box"><div class="metric-val" id="wVis">-- km</div><div class="metric-lbl">Visibilità</div></div>
+          <div class="metric-box"><div class="metric-val" id="wRain">-- mm</div><div class="metric-lbl">Pioggia</div></div>
+          <div class="metric-box"><div class="metric-val" id="wClouds">--%</div><div class="metric-lbl">Nuvolosità</div></div>
         </div>
       </div>
 
+      <!-- Orari Solari e Golden Hour -->
       <div class="widget-card">
-        <div class="widget-title"><i class="fa-solid fa-fish-fins" style="color:var(--accent-green);"></i> Solunare & Pesca</div>
+        <div class="widget-title"><i class="fa-solid fa-sun" style="color:var(--accent-amber);"></i> Luce & Momento Magico</div>
+        <div class="metric-grid">
+          <div class="metric-box"><div class="metric-val" id="wSunrise">--:--</div><div class="metric-lbl">Alba</div></div>
+          <div class="metric-box"><div class="metric-val" id="wSunset">--:--</div><div class="metric-lbl">Tramonto</div></div>
+          <div class="metric-box"><div class="metric-val" id="wGoldenMorn">--:--</div><div class="metric-lbl">Golden Morning</div></div>
+          <div class="metric-box"><div class="metric-val" id="wGoldenEve">--:--</div><div class="metric-lbl">Golden Evening</div></div>
+        </div>
+      </div>
+
+      <!-- Stato del Mare & Maree (Per la costa) -->
+      <div class="widget-card">
+        <div class="widget-title"><i class="fa-solid fa-water" style="color:var(--accent-light-blue);"></i> Mare & Maree da Riva</div>
+        <div class="metric-grid">
+          <div class="metric-box"><div class="metric-val" id="wWaveHeight">-- m</div><div class="metric-lbl">Altezza Onde</div></div>
+          <div class="metric-box"><div class="metric-val" id="wWavePeriod">-- s</div><div class="metric-lbl">Periodo Onda</div></div>
+          <div class="metric-box"><div class="metric-val" id="wTideState">--</div><div class="metric-lbl">Fase Marea</div></div>
+          <div class="metric-box"><div class="metric-val" id="wNextTide">--:--</div><div class="metric-lbl">Prossimo Picco</div></div>
+        </div>
+      </div>
+
+      <!-- Solunare -->
+      <div class="widget-card">
+        <div class="widget-title"><i class="fa-solid fa-fish-fins" style="color:var(--accent-green);"></i> Solunare & Attività</div>
         <p style="text-align:center; font-size:1.6rem; font-weight:900; margin-bottom:4px; color:var(--text-muted);" id="fishActivityText">Calcolo...</p>
-        <p style="text-align:center; font-size:0.85rem; color:var(--text-muted); margin-bottom:16px; font-weight:600;" id="moonPhaseText">Fase Lunare: --</p>
+        <p style="text-align:center; font-size:0.85rem; color:var(--text-muted); margin-bottom:14px; font-weight:600;" id="moonPhaseText">Fase Lunare: --</p>
         
         <div class="metric-grid">
-          <div class="metric-box"><div class="metric-val" style="font-size:1.1rem" id="major1">--:--</div><div class="metric-lbl">Major 1</div></div>
-          <div class="metric-box"><div class="metric-val" style="font-size:1.1rem" id="major2">--:--</div><div class="metric-lbl">Major 2</div></div>
-          <div class="metric-box"><div class="metric-val" style="font-size:1.1rem" id="minor1">--:--</div><div class="metric-lbl">Minor 1</div></div>
-          <div class="metric-box"><div class="metric-val" style="font-size:1.1rem" id="minor2">--:--</div><div class="metric-lbl">Minor 2</div></div>
+          <div class="metric-box"><div class="metric-val" style="font-size:1.05rem" id="major1">--:--</div><div class="metric-lbl">Major 1</div></div>
+          <div class="metric-box"><div class="metric-val" style="font-size:1.05rem" id="major2">--:--</div><div class="metric-lbl">Major 2</div></div>
+          <div class="metric-box"><div class="metric-val" style="font-size:1.05rem" id="minor1">--:--</div><div class="metric-lbl">Minor 1</div></div>
+          <div class="metric-box"><div class="metric-val" style="font-size:1.05rem" id="minor2">--:--</div><div class="metric-lbl">Minor 2</div></div>
         </div>
       </div>
       
-      <button class="btn-refresh-weather" id="btnUpdateWeather" onclick="updateForecastData(this)"><i class="fa-solid fa-arrows-rotate"></i> Aggiorna Meteo Reale</button>
+      <button class="btn-refresh-weather" id="btnUpdateWeather" onclick="updateForecastData(this)"><i class="fa-solid fa-arrows-rotate"></i> Aggiorna Condizioni</button>
     </div>
 
-    <!-- TAB 3: GESTIONE SPOT E BACKUP (RIORDINATO) -->
+    <!-- TAB 3: ARCHIVIO SPOT & DIARIO -->
     <div id="tabMe" class="tab-content" style="padding:16px;">
       
       <div class="search-bar-container">
         <i class="fa-solid fa-magnifying-glass"></i>
-        <input type="text" id="searchSpotInput" onkeyup="filterSpots()" placeholder="Cerca spot, specie o zona...">
+        <input type="text" id="searchSpotInput" onkeyup="filterSpots()" placeholder="Cerca spot, esca, specie...">
       </div>
 
-      <!-- Backup posizionato esattamente sotto la barra di ricerca -->
+      <!-- Filtri Rapidi per Tecnica -->
+      <div class="technique-filter-bar">
+        <div class="tech-chip active" onclick="setTechFilter('all', this)">Tutte</div>
+        <div class="tech-chip" onclick="setTechFilter('Spinning', this)">Spinning</div>
+        <div class="tech-chip" onclick="setTechFilter('Feeder', this)">Feeder</div>
+        <div class="tech-chip" onclick="setTechFilter('Carpfishing', this)">Carpfishing</div>
+        <div class="tech-chip" onclick="setTechFilter('Mosca', this)">Mosca</div>
+        <div class="tech-chip" onclick="setTechFilter('Galleggiante / Bolognese', this)">Galleggiante</div>
+        <div class="tech-chip" onclick="setTechFilter('Fondo / Surfcasting', this)">Fondo / Surf</div>
+        <div class="tech-chip" onclick="setTechFilter('Trout Area', this)">Trout Area</div>
+      </div>
+
+      <!-- Backup posizionato direttamente sotto -->
       <div class="backup-bar">
         <button class="btn-backup" onclick="exportSpots()"><i class="fa-solid fa-file-arrow-down" style="color:var(--accent-light-blue);"></i>Esporta</button>
         <button class="btn-backup" onclick="document.getElementById('importFile').click()"><i class="fa-solid fa-file-arrow-up" style="color:var(--accent-green);"></i>Importa</button>
@@ -760,7 +889,7 @@
     <button class="nav-item" onclick="switchTab('tabMe', this)"><i class="fa-solid fa-bookmark"></i>Archivio</button>
   </nav>
 
-  <!-- Modal Aggiungi/Modifica Spot -->
+  <!-- Modal Aggiungi/Modifica Spot (Con Foto Postazione e Tecnica) -->
   <div class="modal" id="modalAddSpot">
     <div class="modal-drag-handle"></div>
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
@@ -772,10 +901,11 @@
     <form id="spotForm" onsubmit="event.preventDefault(); saveSpotFromModal();">
       <input type="hidden" id="tempLat">
       <input type="hidden" id="tempLng">
+      <input type="hidden" id="spotPhotoData">
       
       <div class="form-group">
         <label style="font-size:0.8rem; font-weight:800; color:var(--text-muted); margin-left:4px;">NOME SPOT *</label>
-        <input type="text" class="form-control" id="spotName" placeholder="Es. Secca del Largo, Buca profonda..." required>
+        <input type="text" class="form-control" id="spotName" placeholder="Es. Buca sotto gli alberi, Scogliera sud..." required>
       </div>
 
       <div class="form-group">
@@ -783,16 +913,40 @@
         <input type="text" class="form-control" id="spotZone" placeholder="Ricerca in corso o inserisci manualmente...">
       </div>
 
-      <!-- Autocomplete Specie Target Ottimizzato per Mobile -->
       <div class="form-group">
-        <label style="font-size:0.8rem; font-weight:800; color:var(--text-muted); margin-left:4px;">SPECIE TARGET</label>
-        <input type="text" class="form-control" id="spotTarget" autocomplete="off" placeholder="Inizia a digitare (es. Carpa, Luccio...)">
-        <div id="autocomplete-list" class="autocomplete-items"></div>
+        <label style="font-size:0.8rem; font-weight:800; color:var(--text-muted); margin-left:4px;">TECNICA PRINCIPALE</label>
+        <select class="form-control" id="spotTechnique" style="padding:14px 16px;">
+          <option value="">Seleziona Tecnica...</option>
+          <option value="Spinning">Spinning</option>
+          <option value="Feeder">Feeder</option>
+          <option value="Carpfishing">Carpfishing</option>
+          <option value="Mosca">Mosca</option>
+          <option value="Galleggiante / Bolognese">Galleggiante / Bolognese</option>
+          <option value="Fondo / Surfcasting">Fondo / Surfcasting</option>
+          <option value="Trout Area">Trout Area</option>
+          <option value="Altro">Altro</option>
+        </select>
       </div>
 
       <div class="form-group">
-        <label style="font-size:0.8rem; font-weight:800; color:var(--text-muted); margin-left:4px;">NOTE / DESCRIZIONE</label>
-        <textarea class="form-control" id="spotNotes" rows="2" placeholder="Profondità, fondale, esche suggerite..."></textarea>
+        <label style="font-size:0.8rem; font-weight:800; color:var(--text-muted); margin-left:4px;">SPECIE TARGET</label>
+        <input type="text" class="form-control" id="spotTarget" autocomplete="off" placeholder="Inizia a digitare (es. Carpa, Luccio, Spigola...)">
+        <div id="autocomplete-list" class="autocomplete-items"></div>
+      </div>
+
+      <!-- Foto Postazione da Riva -->
+      <div class="form-group">
+        <label style="font-size:0.8rem; font-weight:800; color:var(--text-muted); margin-left:4px;">FOTO POSTAZIONE / ACCESSO</label>
+        <div class="photo-preview-box" id="spotPhotoBox" onclick="document.getElementById('spotPhotoInput').click()">
+          <i class="fa-solid fa-camera" style="font-size:2rem; color:var(--accent-light-blue);"></i>
+          <span style="font-size:0.85rem; font-weight:700;">Tocca per scattare o caricare foto</span>
+        </div>
+        <input type="file" id="spotPhotoInput" accept="image/*" style="display:none;" onchange="handlePhotoUpload(event, 'spotPhotoData', 'spotPhotoBox')">
+      </div>
+
+      <div class="form-group">
+        <label style="font-size:0.8rem; font-weight:800; color:var(--text-muted); margin-left:4px;">NOTE / SEGRETI DELLO SPOT</label>
+        <textarea class="form-control" id="spotNotes" rows="2" placeholder="Fondale, varchi nella vegetazione, ostacoli sommersi..."></textarea>
       </div>
 
       <label style="font-size:0.8rem; font-weight:800; color:var(--text-muted); display:block; margin-bottom:10px; margin-left:4px;">COLORE MARKER</label>
@@ -812,6 +966,59 @@
 
       <button type="button" class="btn-submit" onclick="saveSpotFromModal()">Salva nel Database</button>
     </form>
+  </div>
+
+  <!-- Modal DIARIO CATTURE (Logbook) -->
+  <div class="modal" id="modalLogbook">
+    <div class="modal-drag-handle"></div>
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+      <button type="button" style="background:none; border:none; font-size:1.8rem; color:var(--text-muted); cursor:pointer;" onclick="closeLogbookModal()"><i class="fa-solid fa-xmark"></i></button>
+      <h4 style="font-size:1.2rem; color:#fff; font-weight:900;" id="logbookTitle">Diario Catture</h4>
+      <div style="width:30px;"></div>
+    </div>
+
+    <!-- Lista Catture Registrate -->
+    <div id="catchesListContainer" style="margin-bottom:20px;"></div>
+
+    <!-- Modulo Aggiunta Cattura -->
+    <div style="background:rgba(15,23,42,0.8); border:1px solid rgba(255,255,255,0.08); border-radius:20px; padding:18px;">
+      <h5 style="color:var(--accent-orange); font-size:1rem; font-weight:800; margin-bottom:12px;"><i class="fa-solid fa-plus"></i> Nuova Cattura</h5>
+      
+      <input type="hidden" id="catchSpotId">
+      <input type="hidden" id="catchPhotoData">
+
+      <div class="form-group">
+        <label style="font-size:0.75rem; font-weight:800; color:var(--text-muted);">SPECIE *</label>
+        <input type="text" class="form-control" id="catchSpecies" placeholder="Es. Luccio, Cavedano, Orata..." required>
+      </div>
+
+      <div style="display:flex; gap:12px;">
+        <div class="form-group" style="flex:1;">
+          <label style="font-size:0.75rem; font-weight:800; color:var(--text-muted);">PESO (KG)</label>
+          <input type="number" step="0.05" class="form-control" id="catchWeight" placeholder="Es. 2.4">
+        </div>
+        <div class="form-group" style="flex:1;">
+          <label style="font-size:0.75rem; font-weight:800; color:var(--text-muted);">LUNGHEZZA (CM)</label>
+          <input type="number" class="form-control" id="catchLength" placeholder="Es. 65">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label style="font-size:0.75rem; font-weight:800; color:var(--text-muted);">ESCA / ARTIFICIALE USATO</label>
+        <input type="text" class="form-control" id="catchLure" placeholder="Es. Minnow 9cm, Boilie Spezie, Mais...">
+      </div>
+
+      <div class="form-group">
+        <label style="font-size:0.75rem; font-weight:800; color:var(--text-muted);">FOTO DELLA PREDA</label>
+        <div class="photo-preview-box" id="catchPhotoBox" style="height:120px;" onclick="document.getElementById('catchPhotoInput').click()">
+          <i class="fa-solid fa-camera" style="font-size:1.6rem; color:var(--accent-orange);"></i>
+          <span style="font-size:0.8rem; font-weight:700;">Aggiungi foto cattura</span>
+        </div>
+        <input type="file" id="catchPhotoInput" accept="image/*" style="display:none;" onchange="handlePhotoUpload(event, 'catchPhotoData', 'catchPhotoBox')">
+      </div>
+
+      <button type="button" class="btn-submit" style="background:var(--accent-orange);" onclick="saveCatch()">Registra nel Diario</button>
+    </div>
   </div>
 
 </div>
@@ -856,8 +1063,8 @@
       setTimeout(() => installBanner.style.display = 'none', 400);
     }
 
-    // --- AUTOCOMPLETE SPECIE TARGET (OTTIMIZZATO MOBILE) ---
-    const speciesArray = ["Amur (Carpa Erbivora)", "Anguilla", "Barbo", "Carassio", "Carpa Comune", "Carpa Specchio", "Cavedano", "Cheppia", "Luccio", "Luccioperca (Sandra)", "Persico Reale", "Persico Trota (Black Bass)", "Pesce Gatto", "Scardola", "Siluro", "Storione", "Temolo", "Tinca", "Trota Fario", "Trota Iridea", "Trota Marmorata", "Vairone"];
+    // --- AUTOCOMPLETE SPECIE TARGET ---
+    const speciesArray = ["Amur (Carpa Erbivora)", "Anguilla", "Barbo", "Carassio", "Carpa Comune", "Carpa Specchio", "Cavedano", "Cheppia", "Luccio", "Luccioperca (Sandra)", "Persico Reale", "Persico Trota (Black Bass)", "Pesce Gatto", "Scardola", "Siluro", "Storione", "Temolo", "Tinca", "Trota Fario", "Trota Iridea", "Trota Marmorata", "Vairone", "Spigola / Branzino", "Orata", "Sarago", "Mormora", "Serra", "Leccia", "Palamita", "Dentice", "Cefalo"];
     const targetInput = document.getElementById('spotTarget');
     const autoList = document.getElementById('autocomplete-list');
 
@@ -885,6 +1092,56 @@
     targetInput.addEventListener('input', updateAutocomplete);
     targetInput.addEventListener('focus', updateAutocomplete);
     targetInput.addEventListener('blur', () => { setTimeout(() => { autoList.style.display = 'none'; }, 200); });
+
+    // --- COMPRESSIONE E GESTIONE FOTO LOCALI ---
+    function handlePhotoUpload(event, hiddenInputId, previewBoxId) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          const maxDim = 800; // Ridimensiona per non occupare troppa memoria
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height && width > maxDim) {
+            height = Math.round((height * maxDim) / width);
+            width = maxDim;
+          } else if (height > maxDim) {
+            width = Math.round((width * maxDim) / height);
+            height = maxDim;
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+
+          const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
+          document.getElementById(hiddenInputId).value = compressedDataUrl;
+
+          const box = document.getElementById(previewBoxId);
+          box.innerHTML = `
+            <img src="${compressedDataUrl}">
+            <button type="button" class="btn-remove-photo" onclick="event.stopPropagation(); removePhoto('${hiddenInputId}', '${previewBoxId}')"><i class="fa-solid fa-trash"></i></button>
+          `;
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function removePhoto(hiddenInputId, previewBoxId) {
+      document.getElementById(hiddenInputId).value = '';
+      const box = document.getElementById(previewBoxId);
+      box.innerHTML = `
+        <i class="fa-solid fa-camera" style="font-size:2rem; color:var(--accent-light-blue);"></i>
+        <span style="font-size:0.85rem; font-weight:700;">Tocca per scattare o caricare foto</span>
+      `;
+    }
 
     // --- MAPPA E LIVELLI (Leaflet) ---
     const map = L.map('map', { zoomControl: false, attributionControl: false }).setView([41.9028, 12.4964], 6);
@@ -930,7 +1187,6 @@
           }
         })
         .catch(err => {
-          console.error("Errore Geocoder:", err);
           alert("Errore di connessione per la ricerca.");
         });
     }
@@ -938,19 +1194,20 @@
     // --- ELENCO ICONE ---
     const iconList = [
       { id: '📍', type: 'emoji', name: 'Pin Esatto' },
-      { id: '🐟', type: 'emoji', name: 'Pesce Generico' },
-      { id: '🌲', type: 'emoji', name: 'Albero/Riva' },
-      { id: '🌊', type: 'emoji', name: 'Acqua Profonda' },
-      { id: '🌉', type: 'emoji', name: 'Ponte/Struttura' },
-      { id: '⚓', type: 'emoji', name: 'Ancoraggio' },
-      { id: '⛺', type: 'emoji', name: 'Accampamento' },
-      { id: '🚤', type: 'emoji', name: 'Rampa Barche' },
-      { id: '⚠️', type: 'emoji', name: 'Ostacolo/Pericolo' }
+      { id: '🐟', type: 'emoji', name: 'Pesce / Spot' },
+      { id: '🌲', type: 'emoji', name: 'Albero / Riva' },
+      { id: '🌊', type: 'emoji', name: 'Acqua / Buca' },
+      { id: '🚗', type: 'emoji', name: 'Parcheggio / Accesso' },
+      { id: '🌉', type: 'emoji', name: 'Ponte / Manfatto' },
+      { id: '⚓', type: 'emoji', name: 'Scogliera / Molo' },
+      { id: '⛺', type: 'emoji', name: 'Postazione Tenda' },
+      { id: '⚠️', type: 'emoji', name: 'Ostacolo / Incastro' }
     ];
 
     let selectedColor = '#22c55e';
     let selectedIcon = '📍';
     let selectedIconType = 'emoji';
+    let selectedTechFilter = 'all';
     let spots = [];
     let mapMarkers = {};
     let editingSpotId = null;
@@ -1058,7 +1315,7 @@
       window.open(`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`, '_blank');
     }
 
-    // --- MODAL & CRUD ---
+    // --- MODAL & CRUD SPOT ---
     function openAddSpotModal(lat, lng) {
       editingSpotId = null;
       document.getElementById('modalTitle').innerText = "Salva Posizione";
@@ -1069,8 +1326,10 @@
       
       document.getElementById('spotName').value = '';
       document.getElementById('spotZone').value = 'Ricerca zona in corso...';
+      document.getElementById('spotTechnique').value = '';
       document.getElementById('spotTarget').value = '';
       document.getElementById('spotNotes').value = '';
+      removePhoto('spotPhotoData', 'spotPhotoBox');
 
       fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${center.lat}&lon=${center.lng}&zoom=14`)
         .then(res => res.json())
@@ -1096,16 +1355,31 @@
     function saveSpotFromModal() {
       const name = document.getElementById('spotName').value || 'Nuovo Spot';
       const zone = document.getElementById('spotZone').value.trim() || 'Generale';
+      const technique = document.getElementById('spotTechnique').value || '';
       const target = document.getElementById('spotTarget').value || '';
+      const photo = document.getElementById('spotPhotoData').value || '';
       const notes = document.getElementById('spotNotes').value || '';
       const lat = parseFloat(document.getElementById('tempLat').value);
       const lng = parseFloat(document.getElementById('tempLng').value);
 
       if (editingSpotId) {
         const idx = spots.findIndex(s => s.id === editingSpotId);
-        if (idx !== -1) spots[idx] = { ...spots[idx], name, zone, target, notes, color: selectedColor, icon: selectedIcon };
+        if (idx !== -1) {
+          spots[idx] = { 
+            ...spots[idx], 
+            name, zone, technique, target, photo, notes, 
+            color: selectedColor, icon: selectedIcon 
+          };
+        }
       } else {
-        spots.push({ id: Date.now().toString(), name, zone, target, notes, color: selectedColor, icon: selectedIcon, lat, lng, date: new Date().toLocaleDateString() });
+        spots.push({ 
+          id: Date.now().toString(), 
+          name, zone, technique, target, photo, notes, 
+          color: selectedColor, icon: selectedIcon, 
+          lat, lng, 
+          catches: [], 
+          date: new Date().toLocaleDateString() 
+        });
       }
       
       localStorage.setItem('cescospot_data', JSON.stringify(spots));
@@ -1124,11 +1398,23 @@
       document.getElementById('modalTitle').innerText = "Modifica Spot";
       document.getElementById('spotName').value = spot.name;
       document.getElementById('spotZone').value = spot.zone || 'Generale';
+      document.getElementById('spotTechnique').value = spot.technique || '';
       document.getElementById('spotTarget').value = spot.target || '';
       document.getElementById('spotNotes').value = spot.notes || '';
       document.getElementById('tempLat').value = spot.lat;
       document.getElementById('tempLng').value = spot.lng;
       
+      if (spot.photo) {
+        document.getElementById('spotPhotoData').value = spot.photo;
+        const box = document.getElementById('spotPhotoBox');
+        box.innerHTML = `
+          <img src="${spot.photo}">
+          <button type="button" class="btn-remove-photo" onclick="event.stopPropagation(); removePhoto('spotPhotoData', 'spotPhotoBox')"><i class="fa-solid fa-trash"></i></button>
+        `;
+      } else {
+        removePhoto('spotPhotoData', 'spotPhotoBox');
+      }
+
       selectColor(spot.color, document.querySelector(`.color-opt[data-color="${spot.color}"]`));
       document.querySelectorAll('.icon-card').forEach(c => {
         c.classList.remove('selected');
@@ -1149,6 +1435,102 @@
       }
     }
 
+    // --- DIARIO CATTURE (LOGBOOK) ---
+    function openLogbook(spotId) {
+      const spot = spots.find(s => s.id === spotId);
+      if (!spot) return;
+
+      document.getElementById('catchSpotId').value = spotId;
+      document.getElementById('logbookTitle').innerText = `Catture: ${spot.name}`;
+      document.getElementById('catchSpecies').value = '';
+      document.getElementById('catchWeight').value = '';
+      document.getElementById('catchLength').value = '';
+      document.getElementById('catchLure').value = '';
+      removePhoto('catchPhotoData', 'catchPhotoBox');
+
+      renderCatchesList(spot);
+      document.getElementById('modalLogbook').classList.add('open');
+    }
+
+    function closeLogbookModal() {
+      document.getElementById('modalLogbook').classList.remove('open');
+    }
+
+    function saveCatch() {
+      const spotId = document.getElementById('catchSpotId').value;
+      const spot = spots.find(s => s.id === spotId);
+      if (!spot) return;
+
+      const species = document.getElementById('catchSpecies').value.trim();
+      if (!species) { alert("Inserisci la specie della cattura!"); return; }
+
+      const weight = document.getElementById('catchWeight').value;
+      const length = document.getElementById('catchLength').value;
+      const lure = document.getElementById('catchLure').value.trim();
+      const photo = document.getElementById('catchPhotoData').value;
+
+      if (!spot.catches) spot.catches = [];
+
+      spot.catches.unshift({
+        id: Date.now().toString(),
+        species,
+        weight: weight ? parseFloat(weight) : null,
+        length: length ? parseFloat(length) : null,
+        lure: lure || '',
+        photo: photo || '',
+        date: new Date().toLocaleDateString(),
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      });
+
+      localStorage.setItem('cescospot_data', JSON.stringify(spots));
+      renderCatchesList(spot);
+      renderSavedSpotsUI();
+
+      // Pulisci campi
+      document.getElementById('catchSpecies').value = '';
+      document.getElementById('catchWeight').value = '';
+      document.getElementById('catchLength').value = '';
+      document.getElementById('catchLure').value = '';
+      removePhoto('catchPhotoData', 'catchPhotoBox');
+    }
+
+    function deleteCatch(spotId, catchId) {
+      const spot = spots.find(s => s.id === spotId);
+      if (!spot || !spot.catches) return;
+      if (confirm("Vuoi eliminare questa cattura dal diario?")) {
+        spot.catches = spot.catches.filter(c => c.id !== catchId);
+        localStorage.setItem('cescospot_data', JSON.stringify(spots));
+        renderCatchesList(spot);
+        renderSavedSpotsUI();
+      }
+    }
+
+    function renderCatchesList(spot) {
+      const container = document.getElementById('catchesListContainer');
+      if (!spot.catches || spot.catches.length === 0) {
+        container.innerHTML = `<p style="text-align:center; color:var(--text-muted); font-size:0.9rem; padding:10px;">Nessuna cattura registrata per questo spot. Registrane una qui sotto!</p>`;
+        return;
+      }
+
+      container.innerHTML = spot.catches.map(c => `
+        <div class="catch-item">
+          <div class="catch-thumb">
+            ${c.photo ? `<img src="${c.photo}">` : `<i class="fa-solid fa-fish" style="font-size:1.6rem; color:var(--text-muted);"></i>`}
+          </div>
+          <div style="flex:1; overflow:hidden;">
+            <b style="color:#fff; font-size:1rem;">${c.species}</b>
+            <div style="font-size:0.8rem; color:var(--accent-orange); font-weight:700;">
+              ${c.weight ? `${c.weight} kg` : ''} ${c.length ? `• ${c.length} cm` : ''}
+            </div>
+            ${c.lure ? `<div style="font-size:0.75rem; color:var(--text-muted);">Esca: ${c.lure}</div>` : ''}
+            <div style="font-size:0.7rem; color:var(--text-muted); margin-top:2px;">${c.date} alle ${c.time}</div>
+          </div>
+          <button type="button" style="background:none; border:none; color:var(--accent-red); font-size:1.1rem; padding:8px; cursor:pointer;" onclick="deleteCatch('${spot.id}', '${c.id}')"><i class="fa-solid fa-trash"></i></button>
+        </div>
+      `).join('');
+    }
+
+    // --- RENDER MAPPA & ARCHIVIO ---
     function renderMapSpots() {
       Object.values(mapMarkers).forEach(m => map.removeLayer(m));
       mapMarkers = {};
@@ -1171,7 +1553,9 @@
         });
 
         let popup = `<b style="font-size:1.1rem;">${s.name}</b><br><small>Zona: ${s.zone || 'Generale'}</small>`;
+        if(s.technique) popup += `<br><small style="color:#f97316;">Tecnica: ${s.technique}</small>`;
         if(s.target) popup += `<br><small>Target: ${s.target}</small>`;
+        if(s.catches && s.catches.length > 0) popup += `<br><small style="color:#22c55e;"><b>Catture nel diario: ${s.catches.length}</b></small>`;
         if(s.notes) popup += `<br><small><i>${s.notes}</i></small>`;
 
         const m = L.marker([s.lat, s.lng], { icon: customIcon }).addTo(map).bindPopup(popup);
@@ -1179,6 +1563,13 @@
       });
 
       renderSavedSpotsUI();
+    }
+
+    function setTechFilter(tech, element) {
+      selectedTechFilter = tech;
+      document.querySelectorAll('.tech-chip').forEach(c => c.classList.remove('active'));
+      element.classList.add('active');
+      filterSpots();
     }
 
     function toggleZoneList(zoneId) {
@@ -1226,18 +1617,28 @@
           const isEmoji = s.icon && !s.icon.startsWith('fa-');
           const iconHtml = isEmoji ? `<span style="font-size:1.4rem;">${s.icon}</span>` : `<i class="fa-solid ${s.icon}"></i>`;
           const markerBorder = s.color === '#f8fafc' ? '#0f172a' : 'white';
+          const catchCount = s.catches ? s.catches.length : 0;
 
           htmlSec += `
-            <div class="widget-card spot-item" data-search-text="${(s.name + ' ' + s.target + ' ' + s.notes).toLowerCase()}" style="display:flex; justify-content:space-between; align-items:center; padding:16px; margin-bottom:12px; background:rgba(15,23,42,0.8); border-radius:16px; border:1px solid rgba(255,255,255,0.05);">
-              <div onclick="focusSpot('${s.id}')" style="display:flex; align-items:center; gap:16px; flex:1; cursor:pointer; overflow:hidden;">
+            <div class="widget-card spot-item" 
+                 data-technique="${s.technique || ''}"
+                 data-search-text="${(s.name + ' ' + s.target + ' ' + s.technique + ' ' + s.notes).toLowerCase()}" 
+                 style="display:flex; justify-content:space-between; align-items:center; padding:16px; margin-bottom:12px; background:rgba(15,23,42,0.8); border-radius:16px; border:1px solid rgba(255,255,255,0.05);">
+              
+              <div onclick="focusSpot('${s.id}')" style="display:flex; align-items:center; gap:14px; flex:1; cursor:pointer; overflow:hidden;">
                 <div class="custom-map-icon" style="background-color: ${s.color}; border-color: ${markerBorder}; position:static; width:44px; height:44px; font-size:1.2rem; flex-shrink:0;">${iconHtml}</div>
                 <div style="overflow:hidden;">
-                  <b style="color:#fff; display:block; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; font-size:1.1rem;">${s.name}</b>
-                  ${s.target ? `<small style="color:var(--accent-light-blue); display:block; font-weight:700;">Target: ${s.target}</small>` : ''}
-                  <small style="color:var(--text-muted)">Lat: ${s.lat.toFixed(4)}</small>
+                  <b style="color:#fff; display:block; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; font-size:1.05rem;">${s.name}</b>
+                  <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:2px;">
+                    ${s.technique ? `<span style="background:rgba(249,115,22,0.2); color:var(--accent-orange); font-size:0.65rem; font-weight:800; padding:2px 8px; border-radius:10px;">${s.technique}</span>` : ''}
+                    ${catchCount > 0 ? `<span style="background:rgba(34,197,94,0.2); color:var(--accent-green); font-size:0.65rem; font-weight:800; padding:2px 8px; border-radius:10px;"><i class="fa-solid fa-fish"></i> ${catchCount}</span>` : ''}
+                  </div>
+                  ${s.target ? `<small style="color:var(--accent-light-blue); display:block; font-weight:700; margin-top:2px;">Target: ${s.target}</small>` : ''}
                 </div>
               </div>
-              <div class="spot-actions" style="display:flex; gap:6px; flex-shrink:0;">
+
+              <div class="spot-actions" style="display:flex; gap:4px; flex-shrink:0;">
+                <button class="btn-log" onclick="openLogbook('${s.id}')" title="Diario Catture"><i class="fa-solid fa-book-bookmark"></i></button>
                 <button class="btn-share" onclick="shareSpot('${s.name}', ${s.lat}, ${s.lng})" title="Condividi"><i class="fa-solid fa-share-nodes"></i></button>
                 <button class="btn-nav" onclick="openInMaps(${s.lat}, ${s.lng})" title="Naviga"><i class="fa-solid fa-route"></i></button>
                 <button class="btn-edit" onclick="editSpot('${s.id}')" title="Modifica"><i class="fa-solid fa-pen"></i></button>
@@ -1258,15 +1659,19 @@
         let visibleCount = 0;
         const items = section.querySelectorAll('.spot-item');
         items.forEach(item => {
-          if (item.getAttribute('data-search-text').includes(q) || section.getAttribute('data-zone-name').includes(q)) {
+          const matchesText = item.getAttribute('data-search-text').includes(q) || section.getAttribute('data-zone-name').includes(q);
+          const matchesTech = selectedTechFilter === 'all' || item.getAttribute('data-technique') === selectedTechFilter;
+
+          if (matchesText && matchesTech) {
             item.style.display = 'flex';
             visibleCount++;
           } else { item.style.display = 'none'; }
         });
+
         if (visibleCount === 0) { section.style.display = 'none'; } 
         else {
           section.style.display = 'block';
-          if (q !== '') {
+          if (q !== '' || selectedTechFilter !== 'all') {
              section.querySelector('.zone-content').style.display = 'block';
              section.querySelector('.fa-chevron-right')?.classList.replace('fa-chevron-right', 'fa-chevron-down');
           }
@@ -1325,7 +1730,7 @@
       }
     });
 
-    // --- AGGIORNAMENTO DINAMICO DATI METEO PRO ---
+    // --- AGGIORNAMENTO DATI METEO, ONDE, TENDENZA & MAREE ---
     function updateForecastData(btnElement) {
       let originalHtml = '';
       if(btnElement) {
@@ -1335,8 +1740,9 @@
       }
 
       const center = map.getCenter();
-      
       const now = new Date();
+
+      // Solunare & Fasi Lunari
       const lp = 2551443; 
       const newMoon = new Date(1970, 0, 7, 20, 35, 0).getTime();
       const phase = ((now.getTime() - newMoon) / 1000) % lp;
@@ -1383,7 +1789,24 @@
       document.getElementById('minor1').innerText = formatTimeSpanMin(hMinor1);
       document.getElementById('minor2').innerText = formatTimeSpanMin(hMinor2);
 
-      fetch(`https://api.open-meteo.com/v1/forecast?latitude=${center.lat}&longitude=${center.lng}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m,wind_direction_10m,surface_pressure,cloud_cover,visibility`)
+      // Stima Maree da Riva (Ciclo semi-diurno lunare ~12.4h)
+      const tideHours = ((now.getHours() * 60 + now.getMinutes()) / 60) % 12.4;
+      if (tideHours < 3.1) {
+        document.getElementById('wTideState').innerText = "In Salita";
+        document.getElementById('wNextTide').innerText = `Alta tra ${Math.round(3.1 - tideHours)}h`;
+      } else if (tideHours < 6.2) {
+        document.getElementById('wTideState').innerText = "Alta Marea";
+        document.getElementById('wNextTide').innerText = `Picco Massimo`;
+      } else if (tideHours < 9.3) {
+        document.getElementById('wTideState').innerText = "In Discesa";
+        document.getElementById('wNextTide').innerText = `Bassa tra ${Math.round(9.3 - tideHours)}h`;
+      } else {
+        document.getElementById('wTideState').innerText = "Bassa Marea";
+        document.getElementById('wNextTide').innerText = `Picco Minimo`;
+      }
+
+      // Fetch Meteo Generale & Storico Orario (per Pressione 6h e Luce)
+      fetch(`https://api.open-meteo.com/v1/forecast?latitude=${center.lat}&longitude=${center.lng}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m,wind_direction_10m,surface_pressure,cloud_cover&hourly=surface_pressure&daily=sunrise,sunset&timezone=auto`)
         .then(res => res.json())
         .then(data => {
             const code = data.current.weather_code || 0;
@@ -1392,9 +1815,9 @@
             
             if(code >= 1 && code <= 3) { weatherIconStr = '<i class="fa-solid fa-cloud-sun"></i>'; descText = "Poco Nuvoloso"; }
             else if(code === 45 || code === 48) { weatherIconStr = '<i class="fa-solid fa-smog"></i>'; descText = "Nebbia"; }
-            else if(code >= 51 && code <= 67) { weatherIconStr = '<i class="fa-solid fa-cloud-rain" style="color:#38bdf8;"></i>'; descText = "Pioggia Leggera"; }
+            else if(code >= 51 && code <= 67) { weatherIconStr = '<i class="fa-solid fa-cloud-rain" style="color:#38bdf8;"></i>'; descText = "Pioggia"; }
             else if(code >= 71 && code <= 77) { weatherIconStr = '<i class="fa-solid fa-snowflake" style="color:#fff;"></i>'; descText = "Neve"; }
-            else if(code >= 80 && code <= 82) { weatherIconStr = '<i class="fa-solid fa-cloud-showers-heavy" style="color:#38bdf8;"></i>'; descText = "Pioggia Forte"; }
+            else if(code >= 80 && code <= 82) { weatherIconStr = '<i class="fa-solid fa-cloud-showers-heavy" style="color:#38bdf8;"></i>'; descText = "Rovesci"; }
             else if(code >= 95) { weatherIconStr = '<i class="fa-solid fa-cloud-bolt" style="color:#eab308;"></i>'; descText = "Temporale"; }
             
             document.getElementById('wIconLarge').innerHTML = weatherIconStr;
@@ -1405,24 +1828,79 @@
             document.getElementById('wHumidity').innerText = `${data.current.relative_humidity_2m}%`;
             
             const windDir = data.current.wind_direction_10m;
-            document.getElementById('wWind').innerHTML = `${Math.round(data.current.wind_speed_10m)} <i class="fa-solid fa-arrow-up" style="transform: rotate(${windDir}deg); font-size:1rem; color:var(--accent-light-blue);"></i>`;
+            document.getElementById('wWind').innerHTML = `${Math.round(data.current.wind_speed_10m)} <i class="fa-solid fa-arrow-up" style="transform: rotate(${windDir}deg); font-size:0.9rem; color:var(--accent-light-blue);"></i>`;
             
             document.getElementById('wPressure').innerText = `${Math.round(data.current.surface_pressure)} hPa`;
             document.getElementById('wRain').innerText = `${data.current.precipitation} mm`;
-            document.getElementById('wVis').innerText = `${Math.round(data.current.visibility / 1000)} km`;
-            
+            document.getElementById('wClouds').innerText = `${data.current.cloud_cover}%`;
+
+            // Tendenza Pressione Ultime 6 ore
+            if (data.hourly && data.hourly.surface_pressure) {
+              const currentHour = now.getHours();
+              const pNow = data.current.surface_pressure;
+              const p6hAgo = data.hourly.surface_pressure[Math.max(0, currentHour - 6)] || pNow;
+              const diff = pNow - p6hAgo;
+
+              const trendText = document.getElementById('pTrendText');
+              const trendIcon = document.getElementById('pTrendIcon');
+
+              if (diff <= -1.5) {
+                trendText.innerText = `In rapido calo (${diff.toFixed(1)} hPa)`;
+                trendText.style.color = 'var(--accent-red)';
+                trendIcon.innerHTML = `<i class="fa-solid fa-arrow-trend-down" style="color:var(--accent-red);"></i>`;
+              } else if (diff >= 1.5) {
+                trendText.innerText = `In salita (+${diff.toFixed(1)} hPa)`;
+                trendText.style.color = 'var(--accent-green)';
+                trendIcon.innerHTML = `<i class="fa-solid fa-arrow-trend-up" style="color:var(--accent-green);"></i>`;
+              } else {
+                trendText.innerText = `Stabile (${diff >= 0 ? '+' : ''}${diff.toFixed(1)} hPa)`;
+                trendText.style.color = 'var(--accent-light-blue)';
+                trendIcon.innerHTML = `<i class="fa-solid fa-arrows-left-right" style="color:var(--accent-light-blue);"></i>`;
+              }
+            }
+
+            // Orari Solari e Golden Hour
+            if (data.daily && data.daily.sunrise && data.daily.sunset) {
+              const sr = new Date(data.daily.sunrise[0]);
+              const ss = new Date(data.daily.sunset[0]);
+
+              document.getElementById('wSunrise').innerText = sr.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+              document.getElementById('wSunset').innerText = ss.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+              const gmMornStart = new Date(sr.getTime() - 20 * 60000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+              const gmMornEnd = new Date(sr.getTime() + 45 * 60000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+              document.getElementById('wGoldenMorn').innerText = `${gmMornStart} - ${gmMornEnd}`;
+
+              const gmEveStart = new Date(ss.getTime() - 45 * 60000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+              const gmEveEnd = new Date(ss.getTime() + 20 * 60000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+              document.getElementById('wGoldenEve').innerText = `${gmEveStart} - ${gmEveEnd}`;
+            }
+
             if(btnElement) {
-              btnElement.innerHTML = '<i class="fa-solid fa-check"></i> Meteo Aggiornato';
+              btnElement.innerHTML = '<i class="fa-solid fa-check"></i> Condizioni Aggiornate';
               setTimeout(() => { btnElement.innerHTML = originalHtml; btnElement.disabled = false; }, 2000);
             }
         })
         .catch(e => {
-            console.error('Meteo err:', e);
             document.getElementById('wDesc').innerText = 'Errore di Rete';
-            if(btnElement) {
-              btnElement.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Errore Server';
-              setTimeout(() => { btnElement.innerHTML = originalHtml; btnElement.disabled = false; }, 2000);
-            }
+        });
+
+      // Fetch Dati Marini (Onde) da Open-Meteo Marine
+      fetch(`https://marine-api.open-meteo.com/v1/marine?latitude=${center.lat}&longitude=${center.lng}&current=wave_height,wave_period`)
+        .then(res => res.json())
+        .then(mdata => {
+          if (mdata && mdata.current && mdata.current.wave_height !== null) {
+            document.getElementById('wWaveHeight').innerText = `${mdata.current.wave_height.toFixed(1)} m`;
+            document.getElementById('wWavePeriod').innerText = `${Math.round(mdata.current.wave_period || 0)} s`;
+          } else {
+            // Acque Interne (nessun dato onda marina disponibile)
+            document.getElementById('wWaveHeight').innerText = "Calmo / Interno";
+            document.getElementById('wWavePeriod').innerText = "--";
+          }
+        })
+        .catch(() => {
+          document.getElementById('wWaveHeight').innerText = "Acque Interne";
+          document.getElementById('wWavePeriod').innerText = "--";
         });
     }
 
@@ -1465,7 +1943,7 @@
             userAccuracyCircle.setRadius(accuracy);
           }
         }, (err) => { 
-          alert("Errore GPS: Assicurati di aver dato i permessi e di avere segnale."); 
+          alert("Errore GPS: Assicurati di aver dato i permessi."); 
           btn.classList.remove('active'); 
           watchId = null;
         }, { enableHighAccuracy: true, maximumAge: 0 });
