@@ -45,15 +45,16 @@
     }
 
     html, body {
-      height: 100%;
-      height: 100dvh;
+      position: fixed;
+      inset: 0;
       width: 100vw;
-      background: linear-gradient(135deg, #070d1d 0%, #0f172a 100%);
+      height: 100dvh;
+      background: #070d1d;
       color: var(--text-light);
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      overscroll-behavior-y: none;
+      overscroll-behavior: none;
     }
 
     .app-container {
@@ -62,6 +63,7 @@
       position: relative;
       display: flex;
       flex-direction: column;
+      background: #070d1d;
     }
 
     /* PWA Install Banner */
@@ -87,7 +89,7 @@
 
     /* Top Compass Bar con Safe Area Inset */
     .top-telemetry-bar {
-      background: rgba(15, 23, 42, 0.8);
+      background: rgba(15, 23, 42, 0.95);
       backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
       padding: calc(12px + env(safe-area-inset-top)) 24px 12px 24px;
@@ -200,7 +202,7 @@
       width: 100%; 
       overflow-y: auto; 
       -webkit-overflow-scrolling: touch;
-      padding-bottom: 24px;
+      padding-bottom: calc(20px + env(safe-area-inset-bottom));
     }
     .tab-content.active { display: block; }
 
@@ -355,24 +357,25 @@
     }
     .fab-add:active { transform: scale(0.9); }
 
-    /* Bottom Nav Bar */
+    /* Bottom Nav Bar - Risolve la barra bianca su iOS */
     nav.bottom-nav {
-      background: rgba(15, 23, 42, 0.85);
+      background: #0b1329;
       backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
-      border-top: 1px solid rgba(255,255,255,0.1);
+      border-top: 1px solid rgba(255,255,255,0.08);
       display: flex;
       justify-content: space-around;
-      padding-top: 14px;
-      padding-bottom: calc(16px + env(safe-area-inset-bottom));
+      padding-top: 10px;
+      padding-bottom: calc(10px + env(safe-area-inset-bottom));
       z-index: 1000;
       box-shadow: 0 -4px 30px rgba(0,0,0,0.6);
+      width: 100%;
     }
     .nav-item {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
       color: var(--text-muted);
       font-size: 0.75rem;
       cursor: pointer;
@@ -381,9 +384,9 @@
       flex: 1;
       transition: color 0.3s;
     }
-    .nav-item i { font-size: 1.5rem; transition: transform 0.2s; }
+    .nav-item i { font-size: 1.4rem; transition: transform 0.2s; }
     .nav-item.active { color: var(--accent-light-blue); font-weight: bold; }
-    .nav-item.active i { transform: scale(1.2); }
+    .nav-item.active i { transform: scale(1.15); }
 
     /* METEO SECTION */
     .weather-hero-card {
@@ -889,7 +892,7 @@
     <button class="nav-item" onclick="switchTab('tabMe', this)"><i class="fa-solid fa-bookmark"></i>Archivio</button>
   </nav>
 
-  <!-- Modal Aggiungi/Modifica Spot (Con Foto Postazione e Tecnica) -->
+  <!-- Modal Aggiungi/Modifica Spot -->
   <div class="modal" id="modalAddSpot">
     <div class="modal-drag-handle"></div>
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
@@ -1103,7 +1106,7 @@
         const img = new Image();
         img.onload = function() {
           const canvas = document.createElement('canvas');
-          const maxDim = 800; // Ridimensiona per non occupare troppa memoria
+          const maxDim = 800; 
           let width = img.width;
           let height = img.height;
 
@@ -1421,6 +1424,7 @@
         if(c.dataset.icon === spot.icon) {
           c.classList.add('selected');
           selectedIcon = spot.icon;
+          selectedIconType = spot.icon.startsWith('fa-') ? 'fa' : 'emoji';
           document.getElementById('selectedIconLabel').innerText = iconList.find(i => i.id === spot.icon)?.name || '';
         }
       });
@@ -1486,7 +1490,6 @@
       renderCatchesList(spot);
       renderSavedSpotsUI();
 
-      // Pulisci campi
       document.getElementById('catchSpecies').value = '';
       document.getElementById('catchWeight').value = '';
       document.getElementById('catchLength').value = '';
@@ -1789,7 +1792,7 @@
       document.getElementById('minor1').innerText = formatTimeSpanMin(hMinor1);
       document.getElementById('minor2').innerText = formatTimeSpanMin(hMinor2);
 
-      // Stima Maree da Riva (Ciclo semi-diurno lunare ~12.4h)
+      // Stima Maree da Riva
       const tideHours = ((now.getHours() * 60 + now.getMinutes()) / 60) % 12.4;
       if (tideHours < 3.1) {
         document.getElementById('wTideState').innerText = "In Salita";
@@ -1805,7 +1808,7 @@
         document.getElementById('wNextTide').innerText = `Picco Minimo`;
       }
 
-      // Fetch Meteo Generale & Storico Orario (per Pressione 6h e Luce)
+      // Fetch Meteo
       fetch(`https://api.open-meteo.com/v1/forecast?latitude=${center.lat}&longitude=${center.lng}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m,wind_direction_10m,surface_pressure,cloud_cover&hourly=surface_pressure&daily=sunrise,sunset&timezone=auto`)
         .then(res => res.json())
         .then(data => {
@@ -1828,7 +1831,7 @@
             document.getElementById('wHumidity').innerText = `${data.current.relative_humidity_2m}%`;
             
             const windDir = data.current.wind_direction_10m;
-            document.getElementById('wWind').innerHTML = `${Math.round(data.current.wind_speed_10m)} <i class="fa-solid fa-arrow-up" style="transform: rotate(${windDir}deg); font-size:0.9rem; color:var(--accent-light-blue);"></i>`;
+            document.getElementById('wWind').innerHTML = `${Math.round(data.current.wind_speed_10m)} <i class="fa-solid fa-arrow-up" style="transform: rotate(${windDir}deg); font-size:1rem; color:var(--accent-light-blue);"></i>`;
             
             document.getElementById('wPressure').innerText = `${Math.round(data.current.surface_pressure)} hPa`;
             document.getElementById('wRain').innerText = `${data.current.precipitation} mm`;
@@ -1885,7 +1888,7 @@
             document.getElementById('wDesc').innerText = 'Errore di Rete';
         });
 
-      // Fetch Dati Marini (Onde) da Open-Meteo Marine
+      // Fetch Dati Marini (Onde)
       fetch(`https://marine-api.open-meteo.com/v1/marine?latitude=${center.lat}&longitude=${center.lng}&current=wave_height,wave_period`)
         .then(res => res.json())
         .then(mdata => {
@@ -1893,7 +1896,6 @@
             document.getElementById('wWaveHeight').innerText = `${mdata.current.wave_height.toFixed(1)} m`;
             document.getElementById('wWavePeriod').innerText = `${Math.round(mdata.current.wave_period || 0)} s`;
           } else {
-            // Acque Interne (nessun dato onda marina disponibile)
             document.getElementById('wWaveHeight').innerText = "Calmo / Interno";
             document.getElementById('wWavePeriod').innerText = "--";
           }
