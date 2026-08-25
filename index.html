@@ -357,7 +357,7 @@
     }
     .fab-add:active { transform: scale(0.9); }
 
-    /* Bottom Nav Bar - Risolve la barra bianca su iOS */
+    /* Bottom Nav Bar */
     nav.bottom-nav {
       background: #0b1329;
       backdrop-filter: blur(24px);
@@ -505,16 +505,33 @@
     }
     .zone-content { padding: 0 12px 12px 12px; }
 
-    .spot-actions button {
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.1);
-      cursor: pointer;
-      font-size: 1.15rem;
-      padding: 10px;
-      border-radius: 12px;
-      transition: transform 0.2s;
+    /* Pulsanti Azione Spot: 3 Sopra e 2 Sotto */
+    .spot-actions-compact {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      align-items: flex-end;
+      flex-shrink: 0;
     }
-    .spot-actions button:active { transform: scale(0.85); }
+    .spot-actions-row {
+      display: flex;
+      gap: 6px;
+    }
+    .spot-actions-compact button {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      cursor: pointer;
+      font-size: 1rem;
+      width: 36px;
+      height: 36px;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      transition: transform 0.2s, background 0.2s;
+    }
+    .spot-actions-compact button:active { transform: scale(0.85); background: rgba(255,255,255,0.2); }
     .btn-nav { color: var(--accent-green); }
     .btn-log { color: var(--accent-orange); }
     .btn-share { color: var(--accent-amber); }
@@ -1626,27 +1643,34 @@
             <div class="widget-card spot-item" 
                  data-technique="${s.technique || ''}"
                  data-search-text="${(s.name + ' ' + s.target + ' ' + s.technique + ' ' + s.notes).toLowerCase()}" 
-                 style="display:flex; justify-content:space-between; align-items:center; padding:16px; margin-bottom:12px; background:rgba(15,23,42,0.8); border-radius:16px; border:1px solid rgba(255,255,255,0.05);">
+                 style="display:flex; justify-content:space-between; align-items:center; gap:12px; padding:16px; margin-bottom:12px; background:rgba(15,23,42,0.8); border-radius:16px; border:1px solid rgba(255,255,255,0.05);">
               
-              <div onclick="focusSpot('${s.id}')" style="display:flex; align-items:center; gap:14px; flex:1; cursor:pointer; overflow:hidden;">
-                <div class="custom-map-icon" style="background-color: ${s.color}; border-color: ${markerBorder}; position:static; width:44px; height:44px; font-size:1.2rem; flex-shrink:0;">${iconHtml}</div>
-                <div style="overflow:hidden;">
-                  <b style="color:#fff; display:block; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; font-size:1.05rem;">${s.name}</b>
-                  <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:2px;">
-                    ${s.technique ? `<span style="background:rgba(249,115,22,0.2); color:var(--accent-orange); font-size:0.65rem; font-weight:800; padding:2px 8px; border-radius:10px;">${s.technique}</span>` : ''}
-                    ${catchCount > 0 ? `<span style="background:rgba(34,197,94,0.2); color:var(--accent-green); font-size:0.65rem; font-weight:800; padding:2px 8px; border-radius:10px;"><i class="fa-solid fa-fish"></i> ${catchCount}</span>` : ''}
+              <!-- Sezione Info Spot Espansa Senza Troncamenti -->
+              <div onclick="focusSpot('${s.id}')" style="display:flex; align-items:flex-start; gap:12px; flex:1; min-width:0; cursor:pointer;">
+                <div class="custom-map-icon" style="background-color: ${s.color}; border-color: ${markerBorder}; position:static; width:44px; height:44px; font-size:1.2rem; flex-shrink:0; margin-top:2px;">${iconHtml}</div>
+                <div style="flex:1; min-width:0; overflow:hidden;">
+                  <b style="color:#fff; display:block; word-break:break-word; font-size:1.05rem; line-height:1.25; margin-bottom:4px;">${s.name}</b>
+                  <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:4px;">
+                    ${s.technique ? `<span style="background:rgba(249,115,22,0.2); color:var(--accent-orange); font-size:0.7rem; font-weight:800; padding:2px 8px; border-radius:10px;">${s.technique}</span>` : ''}
+                    ${catchCount > 0 ? `<span style="background:rgba(34,197,94,0.2); color:var(--accent-green); font-size:0.7rem; font-weight:800; padding:2px 8px; border-radius:10px;"><i class="fa-solid fa-fish"></i> ${catchCount}</span>` : ''}
                   </div>
-                  ${s.target ? `<small style="color:var(--accent-light-blue); display:block; font-weight:700; margin-top:2px;">Target: ${s.target}</small>` : ''}
+                  ${s.target ? `<div style="color:var(--accent-light-blue); font-size:0.8rem; font-weight:700; line-height:1.2;">Target: ${s.target}</div>` : ''}
                 </div>
               </div>
 
-              <div class="spot-actions" style="display:flex; gap:4px; flex-shrink:0;">
-                <button class="btn-log" onclick="openLogbook('${s.id}')" title="Diario Catture"><i class="fa-solid fa-book-bookmark"></i></button>
-                <button class="btn-share" onclick="shareSpot('${s.name}', ${s.lat}, ${s.lng})" title="Condividi"><i class="fa-solid fa-share-nodes"></i></button>
-                <button class="btn-nav" onclick="openInMaps(${s.lat}, ${s.lng})" title="Naviga"><i class="fa-solid fa-route"></i></button>
-                <button class="btn-edit" onclick="editSpot('${s.id}')" title="Modifica"><i class="fa-solid fa-pen"></i></button>
-                <button class="btn-delete" onclick="deleteSpot('${s.id}')" title="Elimina"><i class="fa-solid fa-trash"></i></button>
+              <!-- Nuova Disposizione Pulsanti Azione: 3 Sopra, 2 Sotto -->
+              <div class="spot-actions-compact">
+                <div class="spot-actions-row">
+                  <button class="btn-nav" onclick="openInMaps(${s.lat}, ${s.lng})" title="Naviga"><i class="fa-solid fa-route"></i></button>
+                  <button class="btn-share" onclick="shareSpot('${s.name}', ${s.lat}, ${s.lng})" title="Condividi"><i class="fa-solid fa-share-nodes"></i></button>
+                  <button class="btn-log" onclick="openLogbook('${s.id}')" title="Diario Catture"><i class="fa-solid fa-book-bookmark"></i></button>
+                </div>
+                <div class="spot-actions-row">
+                  <button class="btn-edit" onclick="editSpot('${s.id}')" title="Modifica"><i class="fa-solid fa-pen"></i></button>
+                  <button class="btn-delete" onclick="deleteSpot('${s.id}')" title="Elimina"><i class="fa-solid fa-trash"></i></button>
+                </div>
               </div>
+
             </div>`;
         });
         htmlSec += `</div></div>`;
