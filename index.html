@@ -41,6 +41,25 @@
       --border-color: #334155;
     }
 
+    /* MODALITÀ NOTTURNA ROSSA (SALVA-VISTA PER RIVA/BUIO) */
+    body.night-mode {
+      --bg-dark: #000000 !important;
+      --panel-bg: #0a0000 !important;
+      --card-bg: #180303 !important;
+      --accent-blue: #991b1b !important;
+      --accent-light-blue: #f87171 !important;
+      --accent-green: #ef4444 !important;
+      --accent-amber: #b91c1c !important;
+      --accent-orange: #dc2626 !important;
+      --accent-red: #ff0000 !important;
+      --text-light: #fca5a5 !important;
+      --text-muted: #7f1d1d !important;
+      --border-color: #450a0a !important;
+    }
+    body.night-mode #map {
+      filter: invert(100%) hue-rotate(180deg) brightness(85%) contrast(120%) sepia(100%) saturate(600%) hue-rotate(310deg);
+    }
+
     * { 
       box-sizing: border-box; 
       margin: 0; 
@@ -55,12 +74,13 @@
       inset: 0;
       width: 100vw;
       height: 100dvh;
-      background: #070d1d;
+      background: var(--bg-dark);
       color: var(--text-light);
       display: flex;
       flex-direction: column;
       overflow: hidden;
       overscroll-behavior: none;
+      transition: background 0.3s, color 0.3s;
     }
 
     .app-container {
@@ -69,7 +89,7 @@
       position: relative;
       display: flex;
       flex-direction: column;
-      background: #070d1d;
+      background: var(--bg-dark);
     }
 
     /* PWA Install Banner */
@@ -93,7 +113,7 @@
     .btn-install { background: #fff; color: var(--accent-blue); border: none; padding: 10px 18px; border-radius: 20px; font-weight: 800; font-size: 0.85rem; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
     .btn-close-banner { background: none; border: none; color: rgba(255,255,255,0.7); font-size: 1.6rem; cursor: pointer; padding: 0 0 0 14px; }
 
-    /* Top Compass Bar con Safe Area Inset */
+    /* Top Compass Bar */
     .top-telemetry-bar {
       background: rgba(15, 23, 42, 0.95);
       backdrop-filter: blur(24px);
@@ -106,6 +126,7 @@
       z-index: 1000;
       box-shadow: 0 4px 30px rgba(0,0,0,0.5);
     }
+    body.night-mode .top-telemetry-bar { background: rgba(15, 0, 0, 0.95); }
     
     .compass-track {
       position: relative;
@@ -251,6 +272,7 @@
       cursor: pointer;
       transition: all 0.2s;
     }
+    body.night-mode .map-btn { background: rgba(20, 0, 0, 0.9); }
     .map-btn:hover { background: var(--panel-bg); }
     .map-btn:active { transform: scale(0.9); }
     .map-btn.active { background: var(--accent-blue); border-color: var(--accent-light-blue); color: #fff; }
@@ -266,6 +288,7 @@
       box-shadow: 0 4px 15px rgba(0,0,0,0.5);
       overflow: hidden;
     }
+    body.night-mode .map-btn-group { background: rgba(20, 0, 0, 0.9); }
     .map-btn-group .map-btn { border-radius: 0; border: none; box-shadow: none; background: transparent; }
     .map-btn-group .map-btn:first-child { border-bottom: 1px solid rgba(255,255,255,0.1); }
 
@@ -321,6 +344,9 @@
       bottom: 24px;
       left: 16px;
       z-index: 1000;
+      display: flex;
+      gap: 10px;
+      align-items: center;
     }
 
     .measure-box {
@@ -377,6 +403,7 @@
       box-shadow: 0 -4px 30px rgba(0,0,0,0.6);
       width: 100%;
     }
+    body.night-mode nav.bottom-nav { background: #0a0000; }
     .nav-item {
       display: flex;
       flex-direction: column;
@@ -410,6 +437,7 @@
       position: relative;
       overflow: hidden;
     }
+    body.night-mode .weather-hero-card { background: linear-gradient(145deg, rgba(153, 27, 27, 0.3) 0%, rgba(20, 0, 0, 0.8) 100%); }
     .weather-hero-card::before {
       content:''; position:absolute; top:0; left:0; right:0; height:1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
     }
@@ -417,11 +445,37 @@
     .w-temp-huge { font-size: 3.6rem; font-weight: 900; letter-spacing: -2px; margin-bottom: 4px; line-height: 1; }
     .w-desc-text { font-size: 1.1rem; color: var(--accent-light-blue); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
 
+    /* Slider Meteo Orario 24h */
+    .hourly-forecast-track {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      padding: 6px 0 12px 0;
+      scrollbar-width: none;
+    }
+    .hourly-forecast-track::-webkit-scrollbar { display: none; }
+    .hourly-box {
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 12px 14px;
+      text-align: center;
+      min-width: 78px;
+      flex-shrink: 0;
+    }
+    body.night-mode .hourly-box { background: rgba(20, 0, 0, 0.7); }
+    .hourly-time { font-size: 0.75rem; color: var(--text-muted); font-weight: 700; margin-bottom: 6px; }
+    .hourly-icon { font-size: 1.4rem; margin-bottom: 6px; }
+    .hourly-temp { font-size: 1rem; font-weight: 900; color: var(--text-light); }
+    .hourly-wind { font-size: 0.7rem; color: var(--accent-light-blue); margin-top: 4px; font-weight: 700; }
+
     .widget-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); border-radius: 20px; padding: 18px; margin-bottom: 18px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+    body.night-mode .widget-card { background: rgba(30, 5, 5, 0.7); }
     .widget-title { font-size: 1.05rem; color: #fff; font-weight: 800; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
     
     .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; }
     .metric-box { background: rgba(15, 23, 42, 0.6); padding: 14px 10px; border-radius: 16px; text-align: center; border: 1px solid rgba(255,255,255,0.05); transition: transform 0.2s; }
+    body.night-mode .metric-box { background: rgba(20, 0, 0, 0.6); }
     .metric-box:active { transform: scale(0.95); }
     .metric-val { font-size: 1.25rem; font-weight: 800; color: var(--text-light); display:flex; align-items:center; justify-content:center; gap:8px; }
     .metric-lbl { font-size: 0.75rem; color: var(--accent-light-blue); margin-top: 6px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;}
@@ -436,6 +490,7 @@
       border: 1px solid rgba(255,255,255,0.1);
       margin-bottom: 12px;
     }
+    body.night-mode .search-bar-container { background: rgba(20, 0, 0, 0.8); }
     .search-bar-container i { color: var(--text-muted); margin-right: 14px; font-size: 1.2rem; }
     .search-bar-container input {
       border: none;
@@ -475,27 +530,28 @@
     }
 
     /* Backup Bar */
-    .backup-bar { display: flex; gap: 12px; margin-bottom: 20px; }
+    .backup-bar { display: flex; gap: 8px; margin-bottom: 20px; }
     .btn-backup {
       flex: 1;
-      padding: 14px;
+      padding: 12px 8px;
       border-radius: 14px;
       border: 1px solid rgba(255,255,255,0.1);
       background: rgba(30, 41, 59, 0.8);
       color: var(--text-light);
       font-weight: 800;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 6px;
       transition: background 0.2s;
     }
     .btn-backup:active { transform: scale(0.96); background: var(--panel-bg); }
 
     /* Gestione Zone (Collapsable) */
     .zone-section { margin-bottom: 16px; background: rgba(30, 41, 59, 0.6); border-radius: 18px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); }
+    body.night-mode .zone-section { background: rgba(25, 5, 5, 0.6); }
     .zone-header {
       font-size: 1rem;
       font-weight: 800;
@@ -511,7 +567,7 @@
     }
     .zone-content { padding: 0 12px 12px 12px; }
 
-    /* Pulsanti Azione Spot: 3 Sopra e 2 Sotto */
+    /* Pulsanti Azione Spot */
     .spot-actions-compact {
       display: flex;
       flex-direction: column;
@@ -588,6 +644,7 @@
       margin-top: 8px;
       transition: border-color 0.2s;
     }
+    body.night-mode .form-control { background: rgba(20, 0, 0, 0.6); }
     .form-control:focus { border-color: var(--accent-light-blue); background: var(--bg-dark); }
 
     .color-picker-grid { display: flex; gap: 14px; overflow-x: auto; padding: 10px 0; margin-bottom: 16px; }
@@ -714,6 +771,16 @@
     }
     .btn-refresh-weather:active { transform: scale(0.96); }
 
+    /* Prontuario Nodi */
+    .knot-card {
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+    .knot-title { color: var(--accent-light-blue); font-size: 1.05rem; font-weight: 800; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between; }
+
     .leaflet-control-scale { margin-bottom: 24px !important; margin-left: 16px !important; border-color: rgba(255,255,255,0.5) !important; color: #fff !important; }
 
     ::-webkit-scrollbar { width: 6px; height: 6px; }
@@ -787,6 +854,10 @@
 
       <div class="left-controls">
         <button class="map-btn" onclick="toggleMapSearch()" title="Cerca un luogo"><i class="fa-solid fa-magnifying-glass"></i></button>
+        <!-- Modalità Notturna Salva-Vista (Punto 1) -->
+        <button class="map-btn" id="nightModeBtn" onclick="toggleNightMode()" title="Modalità Notturna Rossa"><i class="fa-solid fa-moon"></i></button>
+        <!-- Prontuario Nodi & Tabelle (Punto 1) -->
+        <button class="map-btn" onclick="openKnotsModal()" title="Prontuario Nodi & Fili"><i class="fa-solid fa-circle-nodes"></i></button>
         <div class="map-btn-group">
           <button class="map-btn" onclick="map.zoomIn()" title="Zoom In"><i class="fa-solid fa-plus"></i></button>
           <button class="map-btn" onclick="map.zoomOut()" title="Zoom Out"><i class="fa-solid fa-minus"></i></button>
@@ -800,6 +871,8 @@
 
       <div class="bottom-left-gps">
         <button class="map-btn" onclick="startTracking()" id="gpsBtn" title="Traccia Posizione"><i class="fa-solid fa-location-crosshairs"></i></button>
+        <!-- Spot Rapido al Volo 1-Tap (Punto 1) -->
+        <button class="map-btn" onclick="quickDropSpot()" title="Spot Rapido al Volo" style="color:var(--accent-amber);"><i class="fa-solid fa-bolt"></i></button>
       </div>
 
       <button class="fab-add" onclick="openAddSpotModal()" title="Aggiungi Spot"><i class="fa-solid fa-plus"></i></button>
@@ -807,7 +880,7 @@
       <div id="map"></div>
     </div>
 
-    <!-- TAB 2: METEO, SOLUNARE, MARE & FIUMI -->
+    <!-- TAB 2: METEO, FIUMI, ONDE & MAREE -->
     <div id="tabForecasts" class="tab-content" style="padding:16px;">
       
       <div class="weather-hero-card">
@@ -816,7 +889,15 @@
         <div class="w-desc-text" id="wDesc">In attesa di dati...</div>
       </div>
 
-      <!-- NUOVA SEZIONE: LIVELLO & PORTATA FIUME DA RIVA -->
+      <!-- PREVISIONI ORARIE 24H (PUNTO 2) -->
+      <div class="widget-card">
+        <div class="widget-title"><i class="fa-solid fa-clock" style="color:var(--accent-light-blue);"></i> Previsioni Orarie (24h)</div>
+        <div class="hourly-forecast-track" id="hourlyForecastTrack">
+          <p style="color:var(--text-muted); font-size:0.85rem;">Caricamento previsione oraria...</p>
+        </div>
+      </div>
+
+      <!-- LIVELLO & PORTATA FIUME DA RIVA (PUNTO 2) -->
       <div class="widget-card">
         <div class="widget-title"><i class="fa-solid fa-water-ladder" style="color:var(--accent-light-blue);"></i> Idrologia & Fiumi da Riva</div>
         <div style="background:rgba(15,23,42,0.7); padding:14px 16px; border-radius:14px; border:1px solid rgba(255,255,255,0.05); margin-bottom:12px; display:flex; align-items:center; justify-content:space-between;">
@@ -864,14 +945,14 @@
         </div>
       </div>
 
-      <!-- Stato del Mare & Maree (Per la costa) -->
+      <!-- Stato del Mare, Maree & Temperatura Acqua (Punto 2) -->
       <div class="widget-card">
         <div class="widget-title"><i class="fa-solid fa-water" style="color:var(--accent-light-blue);"></i> Mare & Maree da Riva</div>
         <div class="metric-grid">
+          <div class="metric-box"><div class="metric-val" id="wSeaTemp">--°C</div><div class="metric-lbl">Temp. Acqua Mare</div></div>
           <div class="metric-box"><div class="metric-val" id="wWaveHeight">-- m</div><div class="metric-lbl">Altezza Onde</div></div>
           <div class="metric-box"><div class="metric-val" id="wWavePeriod">-- s</div><div class="metric-lbl">Periodo Onda</div></div>
           <div class="metric-box"><div class="metric-val" id="wTideState">--</div><div class="metric-lbl">Fase Marea</div></div>
-          <div class="metric-box"><div class="metric-val" id="wNextTide">--:--</div><div class="metric-lbl">Prossimo Picco</div></div>
         </div>
       </div>
 
@@ -912,10 +993,11 @@
         <div class="tech-chip" onclick="setTechFilter('Trout Area', this)">Trout Area</div>
       </div>
 
-      <!-- Backup posizionato direttamente sotto -->
+      <!-- Backup JSON e GPX (Punto 4) -->
       <div class="backup-bar">
-        <button class="btn-backup" onclick="exportSpots()"><i class="fa-solid fa-file-arrow-down" style="color:var(--accent-light-blue);"></i>Esporta</button>
-        <button class="btn-backup" onclick="document.getElementById('importFile').click()"><i class="fa-solid fa-file-arrow-up" style="color:var(--accent-green);"></i>Importa</button>
+        <button class="btn-backup" onclick="exportSpots()"><i class="fa-solid fa-file-arrow-down" style="color:var(--accent-light-blue);"></i>Backup JSON</button>
+        <button class="btn-backup" onclick="exportGPX()"><i class="fa-solid fa-map-location-dot" style="color:var(--accent-orange);"></i>Esporta GPX</button>
+        <button class="btn-backup" onclick="document.getElementById('importFile').click()"><i class="fa-solid fa-file-arrow-up" style="color:var(--accent-green);"></i>Ripristina</button>
         <input type="file" id="importFile" style="display:none" accept=".json" onchange="importSpots(event)">
       </div>
 
@@ -955,19 +1037,27 @@
         <input type="text" class="form-control" id="spotZone" placeholder="Ricerca in corso o inserisci manualmente...">
       </div>
 
-      <div class="form-group">
-        <label style="font-size:0.8rem; font-weight:800; color:var(--text-muted); margin-left:4px;">TECNICA PRINCIPALE</label>
-        <select class="form-control" id="spotTechnique" style="padding:14px 16px;">
-          <option value="">Seleziona Tecnica...</option>
-          <option value="Spinning">Spinning</option>
-          <option value="Feeder">Feeder</option>
-          <option value="Carpfishing">Carpfishing</option>
-          <option value="Mosca">Mosca</option>
-          <option value="Galleggiante / Bolognese">Galleggiante / Bolognese</option>
-          <option value="Fondo / Surfcasting">Fondo / Surfcasting</option>
-          <option value="Trout Area">Trout Area</option>
-          <option value="Altro">Altro</option>
-        </select>
+      <div style="display:flex; gap:12px;">
+        <div class="form-group" style="flex:1;">
+          <label style="font-size:0.8rem; font-weight:800; color:var(--text-muted); margin-left:4px;">TECNICA</label>
+          <select class="form-control" id="spotTechnique" style="padding:14px 16px;">
+            <option value="">Seleziona...</option>
+            <option value="Spinning">Spinning</option>
+            <option value="Feeder">Feeder</option>
+            <option value="Carpfishing">Carpfishing</option>
+            <option value="Mosca">Mosca</option>
+            <option value="Galleggiante / Bolognese">Galleggiante</option>
+            <option value="Fondo / Surfcasting">Fondo / Surf</option>
+            <option value="Trout Area">Trout Area</option>
+            <option value="Altro">Altro</option>
+          </select>
+        </div>
+
+        <!-- RAGGIO DI LANCIO / PASTURA (PUNTO 4) -->
+        <div class="form-group" style="flex:1;">
+          <label style="font-size:0.8rem; font-weight:800; color:var(--text-muted); margin-left:4px;">RAGGIO LANCIO (M)</label>
+          <input type="number" class="form-control" id="spotRadius" placeholder="Es. 30 (opzionale)">
+        </div>
       </div>
 
       <div class="form-group">
@@ -1063,6 +1153,60 @@
     </div>
   </div>
 
+  <!-- MODAL PRONTUARIO NODI & TABELLE (PUNTO 1) -->
+  <div class="modal" id="modalKnots">
+    <div class="modal-drag-handle"></div>
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+      <button type="button" style="background:none; border:none; font-size:1.8rem; color:var(--text-muted); cursor:pointer;" onclick="closeKnotsModal()"><i class="fa-solid fa-xmark"></i></button>
+      <h4 style="font-size:1.2rem; color:#fff; font-weight:900;">Nodi & Tabelle Fili</h4>
+      <div style="width:30px;"></div>
+    </div>
+
+    <!-- Tabella Conversione Fili -->
+    <div class="widget-card" style="padding:14px; margin-bottom:16px;">
+      <div class="widget-title" style="margin-bottom:8px;"><i class="fa-solid fa-table-list" style="color:var(--accent-amber);"></i> Conversione Fili da Pesca</div>
+      <table style="width:100%; border-collapse:collapse; font-size:0.8rem; text-align:center;">
+        <thead>
+          <tr style="color:var(--accent-light-blue); border-bottom:1px solid rgba(255,255,255,0.1);">
+            <th style="padding:6px 0;">PE</th>
+            <th style="padding:6px 0;">Diametro</th>
+            <th style="padding:6px 0;">Libbre</th>
+            <th style="padding:6px 0;">Carico (kg)</th>
+          </tr>
+        </thead>
+        <tbody style="color:var(--text-light); opacity:0.9;">
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:6px 0;">#0.6</td><td>0.128 mm</td><td>8 lb</td><td>~3.6 kg</td></tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:6px 0;">#0.8</td><td>0.148 mm</td><td>12 lb</td><td>~5.4 kg</td></tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:6px 0;">#1.0</td><td>0.165 mm</td><td>16 lb</td><td>~7.2 kg</td></tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:6px 0;">#1.5</td><td>0.205 mm</td><td>24 lb</td><td>~10.8 kg</td></tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:6px 0;">#2.0</td><td>0.235 mm</td><td>30 lb</td><td>~13.6 kg</td></tr>
+          <tr><td style="padding:6px 0;">#3.0</td><td>0.285 mm</td><td>40 lb</td><td>~18.1 kg</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Nodi Essenziali -->
+    <div class="knot-card">
+      <div class="knot-title"><span>1. Nodo Palomar</span><span style="font-size:0.75rem; color:var(--accent-green);">Ami, Moschettoni, Girelle</span></div>
+      <p style="font-size:0.8rem; color:var(--text-muted); line-height:1.4;">Doppia il filo nell'occhiello, fai un nodo semplice con l'asola, passa l'amo all'interno dell'asola, inumidisci e serra con forza. Resistenza 95%.</p>
+    </div>
+
+    <div class="knot-card">
+      <div class="knot-title"><span>2. Nodo FG (Treccia ⇄ Fluorocarbon)</span><span style="font-size:0.75rem; color:var(--accent-orange);">Top Spinning / Mare</span></div>
+      <p style="font-size:0.8rem; color:var(--text-muted); line-height:1.4;">Treccia tesa con 16-20 spire alternate a croce sul fluorocarbon, blocco con mezzo collo, serrare e chiudere con rizoma. Il più sottile per passare nei passanti.</p>
+    </div>
+
+    <div class="knot-card">
+      <div class="knot-title"><span>3. Nodo Albright / Mahin</span><span style="font-size:0.75rem; color:var(--accent-light-blue);">Shock Leader Rapido</span></div>
+      <p style="font-size:0.8rem; color:var(--text-muted); line-height:1.4;">Crea un'asola col terminale grosso, infila la treccia e fai 8-10 spire a salire e 4 a scendere, ripassa dall'asola nello stesso verso, inumidisci e tira.</p>
+    </div>
+
+    <div class="knot-card">
+      <div class="knot-title"><span>4. Nodo Senza Nodo (Knotless)</span><span style="font-size:0.75rem; color:var(--accent-amber);">Carpfishing & Hair Rig</span></div>
+      <p style="font-size:0.8rem; color:var(--text-muted); line-height:1.4;">Infila il trecciato da dietro l'occhiello, lascia l'asola dell'innesco, avvolgi 7-8 spire fitte sul gambo e ripassa dal retro dell'occhiello verso la punta.</p>
+    </div>
+  </div>
+
 </div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -1104,6 +1248,22 @@
       installBanner.classList.remove('show');
       setTimeout(() => installBanner.style.display = 'none', 400);
     }
+
+    // --- MODALITÀ NOTTURNA ROSSA (PUNTO 1) ---
+    function toggleNightMode() {
+      document.body.classList.toggle('night-mode');
+      const isNight = document.body.classList.contains('night-mode');
+      const btn = document.getElementById('nightModeBtn');
+      btn.innerHTML = isNight ? '<i class="fa-solid fa-sun"></i>' : '<i class="fa-solid fa-moon"></i>';
+      localStorage.setItem('cescospot_night_mode', isNight ? 'true' : 'false');
+    }
+    if (localStorage.getItem('cescospot_night_mode') === 'true') {
+      document.body.classList.add('night-mode');
+      document.getElementById('nightModeBtn').innerHTML = '<i class="fa-solid fa-sun"></i>';
+    }
+
+    function openKnotsModal() { document.getElementById('modalKnots').classList.add('open'); }
+    function closeKnotsModal() { document.getElementById('modalKnots').classList.remove('open'); }
 
     // --- AUTOCOMPLETE SPECIE TARGET ---
     const speciesArray = ["Amur (Carpa Erbivora)", "Anguilla", "Barbo", "Carassio", "Carpa Comune", "Carpa Specchio", "Cavedano", "Cheppia", "Luccio", "Luccioperca (Sandra)", "Persico Reale", "Persico Trota (Black Bass)", "Pesce Gatto", "Scardola", "Siluro", "Storione", "Temolo", "Tinca", "Trota Fario", "Trota Iridea", "Trota Marmorata", "Vairone", "Spigola / Branzino", "Orata", "Sarago", "Mormora", "Serra", "Leccia", "Palamita", "Dentice", "Cefalo"];
@@ -1252,6 +1412,7 @@
     let selectedTechFilter = 'all';
     let spots = [];
     let mapMarkers = {};
+    let mapCircles = {};
     let editingSpotId = null;
     let tempMarker = null;
     
@@ -1291,6 +1452,53 @@
       selectedColor = colorHex;
     }
 
+    // --- SPOT RAPIDO AL VOLO 1-TAP (PUNTO 1) ---
+    function quickDropSpot() {
+      if (!navigator.geolocation) { alert("GPS non disponibile."); return; }
+      
+      navigator.geolocation.getCurrentPosition((pos) => {
+        const { latitude: lat, longitude: lng } = pos.coords;
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        
+        const newSpot = {
+          id: Date.now().toString(),
+          name: `Spot Rapido (${timeStr})`,
+          zone: 'In fase di rilevamento...',
+          technique: '',
+          target: '',
+          photo: '',
+          radius: null,
+          notes: `Salvato al volo alle ${timeStr} del ${now.toLocaleDateString()}`,
+          color: '#eab308',
+          icon: '📍',
+          lat, lng,
+          catches: [],
+          date: now.toLocaleDateString()
+        };
+
+        fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=14`)
+          .then(res => res.json())
+          .then(data => {
+            if(data && data.address) {
+              let city = data.address.city || data.address.town || data.address.village || data.address.county || '';
+              let state = data.address.state || '';
+              newSpot.zone = [city, state].filter(Boolean).join(', ') || 'Generale';
+              localStorage.setItem('cescospot_data', JSON.stringify(spots));
+              renderSavedSpotsUI();
+            }
+          }).catch(()=>{});
+
+        spots.push(newSpot);
+        localStorage.setItem('cescospot_data', JSON.stringify(spots));
+        renderMapSpots();
+        map.flyTo([lat, lng], 16);
+        alert(`⚡ Spot salvato al volo nella tua posizione!`);
+      }, (err) => {
+        alert("Attiva il GPS per salvare lo spot al volo!");
+      }, { enableHighAccuracy: true });
+    }
+
     // --- CONDIVISIONE SPOT ---
     function shareSpot(name, lat, lng) {
       const shareUrl = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
@@ -1305,7 +1513,43 @@
       }
     }
 
-    // --- BACKUP ---
+    // --- ESPORTAZIONE GPX (PUNTO 4) ---
+    function exportGPX() {
+      if (spots.length === 0) { alert("Nessuno spot da esportare in GPX."); return; }
+      
+      let gpx = `<?xml version="1.0" encoding="UTF-8"?>\n<gpx version="1.1" creator="CescoSpot PRO" xmlns="http://www.topografix.com/GPX/1/1">\n`;
+      spots.forEach(s => {
+        gpx += `  <wpt lat="${s.lat}" lon="${s.lng}">\n`;
+        gpx += `    <name>${escapeXml(s.name)}</name>\n`;
+        gpx += `    <desc>${escapeXml((s.technique ? 'Tecnica: ' + s.technique + ' | ' : '') + (s.target ? 'Target: ' + s.target + ' | ' : '') + (s.notes || ''))}</desc>\n`;
+        gpx += `    <sym>Fishing Hot Spot</sym>\n`;
+        gpx += `  </wpt>\n`;
+      });
+      gpx += `</gpx>`;
+
+      const blob = new Blob([gpx], { type: "application/gpx+xml" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `CescoSpot_${new Date().toISOString().slice(0,10)}.gpx`;
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 100);
+    }
+
+    function escapeXml(unsafe) {
+      return unsafe.replace(/[<>&'"]/g, function (c) {
+        switch (c) {
+          case '<': return '&lt;';
+          case '>': return '&gt;';
+          case '&': return '&amp;';
+          case '\'': return '&apos;';
+          case '"': return '&quot;';
+        }
+      });
+    }
+
+    // --- BACKUP JSON ---
     function exportSpots() {
       if (spots.length === 0) { alert("Nessuno spot da esportare."); return; }
       try {
@@ -1369,6 +1613,7 @@
       document.getElementById('spotName').value = '';
       document.getElementById('spotZone').value = 'Ricerca zona in corso...';
       document.getElementById('spotTechnique').value = '';
+      document.getElementById('spotRadius').value = '';
       document.getElementById('spotTarget').value = '';
       document.getElementById('spotNotes').value = '';
       removePhoto('spotPhotoData', 'spotPhotoBox');
@@ -1398,6 +1643,7 @@
       const name = document.getElementById('spotName').value || 'Nuovo Spot';
       const zone = document.getElementById('spotZone').value.trim() || 'Generale';
       const technique = document.getElementById('spotTechnique').value || '';
+      const radius = parseFloat(document.getElementById('spotRadius').value) || null;
       const target = document.getElementById('spotTarget').value || '';
       const photo = document.getElementById('spotPhotoData').value || '';
       const notes = document.getElementById('spotNotes').value || '';
@@ -1409,14 +1655,14 @@
         if (idx !== -1) {
           spots[idx] = { 
             ...spots[idx], 
-            name, zone, technique, target, photo, notes, 
+            name, zone, technique, radius, target, photo, notes, 
             color: selectedColor, icon: selectedIcon 
           };
         }
       } else {
         spots.push({ 
           id: Date.now().toString(), 
-          name, zone, technique, target, photo, notes, 
+          name, zone, technique, radius, target, photo, notes, 
           color: selectedColor, icon: selectedIcon, 
           lat, lng, 
           catches: [], 
@@ -1441,6 +1687,7 @@
       document.getElementById('spotName').value = spot.name;
       document.getElementById('spotZone').value = spot.zone || 'Generale';
       document.getElementById('spotTechnique').value = spot.technique || '';
+      document.getElementById('spotRadius').value = spot.radius || '';
       document.getElementById('spotTarget').value = spot.target || '';
       document.getElementById('spotNotes').value = spot.notes || '';
       document.getElementById('tempLat').value = spot.lat;
@@ -1575,7 +1822,9 @@
     // --- RENDER MAPPA & ARCHIVIO ---
     function renderMapSpots() {
       Object.values(mapMarkers).forEach(m => map.removeLayer(m));
+      Object.values(mapCircles).forEach(c => map.removeLayer(c));
       mapMarkers = {};
+      mapCircles = {};
 
       spots.forEach(s => {
         const isEmoji = s.icon && !s.icon.startsWith('fa-');
@@ -1596,12 +1845,26 @@
 
         let popup = `<b style="font-size:1.1rem;">${s.name}</b><br><small>Zona: ${s.zone || 'Generale'}</small>`;
         if(s.technique) popup += `<br><small style="color:#f97316;">Tecnica: ${s.technique}</small>`;
+        if(s.radius) popup += `<br><small style="color:#38bdf8;">Raggio lancio/pastura: ${s.radius}m</small>`;
         if(s.target) popup += `<br><small>Target: ${s.target}</small>`;
         if(s.catches && s.catches.length > 0) popup += `<br><small style="color:#22c55e;"><b>Catture nel diario: ${s.catches.length}</b></small>`;
         if(s.notes) popup += `<br><small><i>${s.notes}</i></small>`;
 
         const m = L.marker([s.lat, s.lng], { icon: customIcon }).addTo(map).bindPopup(popup);
         mapMarkers[s.id] = m;
+
+        // Cerchio Raggio di Lancio / Pastura (Punto 4)
+        if (s.radius && s.radius > 0) {
+          const circle = L.circle([s.lat, s.lng], {
+            radius: s.radius,
+            color: s.color || '#38bdf8',
+            fillColor: s.color || '#38bdf8',
+            fillOpacity: 0.15,
+            weight: 1.5,
+            dashArray: '4, 6'
+          }).addTo(map);
+          mapCircles[s.id] = circle;
+        }
       });
 
       renderSavedSpotsUI();
@@ -1667,20 +1930,21 @@
                  data-search-text="${(s.name + ' ' + s.target + ' ' + s.technique + ' ' + s.notes).toLowerCase()}" 
                  style="display:flex; justify-content:space-between; align-items:center; gap:12px; padding:16px; margin-bottom:12px; background:rgba(15,23,42,0.8); border-radius:16px; border:1px solid rgba(255,255,255,0.05);">
               
-              <!-- Sezione Info Spot Espansa Senza Troncamenti -->
+              <!-- Sezione Info Spot Espansa -->
               <div onclick="focusSpot('${s.id}')" style="display:flex; align-items:flex-start; gap:12px; flex:1; min-width:0; cursor:pointer;">
                 <div class="custom-map-icon" style="background-color: ${s.color}; border-color: ${markerBorder}; position:static; width:44px; height:44px; font-size:1.2rem; flex-shrink:0; margin-top:2px;">${iconHtml}</div>
                 <div style="flex:1; min-width:0; overflow:hidden;">
                   <b style="color:#fff; display:block; word-break:break-word; font-size:1.05rem; line-height:1.25; margin-bottom:4px;">${s.name}</b>
                   <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:4px;">
                     ${s.technique ? `<span style="background:rgba(249,115,22,0.2); color:var(--accent-orange); font-size:0.7rem; font-weight:800; padding:2px 8px; border-radius:10px;">${s.technique}</span>` : ''}
+                    ${s.radius ? `<span style="background:rgba(56,189,248,0.2); color:var(--accent-light-blue); font-size:0.7rem; font-weight:800; padding:2px 8px; border-radius:10px;"><i class="fa-solid fa-bullseye"></i> ${s.radius}m</span>` : ''}
                     ${catchCount > 0 ? `<span style="background:rgba(34,197,94,0.2); color:var(--accent-green); font-size:0.7rem; font-weight:800; padding:2px 8px; border-radius:10px;"><i class="fa-solid fa-fish"></i> ${catchCount}</span>` : ''}
                   </div>
                   ${s.target ? `<div style="color:var(--accent-light-blue); font-size:0.8rem; font-weight:700; line-height:1.2;">Target: ${s.target}</div>` : ''}
                 </div>
               </div>
 
-              <!-- Nuova Disposizione Pulsanti Azione: 3 Sopra, 2 Sotto -->
+              <!-- Disposizione Pulsanti Azione: 3 Sopra, 2 Sotto -->
               <div class="spot-actions-compact">
                 <div class="spot-actions-row">
                   <button class="btn-nav" onclick="openInMaps(${s.lat}, ${s.lng})" title="Naviga"><i class="fa-solid fa-route"></i></button>
@@ -1779,7 +2043,7 @@
       }
     });
 
-    // --- AGGIORNAMENTO DATI METEO, FIUMI, ONDE, TENDENZA & MAREE ---
+    // --- AGGIORNAMENTO DATI METEO, ORARIE 24H, FIUMI, ONDE, TENDENZA & MAREE ---
     function updateForecastData(btnElement) {
       let originalHtml = '';
       if(btnElement) {
@@ -1842,20 +2106,16 @@
       const tideHours = ((now.getHours() * 60 + now.getMinutes()) / 60) % 12.4;
       if (tideHours < 3.1) {
         document.getElementById('wTideState').innerText = "In Salita";
-        document.getElementById('wNextTide').innerText = `Alta tra ${Math.round(3.1 - tideHours)}h`;
       } else if (tideHours < 6.2) {
         document.getElementById('wTideState').innerText = "Alta Marea";
-        document.getElementById('wNextTide').innerText = `Picco Massimo`;
       } else if (tideHours < 9.3) {
         document.getElementById('wTideState').innerText = "In Discesa";
-        document.getElementById('wNextTide').innerText = `Bassa tra ${Math.round(9.3 - tideHours)}h`;
       } else {
         document.getElementById('wTideState').innerText = "Bassa Marea";
-        document.getElementById('wNextTide').innerText = `Picco Minimo`;
       }
 
-      // Fetch Meteo
-      fetch(`https://api.open-meteo.com/v1/forecast?latitude=${center.lat}&longitude=${center.lng}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m,wind_direction_10m,surface_pressure,cloud_cover&hourly=surface_pressure&daily=sunrise,sunset&timezone=auto`)
+      // Fetch Meteo Generale & Orarie 24h (Punto 2)
+      fetch(`https://api.open-meteo.com/v1/forecast?latitude=${center.lat}&longitude=${center.lng}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m,wind_direction_10m,surface_pressure,cloud_cover&hourly=temperature_2m,weather_code,precipitation,wind_speed_10m,surface_pressure&daily=sunrise,sunset&timezone=auto`)
         .then(res => res.json())
         .then(data => {
             const code = data.current.weather_code || 0;
@@ -1882,6 +2142,32 @@
             document.getElementById('wPressure').innerText = `${Math.round(data.current.surface_pressure)} hPa`;
             document.getElementById('wRain').innerText = `${data.current.precipitation} mm`;
             document.getElementById('wClouds').innerText = `${data.current.cloud_cover}%`;
+
+            // Render Slider Previsioni Orarie 24h
+            if (data.hourly && data.hourly.time) {
+              const curH = now.getHours();
+              const track = document.getElementById('hourlyForecastTrack');
+              let htmlH = '';
+
+              for (let i = curH; i < curH + 24 && i < data.hourly.time.length; i++) {
+                const hTime = data.hourly.time[i].slice(-5);
+                const hCode = data.hourly.weather_code[i] || 0;
+                let hIcon = 'fa-sun" style="color:#eab308;';
+                if(hCode >= 1 && hCode <= 3) hIcon = 'fa-cloud-sun';
+                else if(hCode >= 51 && hCode <= 67) hIcon = 'fa-cloud-rain" style="color:#38bdf8;';
+                else if(hCode >= 80) hIcon = 'fa-cloud-showers-heavy" style="color:#38bdf8;';
+                else if(hCode >= 95) hIcon = 'fa-bolt" style="color:#eab308;';
+
+                htmlH += `
+                  <div class="hourly-box">
+                    <div class="hourly-time">${hTime}</div>
+                    <div class="hourly-icon"><i class="fa-solid ${hIcon}"></i></div>
+                    <div class="hourly-temp">${Math.round(data.hourly.temperature_2m[i])}°</div>
+                    <div class="hourly-wind">${Math.round(data.hourly.wind_speed_10m[i])}k/h</div>
+                  </div>`;
+              }
+              track.innerHTML = htmlH;
+            }
 
             // Tendenza Pressione Ultime 6 ore
             if (data.hourly && data.hourly.surface_pressure) {
@@ -1989,21 +2275,28 @@
           document.getElementById('riverTrend').innerText = "--";
         });
 
-      // Fetch Dati Marini (Onde)
-      fetch(`https://marine-api.open-meteo.com/v1/marine?latitude=${center.lat}&longitude=${center.lng}&current=wave_height,wave_period`)
+      // Fetch Dati Marini (Onde + Temperatura Acqua Mare - Punto 2)
+      fetch(`https://marine-api.open-meteo.com/v1/marine?latitude=${center.lat}&longitude=${center.lng}&current=wave_height,wave_period,sea_surface_temperature`)
         .then(res => res.json())
         .then(mdata => {
           if (mdata && mdata.current && mdata.current.wave_height !== null) {
             document.getElementById('wWaveHeight').innerText = `${mdata.current.wave_height.toFixed(1)} m`;
             document.getElementById('wWavePeriod').innerText = `${Math.round(mdata.current.wave_period || 0)} s`;
+            if (mdata.current.sea_surface_temperature !== null && mdata.current.sea_surface_temperature !== undefined) {
+              document.getElementById('wSeaTemp').innerText = `${Math.round(mdata.current.sea_surface_temperature)}°C`;
+            } else {
+              document.getElementById('wSeaTemp').innerText = `--°C`;
+            }
           } else {
             document.getElementById('wWaveHeight').innerText = "Calmo / Interno";
             document.getElementById('wWavePeriod').innerText = "--";
+            document.getElementById('wSeaTemp').innerText = "Acque Interne";
           }
         })
         .catch(() => {
           document.getElementById('wWaveHeight').innerText = "Acque Interne";
           document.getElementById('wWavePeriod').innerText = "--";
+          document.getElementById('wSeaTemp').innerText = "--";
         });
     }
 
