@@ -1094,7 +1094,7 @@
     <button class="nav-item" onclick="switchTab('tabMe', this)"><i class="fa-solid fa-bookmark"></i>Archivio</button>
   </nav>
 
-  <!-- Modal Aggiungi/Modifica Spot con TUTTI i campi unificati -->
+  <!-- Modal Aggiungi/Modifica Spot con TUTTI i campi unificati (Comunicanti) -->
   <div class="modal" id="modalAddSpot">
     <div class="modal-drag-handle"></div>
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
@@ -1118,7 +1118,7 @@
         <input type="text" class="form-control" id="spotZone" placeholder="Ricerca in corso o inserisci manualmente...">
       </div>
 
-      <!-- SELEZIONE MULTIPLA TECNICA A TENDINA (Inclusi Pesca al tocco e Siliconiche piombate) -->
+      <!-- SELEZIONE MULTIPLA TECNICA A TENDINA (Con Pesca al tocco e Siliconiche piombate) -->
       <div class="form-group">
         <label style="font-size:0.8rem; font-weight:800; color:var(--text-muted); margin-left:4px;">TECNICHE (SELEZIONE MULTIPLA)</label>
         <div class="multiselect-container">
@@ -1154,7 +1154,7 @@
         </div>
       </div>
 
-      <!-- SELEZIONE MULTIPLA ESCHE / ARTIFICIALI NEL SPOT -->
+      <!-- SELEZIONE MULTIPLA ESCHE / ARTIFICIALI NELLO SPOT -->
       <div class="form-group">
         <label style="font-size:0.8rem; font-weight:800; color:var(--text-muted); margin-left:4px;">ESCHE / ARTIFICIALI (SELEZIONE MULTIPLA)</label>
         <div class="multiselect-container">
@@ -1558,7 +1558,7 @@
       isSat = !isSat;
     }
 
-    // --- LISTE TECNICHE, SPECIE E ESCHE (AGGIUNTE "Pesca al tocco" e "Esche siliconiche piombate") ---
+    // --- LISTE TECNICHE, SPECIE E ESCHE (Con Pesca al tocco e Siliconiche piombate) ---
     const allTechniques = ["Spinning", "Feeder", "Carpfishing", "Mosca", "Galleggiante / Bolognese", "Fondo / Surfcasting", "Trout Area", "Baitcasting", "Spinning UL", "Eging", "Bolentino", "Pesca al tocco", "Esche siliconiche piombate", "Altro"];
     const freshwaterSpecies = ["Amur", "Anguilla", "Barbo", "Carassio", "Carpa Comune", "Carpa Specchio", "Cavedano", "Cheppia", "Luccio", "Luccioperca", "Persico Reale", "Black Bass", "Pesce Gatto", "Scardola", "Siluro", "Storione", "Temolo", "Tinca", "Trota Fario", "Trota Iridea", "Trota Marmorata", "Vairone"];
     const saltwaterSpecies = ["Spigola / Branzino", "Orata", "Sarago", "Mormora", "Serra", "Leccia", "Palamita", "Dentice", "Cefalo", "Ombrina", "Triglia", "Grongo", "Murena", "Sgombro", "Lattarino"];
@@ -1928,6 +1928,19 @@
         const { latitude: lat, longitude: lng } = pos.coords;
         const now = new Date();
         const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        
+        // Logica di accorpamento se lo spot è vicinissimo (entro 20 metri)
+        let existingSpot = spots.find(s => L.latLng(s.lat, s.lng).distanceTo(L.latLng(lat, lng)) < 20);
+
+        if (existingSpot) {
+          existingSpot.notes += ` | Aggiornato al volo alle ${timeStr}`;
+          localStorage.setItem('cescospot_data', JSON.stringify(spots));
+          renderMapSpots();
+          map.flyTo([lat, lng], 16);
+          alert(`⚡ Spot esistente aggiornato nelle vicinanze!`);
+          return;
+        }
+
         const newSpot = {
           id: Date.now().toString(),
           name: `Spot Rapido (${timeStr})`,
@@ -2101,7 +2114,7 @@
     }
 
     function saveSpotFromModal() {
-      const name = document.getElementById('spotName').value || 'Nuovo Spot';
+      const name = document.getElementById('spotName').value.trim() || 'Nuovo Spot';
       const zone = document.getElementById('spotZone').value.trim() || 'Generale';
       const techniques = Array.from(selectedTechniquesSet);
       const radius = parseFloat(document.getElementById('spotRadius').value) || null;
@@ -2118,7 +2131,19 @@
           spots[idx] = { ...spots[idx], name, zone, techniques, radius, targets, spotLures, photo, notes, color: selectedColor, icon: selectedIcon };
         }
       } else {
-        spots.push({ id: Date.now().toString(), name, zone, techniques, radius, targets, spotLures, photo, notes, color: selectedColor, icon: selectedIcon, lat, lng, catches: [], date: new Date().toLocaleDateString() });
+        // Logica di ACCORPAMENTO AUTOMATICO se lo spot esiste già nella stessa posizione (entro 20 metri)
+        let existingSpot = spots.find(s => L.latLng(s.lat, s.lng).distanceTo(L.latLng(lat, lng)) < 20);
+
+        if (existingSpot) {
+          existingSpot.techniques = Array.from(new Set([...(existingSpot.techniques || []), ...techniques]));
+          existingSpot.targets = Array.from(new Set([...(existingSpot.targets || []), ...targets]));
+          existingSpot.spotLures = Array.from(new Set([...(existingSpot.spotLures || []), ...spotLures]));
+          if (photo) existingSpot.photo = photo;
+          if (notes) existingSpot.notes += ` | ${notes}`;
+          alert(`⚡ Posizione già esistente! I nuovi dati sono stati accorpati nello spot "${existingSpot.name}".`);
+        } else {
+          spots.push({ id: Date.now().toString(), name, zone, techniques, radius, targets, spotLures, photo, notes, color: selectedColor, icon: selectedIcon, lat, lng, catches: [], date: new Date().toLocaleDateString() });
+        }
       }
       
       localStorage.setItem('cescospot_data', JSON.stringify(spots));
