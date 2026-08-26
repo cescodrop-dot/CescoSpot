@@ -1053,7 +1053,7 @@
         <input type="text" class="form-control" id="spotZone" placeholder="Ricerca in corso o inserisci manualmente...">
       </div>
 
-      <!-- SELEZIONE MULTIPLA TECNICA (A TENDINA) -->
+      <!-- SELEZIONE MULTIPLA TECNICA A TENDINA -->
       <div class="form-group">
         <label style="font-size:0.8rem; font-weight:800; color:var(--text-muted); margin-left:4px;">TECNICHE (SELEZIONE MULTIPLA)</label>
         <div class="multiselect-container">
@@ -1071,7 +1071,7 @@
         </div>
       </div>
 
-      <!-- SELEZIONE MULTIPLA SPECIE TARGET (A TENDINA) -->
+      <!-- SELEZIONE MULTIPLA SPECIE TARGET A TENDINA -->
       <div class="form-group">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
           <label style="font-size:0.8rem; font-weight:800; color:var(--text-muted); margin-left:4px;">SPECIE TARGET (SELEZIONE MULTIPLA)</label>
@@ -1285,8 +1285,26 @@
     function openKnotsModal() { document.getElementById('modalKnots').classList.add('open'); }
     function closeKnotsModal() { document.getElementById('modalKnots').classList.remove('open'); }
 
-    // --- LISTE TECNICHE E SPECIE MULTI-SELECT A TENDINA ---
-    const allTechniques = ["Spinning", "Feeder", "Carpfishing", "Mosca", "Galleggiante / Bolognese", "Fondo / Surfcasting", "Trout Area", "Baitcasting", "spinning UL", "Eging", "Bolentino", "Altro"];
+    // --- MAPPE MIGLIORI (GOOGLE SATELLITE + OPENCYCLEMAP) ---
+    const map = L.map('map', { zoomControl: false, attributionControl: false }).setView([41.9028, 12.4964], 6);
+
+    const satLayer = L.layerGroup([
+      L.tileLayer('https://mt1.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', { maxZoom: 20 })
+    ]).addTo(map);
+
+    const topoLayer = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', { maxZoom: 17 });
+    let isSat = true;
+
+    L.control.scale({ imperial: false, position: 'bottomleft' }).addTo(map);
+
+    function toggleMapType() {
+      if(isSat) { map.removeLayer(satLayer); topoLayer.addTo(map); }
+      else { map.removeLayer(topoLayer); satLayer.addTo(map); }
+      isSat = !isSat;
+    }
+
+    // --- LISTE TECNICHE E SPECIE (ACQUA DOLCE VS SALATA) ---
+    const allTechniques = ["Spinning", "Feeder", "Carpfishing", "Mosca", "Galleggiante / Bolognese", "Fondo / Surfcasting", "Trout Area", "Baitcasting", "Spinning UL", "Eging", "Bolentino", "Altro"];
     const freshwaterSpecies = ["Amur", "Anguilla", "Barbo", "Carassio", "Carpa Comune", "Carpa Specchio", "Cavedano", "Cheppia", "Luccio", "Luccioperca", "Persico Reale", "Black Bass", "Pesce Gatto", "Scardola", "Siluro", "Storione", "Temolo", "Tinca", "Trota Fario", "Trota Iridea", "Trota Marmorata", "Vairone"];
     const saltwaterSpecies = ["Spigola / Branzino", "Orata", "Sarago", "Mormora", "Serra", "Leccia", "Palamita", "Dentice", "Cefalo", "Ombrina", "Triglia", "Grongo", "Murena", "Sgombro", "Lattarino"];
 
@@ -1294,20 +1312,18 @@
     let selectedTechniquesSet = new Set();
     let selectedSpeciesSet = new Set();
 
-    // Gestione Tecniche a Tendina
+    // Gestione Tecniche a Tendina Multipla
     function renderTechniqueSelect(selectedList = []) {
       selectedTechniquesSet = new Set(selectedList);
       const selectEl = document.getElementById('techniqueSelect');
       const badgesBox = document.getElementById('selectedTechniquesBadges');
 
-      // Rendering dei badge selezionati
       let badgesHtml = '';
       selectedTechniquesSet.forEach(tech => {
         badgesHtml += `<div class="multi-badge">${tech} <i class="fa-solid fa-xmark" onclick="removeTechnique('${tech}')"></i></div>`;
       });
       badgesBox.innerHTML = badgesHtml;
 
-      // Rendering delle opzioni rimanenti nella tendina
       let optionsHtml = `<option value="">+ Aggiungi Tecnica...</option>`;
       allTechniques.forEach(tech => {
         if (!selectedTechniquesSet.has(tech)) {
@@ -1329,20 +1345,18 @@
       renderTechniqueSelect(Array.from(selectedTechniquesSet));
     }
 
-    // Gestione Specie Target a Tendina
+    // Gestione Specie Target a Tendina Multipla
     function renderSpeciesSelector(selectedList = []) {
       selectedSpeciesSet = new Set(selectedList);
       const selectEl = document.getElementById('speciesSelect');
       const badgesBox = document.getElementById('selectedSpeciesBadges');
 
-      // Rendering dei badge selezionati
       let badgesHtml = '';
       selectedSpeciesSet.forEach(specie => {
         badgesHtml += `<div class="multi-badge">${specie} <i class="fa-solid fa-xmark" onclick="removeSpecies('${specie}')"></i></div>`;
       });
       badgesBox.innerHTML = badgesHtml;
 
-      // Rendering delle opzioni rimanenti nella tendina (includendo eventuali specie custom)
       let availableList = [...currentEnvironmentSpecies];
       selectedSpeciesSet.forEach(specie => {
         if (!availableList.includes(specie)) availableList.push(specie);
@@ -1445,25 +1459,6 @@
         <i class="fa-solid fa-camera" style="font-size:2rem; color:var(--accent-light-blue);"></i>
         <span style="font-size:0.85rem; font-weight:700;">Tocca per scattare o caricare foto</span>
       `;
-    }
-
-    // --- MAPPA E LIVELLI ---
-    const map = L.map('map', { zoomControl: false, attributionControl: false }).setView([41.9028, 12.4964], 6);
-
-    const satLayer = L.layerGroup([
-      L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'),
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}{r}.png', { subdomains: 'abcd' })
-    ]).addTo(map);
-
-    const topoLayer = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', { maxZoom: 17 });
-    let isSat = true;
-
-    L.control.scale({ imperial: false, position: 'bottomleft' }).addTo(map);
-
-    function toggleMapType() {
-      if(isSat) { map.removeLayer(satLayer); topoLayer.addTo(map); }
-      else { map.removeLayer(topoLayer); satLayer.addTo(map); }
-      isSat = !isSat;
     }
 
     function toggleMapSearch() {
