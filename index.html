@@ -789,52 +789,73 @@
     }
     .btn-refresh-weather:active { transform: scale(0.96); }
 
-    /* Prontuario Nodi & Guide Grafiche Step-by-Step */
-    .knot-card {
-      background: rgba(15, 23, 42, 0.7);
+    /* ENCICLOPEDIA STILE CATEGORIE & SCHEMI FOTO */
+    .wiki-cat-bar {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 4px 0 16px 0;
+      scrollbar-width: none;
+    }
+    .wiki-cat-bar::-webkit-scrollbar { display: none; }
+    .wiki-chip {
+      padding: 8px 16px;
+      border-radius: 20px;
+      background: rgba(30, 41, 59, 0.8);
+      color: var(--text-muted);
       border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 16px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .wiki-chip.active {
+      background: var(--accent-blue);
+      color: #fff;
+      border-color: var(--accent-light-blue);
+      box-shadow: 0 2px 10px rgba(2, 132, 199, 0.4);
+    }
+    .wiki-section { display: none; }
+    .wiki-section.active { display: block; }
+
+    .encyclopedia-card {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 20px;
       padding: 16px;
       margin-bottom: 16px;
     }
-    .knot-title { color: var(--accent-light-blue); font-size: 1.1rem; font-weight: 800; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; }
-    
-    /* Schema Grafico a Step Numerati (stile immagine) */
-    .knot-steps-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 8px;
-      margin-top: 12px;
+    .encyclopedia-card-title {
+      color: var(--accent-light-blue);
+      font-size: 1.1rem;
+      font-weight: 900;
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
-    @media(max-width: 480px) {
-      .knot-steps-grid { grid-template-columns: repeat(2, 1fr); }
-    }
-    .knot-step-box {
-      background: rgba(0, 0, 0, 0.4);
-      border: 1px solid rgba(56, 189, 248, 0.2);
-      border-radius: 12px;
-      padding: 10px 8px;
-      text-align: center;
+    .encyclopedia-photo-box {
+      width: 100%;
+      height: 180px;
+      border-radius: 14px;
+      background: rgba(0,0,0,0.5);
+      border: 2px dashed rgba(56, 189, 248, 0.3);
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: var(--text-muted);
+      cursor: pointer;
+      margin-top: 10px;
+      overflow: hidden;
+      position: relative;
     }
-    .knot-step-num {
-      width: 26px; height: 26px;
-      background: var(--accent-blue);
-      color: #fff;
-      border-radius: 50%;
-      font-size: 0.85rem;
-      font-weight: 900;
-      display: flex; align-items: center; justify-content: center;
-      margin-bottom: 6px;
-      box-shadow: 0 2px 8px rgba(2, 132, 199, 0.5);
-    }
-    .knot-step-text {
-      font-size: 0.72rem;
-      color: var(--text-light);
-      line-height: 1.25;
-      font-weight: 600;
+    .encyclopedia-photo-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
     }
 
     .leaflet-control-scale { margin-bottom: 24px !important; margin-left: 16px !important; border-color: rgba(255,255,255,0.5) !important; color: #fff !important; }
@@ -916,7 +937,7 @@
 
       <div class="left-controls">
         <button class="map-btn" onclick="toggleMapSearch()" title="Cerca un luogo"><i class="fa-solid fa-magnifying-glass"></i></button>
-        <button class="map-btn" onclick="openKnotsModal()" title="Prontuario Nodi & Fili"><i class="fa-solid fa-circle-nodes"></i></button>
+        <button class="map-btn" onclick="openKnotsModal()" title="Enciclopedia della Pesca"><i class="fa-solid fa-book-open"></i></button>
         <div class="map-btn-group">
           <button class="map-btn" onclick="map.zoomIn()" title="Zoom In"><i class="fa-solid fa-plus"></i></button>
           <button class="map-btn" onclick="map.zoomOut()" title="Zoom Out"><i class="fa-solid fa-minus"></i></button>
@@ -1240,136 +1261,169 @@
     </div>
   </div>
 
-  <!-- MODAL PRONTUARIO NODI, FILI & NORMATIVA CON GUIDE GRAFICHE A STEP -->
+  <!-- MODAL ENCICLOPEDIA DEL PESCATORE A CATEGORIE & FOTO ILLUSTRATIVE -->
   <div class="modal" id="modalKnots">
     <div class="modal-drag-handle"></div>
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
       <button type="button" style="background:none; border:none; font-size:1.8rem; color:var(--text-muted); cursor:pointer;" onclick="closeKnotsModal()"><i class="fa-solid fa-xmark"></i></button>
-      <h4 style="font-size:1.2rem; color:#fff; font-weight:900;">Nodi, Fili & Normativa</h4>
+      <h4 style="font-size:1.2rem; color:#fff; font-weight:900;">Enciclopedia del Pescatore</h4>
       <div style="width:30px;"></div>
     </div>
 
-    <!-- Regole di Comportamento & Catch & Release -->
-    <div class="knot-card" style="border-color:var(--accent-green);">
-      <div class="knot-title"><span style="color:var(--accent-green);"><i class="fa-solid fa-hand-holding-heart"></i> Etica di Riva & Catch & Release</span></div>
-      <p style="font-size:0.8rem; color:var(--text-muted); line-height:1.4;">
-        Il <b>Catch & Release</b> è fondamentale per la tutela degli spot. Bagnati sempre le mani prima di toccare il pesce, slamalo delicatamente in acqua quando possibile e non abbandonare mai lenze o esche sul bagnasciuga o tra i rami della riva.
-      </p>
+    <!-- Barra Categorie Enciclopedia -->
+    <div class="wiki-cat-bar">
+      <div class="wiki-chip active" onclick="switchWikiCat('wikiKnots', this)">🔗 Nodi & Legature</div>
+      <div class="wiki-chip" onclick="switchWikiCat('wikiRigs', this)">⚖️ Lenze & Piombature</div>
+      <div class="wiki-chip" onclick="switchWikiCat('wikiFeeder', this)">🧺 Feeder & Fondo</div>
+      <div class="wiki-chip" onclick="switchWikiCat('wikiRules', this)">🛡️ Etica & Normativa</div>
     </div>
 
-    <!-- Tabella Conversione Fili -->
-    <div class="widget-card" style="padding:14px; margin-bottom:16px;">
-      <div class="widget-title" style="margin-bottom:8px;"><i class="fa-solid fa-table-list" style="color:var(--accent-amber);"></i> Conversione Fili da Pesca</div>
-      <table style="width:100%; border-collapse:collapse; font-size:0.8rem; text-align:center;">
-        <thead>
-          <tr style="color:var(--accent-light-blue); border-bottom:1px solid rgba(255,255,255,0.1);">
-            <th style="padding:6px 0;">PE</th>
-            <th style="padding:6px 0;">Diametro</th>
-            <th style="padding:6px 0;">Libbre</th>
-            <th style="padding:6px 0;">Carico (kg)</th>
-          </tr>
-        </thead>
-        <tbody style="color:var(--text-light); opacity:0.9;">
-          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:6px 0;">#0.6</td><td>0.128 mm</td><td>8 lb</td><td>~3.6 kg</td></tr>
-          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:6px 0;">#0.8</td><td>0.148 mm</td><td>12 lb</td><td>~5.4 kg</td></tr>
-          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:6px 0;">#1.0</td><td>0.165 mm</td><td>16 lb</td><td>~7.2 kg</td></tr>
-          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:6px 0;">#1.5</td><td>0.205 mm</td><td>24 lb</td><td>~10.8 kg</td></tr>
-          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:6px 0;">#2.0</td><td>0.235 mm</td><td>30 lb</td><td>~13.6 kg</td></tr>
-          <tr><td style="padding:6px 0;">#3.0</td><td>0.285 mm</td><td>40 lb</td><td>~18.1 kg</td></tr>
-        </tbody>
-      </table>
-    </div>
+    <!-- SEZIONE 1: NODI -->
+    <div id="wikiKnots" class="wiki-section active">
+      <!-- Nodo Palomar -->
+      <div class="encyclopedia-card">
+        <div class="encyclopedia-card-title">
+          <span>1. Nodo Palomar</span>
+          <span style="font-size:0.75rem; color:var(--accent-green);">Ami con Occhiello & Moschettoni</span>
+        </div>
+        <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:8px;">Il più robusto per ami senza asola e moschettoni.</p>
+        
+        <input type="file" id="wikiUpload_palomar" accept="image/*" style="display:none;" onchange="handleWikiPhoto(event, 'wikiImg_palomar', 'palomar')">
+        <div class="encyclopedia-photo-box" onclick="document.getElementById('wikiUpload_palomar').click()">
+          <div id="wikiImg_palomar">
+            <i class="fa-solid fa-image" style="font-size:2rem; color:var(--accent-light-blue);"></i>
+            <span style="font-size:0.8rem; font-weight:700; display:block; margin-top:4px;">Tocca per caricare foto schema Palomar</span>
+          </div>
+        </div>
+      </div>
 
-    <!-- MISURE MINIME E DIVIETI -->
-    <div class="widget-card" style="padding:14px; margin-bottom:16px;">
-      <div class="widget-title" style="margin-bottom:8px;"><i class="fa-solid fa-shield-halved" style="color:var(--accent-green);"></i> Misure Minime & Divieti (Riva)</div>
-      <table style="width:100%; border-collapse:collapse; font-size:0.8rem; text-align:center;">
-        <thead>
-          <tr style="color:var(--accent-green); border-bottom:1px solid rgba(255,255,255,0.1);">
-            <th style="padding:6px 0;">Specie</th>
-            <th style="padding:6px 0;">Misura Min.</th>
-            <th style="padding:6px 0;">Periodo Frega / Divieto</th>
-          </tr>
-        </thead>
-        <tbody style="color:var(--text-light); opacity:0.9;">
-          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:6px 0;">Trota Fario</td><td>22-25 cm</td><td>1Ott - 1Feb (variabile)</td></tr>
-          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:6px 0;">Luccio</td><td>50-60 cm</td><td>1Feb - 31Mar</td></tr>
-          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:6px 0;">Black Bass</td><td>30 cm</td><td>1Apr - 31Mag (Catch & Release)</td></tr>
-          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:6px 0;">Barbo / Cavedano</td><td>N.D. / 20cm</td><td>1Mag - 30Giu</td></tr>
-          <tr><td style="padding:6px 0;">Spigola (Mare)</td><td>25 cm</td><td>Nessun divieto fisso</td></tr>
-        </tbody>
-      </table>
-    </div>
+      <!-- Nodo Clinch -->
+      <div class="encyclopedia-card">
+        <div class="encyclopedia-card-title">
+          <span>2. Clinch Rinforzato</span>
+          <span style="font-size:0.75rem; color:var(--accent-amber);">Rapido in Pesca</span>
+        </div>
+        <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:8px;">Ideale per cambi rapidi di esche su ami con occhiello.</p>
+        
+        <input type="file" id="wikiUpload_clinch" accept="image/*" style="display:none;" onchange="handleWikiPhoto(event, 'wikiImg_clinch', 'clinch')">
+        <div class="encyclopedia-photo-box" onclick="document.getElementById('wikiUpload_clinch').click()">
+          <div id="wikiImg_clinch">
+            <i class="fa-solid fa-image" style="font-size:2rem; color:var(--accent-light-blue);"></i>
+            <span style="font-size:0.8rem; font-weight:700; display:block; margin-top:4px;">Tocca per caricare foto schema Clinch</span>
+          </div>
+        </div>
+      </div>
 
-    <!-- Guide Nodi con Schema Grafico a Step Numerati -->
-    <div class="knot-card">
-      <div class="knot-title"><span>1. Nodo Palomar</span><span style="font-size:0.75rem; color:var(--accent-green);">Ami con Occhiello & Moschettoni</span></div>
-      <p style="font-size:0.80rem; color:var(--text-muted);">Il più robusto per ami senza asola e moschettoni.</p>
-      <div class="knot-steps-grid">
-        <div class="knot-step-box">
-          <div class="knot-step-num">1</div>
-          <div class="knot-step-text">Raddoppia il filo e passa l'asola nell'occhiello dell'amo.</div>
+      <!-- Nodo FG -->
+      <div class="encyclopedia-card">
+        <div class="encyclopedia-card-title">
+          <span>3. Nodo FG</span>
+          <span style="font-size:0.75rem; color:var(--accent-orange);">Treccia ⇄ Fluorocarbon</span>
         </div>
-        <div class="knot-step-box">
-          <div class="knot-step-num">2</div>
-          <div class="knot-step-text">Fai un nodo semplice col doppio filo senza stringere.</div>
-        </div>
-        <div class="knot-step-box">
-          <div class="knot-step-num">3</div>
-          <div class="knot-step-text">Passa l'intero amo attraverso l'asola creata.</div>
-        </div>
-        <div class="knot-step-box">
-          <div class="knot-step-num">4</div>
-          <div class="knot-step-text">Bagna, stringi progressivamente e taglia il capo.</div>
+        <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:8px;">Il re dei nodi di giunzione per mulinello da spinning.</p>
+        
+        <input type="file" id="wikiUpload_fg" accept="image/*" style="display:none;" onchange="handleWikiPhoto(event, 'wikiImg_fg', 'fg')">
+        <div class="encyclopedia-photo-box" onclick="document.getElementById('wikiUpload_fg').click()">
+          <div id="wikiImg_fg">
+            <i class="fa-solid fa-image" style="font-size:2rem; color:var(--accent-light-blue);"></i>
+            <span style="font-size:0.8rem; font-weight:700; display:block; margin-top:4px;">Tocca per caricare foto schema FG</span>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="knot-card">
-      <div class="knot-title"><span>2. Nodo Clinch Rinforzato</span><span style="font-size:0.75rem; color:var(--accent-amber);">Rapido in Pesca</span></div>
-      <p style="font-size:0.80rem; color:var(--text-muted);">Ideale per cambi rapidi su ami con occhiello.</p>
-      <div class="knot-steps-grid">
-        <div class="knot-step-box">
-          <div class="knot-step-num">1</div>
-          <div class="knot-step-text">Infila il filo nell'occhiello e avvolgi sul trave 5-7 volte.</div>
+    <!-- SEZIONE 2: LENZE & PIOMBATURE -->
+    <div id="wikiRigs" class="wiki-section">
+      <div class="encyclopedia-card">
+        <div class="encyclopedia-card-title">
+          <span>Spallinata a Scalare (Bolognese)</span>
+          <span style="font-size:0.75rem; color:var(--accent-light-blue);">Presentazione Naturale</span>
         </div>
-        <div class="knot-step-box">
-          <div class="knot-step-num">2</div>
-          <div class="knot-step-text">Infila l'estremità nell'asola vicina all'occhiello.</div>
-        </div>
-        <div class="knot-step-box">
-          <div class="knot-step-num">3</div>
-          <div class="knot-step-text">Ripassare il capo nell'anello grande formatosi.</div>
-        </div>
-        <div class="knot-step-box">
-          <div class="knot-step-num">4</div>
-          <div class="knot-step-text">Inumidisci, serra con decisione e taglia l'eccesso.</div>
+        <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:8px;">Distribuzione dei piombini decrescente verso il terminale per una calata morbida dell'esca.</p>
+        
+        <input type="file" id="wikiUpload_rig1" accept="image/*" style="display:none;" onchange="handleWikiPhoto(event, 'wikiImg_rig1', 'rig1')">
+        <div class="encyclopedia-photo-box" onclick="document.getElementById('wikiUpload_rig1').click()">
+          <div id="wikiImg_rig1">
+            <i class="fa-solid fa-image" style="font-size:2rem; color:var(--accent-light-blue);"></i>
+            <span style="font-size:0.8rem; font-weight:700; display:block; margin-top:4px;">Tocca per caricare schema spallinata</span>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="knot-card">
-      <div class="knot-title"><span>3. Nodo FG</span><span style="font-size:0.75rem; color:var(--accent-orange);">Treccia ⇄ Fluorocarbon</span></div>
-      <p style="font-size:0.80rem; color:var(--text-muted);">Il re dei nodi di giunzione per mulinello.</p>
-      <div class="knot-steps-grid">
-        <div class="knot-step-box">
-          <div class="knot-step-num">1</div>
-          <div class="knot-step-text">Tieni in tensione la treccia e incrocia 16-20 spire a croce.</div>
+    <!-- SEZIONE 3: FEEDER & FONDO -->
+    <div id="wikiFeeder" class="wiki-section">
+      <div class="encyclopedia-card">
+        <div class="encyclopedia-card-title">
+          <span>Running Rig (Feeder Libero)</span>
+          <span style="font-size:0.75rem; color:var(--accent-green);">Anti-Sgusciante</span>
         </div>
-        <div class="knot-step-box">
-          <div class="knot-step-num">2</div>
-          <div class="knot-step-text">Esegui un mezzo collo di blocco col trecciato.</div>
-        </div>
-        <div class="knot-step-box">
-          <div class="knot-step-num">3</div>
-          <div class="knot-step-text">Fai 3-4 nodi di chiusura alternati di sicurezza.</div>
-        </div>
-        <div class="knot-step-box">
-          <div class="knot-step-num">4</div>
-          <div class="knot-step-text">Brucia leggermente la punta del fluorocarbon.</div>
+        <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:8px;">Montatura scorrevole con girella e stopper per avvertire anche le tocche più timide a fondo.</p>
+        
+        <input type="file" id="wikiUpload_feeder1" accept="image/*" style="display:none;" onchange="handleWikiPhoto(event, 'wikiImg_feeder1', 'feeder1')">
+        <div class="encyclopedia-photo-box" onclick="document.getElementById('wikiUpload_feeder1').click()">
+          <div id="wikiImg_feeder1">
+            <i class="fa-solid fa-image" style="font-size:2rem; color:var(--accent-light-blue);"></i>
+            <span style="font-size:0.8rem; font-weight:700; display:block; margin-top:4px;">Tocca per caricare schema Running Rig</span>
+          </div>
         </div>
       </div>
     </div>
+
+    <!-- SEZIONE 4: ETICA & NORMATIVA -->
+    <div id="wikiRules" class="wiki-section">
+      <div class="knot-card" style="border-color:var(--accent-green);">
+        <div class="knot-title"><span style="color:var(--accent-green);"><i class="fa-solid fa-hand-holding-heart"></i> Catch & Release & Rispetto</span></div>
+        <p style="font-size:0.8rem; color:var(--text-muted); line-height:1.4; margin-bottom:8px;">
+          Il <b>Catch & Release</b> è fondamentale per la tutela degli spot. Bagnati sempre le mani prima di toccare il pesce, slamalo delicatamente in acqua e non abbandonare mai lenze o esche.
+        </p>
+      </div>
+
+      <!-- Tabella Conversione Fili -->
+      <div class="widget-card" style="padding:14px; margin-bottom:16px;">
+        <div class="widget-title" style="margin-bottom:8px;"><i class="fa-solid fa-table-list" style="color:var(--accent-amber);"></i> Conversione Fili da Pesca</div>
+        <table style="width:100%; border-collapse:collapse; font-size:0.8rem; text-align:center;">
+          <thead>
+            <tr style="color:var(--accent-light-blue); border-bottom:1px solid rgba(255,255,255,0.1);">
+              <th style="padding:6px 0;">PE</th>
+              <th style="padding:6px 0;">Diametro</th>
+              <th style="padding:6px 0;">Libbre</th>
+              <th style="padding:6px 0;">Carico (kg)</th>
+            </tr>
+          </thead>
+          <tbody style="color:var(--text-light); opacity:0.9;">
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:6px 0;">#0.6</td><td>0.128 mm</td><td>8 lb</td><td>~3.6 kg</td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:6px 0;">#0.8</td><td>0.148 mm</td><td>12 lb</td><td>~5.4 kg</td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:6px 0;">#1.0</td><td>0.165 mm</td><td>16 lb</td><td>~7.2 kg</td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:6px 0;">#1.5</td><td>0.205 mm</td><td>24 lb</td><td>~10.8 kg</td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:6px 0;">#2.0</td><td>0.235 mm</td><td>30 lb</td><td>~13.6 kg</td></tr>
+            <tr><td style="padding:6px 0;">#3.0</td><td>0.285 mm</td><td>40 lb</td><td>~18.1 kg</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- MISURE MINIME E DIVIETI -->
+      <div class="widget-card" style="padding:14px; margin-bottom:16px;">
+        <div class="widget-title" style="margin-bottom:8px;"><i class="fa-solid fa-shield-halved" style="color:var(--accent-green);"></i> Misure Minime & Divieti (Riva)</div>
+        <table style="width:100%; border-collapse:collapse; font-size:0.8rem; text-align:center;">
+          <thead>
+            <tr style="color:var(--accent-green); border-bottom:1px solid rgba(255,255,255,0.1);">
+              <th style="padding:6px 0;">Specie</th>
+              <th style="padding:6px 0;">Misura Min.</th>
+              <th style="padding:6px 0;">Periodo Frega / Divieto</th>
+            </tr>
+          </thead>
+          <tbody style="color:var(--text-light); opacity:0.9;">
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:6px 0;">Trota Fario</td><td>22-25 cm</td><td>1Ott - 1Feb (variabile)</td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:6px 0;">Luccio</td><td>50-60 cm</td><td>1Feb - 31Mar</td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:6px 0;">Black Bass</td><td>30 cm</td><td>1Apr - 31Mag (Catch & Release)</td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:6px 0;">Barbo / Cavedano</td><td>N.D. / 20cm</td><td>1Mag - 30Giu</td></tr>
+            <tr><td style="padding:6px 0;">Spigola (Mare)</td><td>25 cm</td><td>Nessun divieto fisso</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
   </div>
 
 </div>
@@ -1414,8 +1468,60 @@
       setTimeout(() => installBanner.style.display = 'none', 400);
     }
 
-    function openKnotsModal() { document.getElementById('modalKnots').classList.add('open'); }
+    function openKnotsModal() { document.getElementById('modalKnots').classList.add('open'); loadWikiPhotos(); }
     function closeKnotsModal() { document.getElementById('modalKnots').classList.remove('open'); }
+
+    // --- GESTIONE CATEGORIE ENCICLOPEDIA ---
+    function switchWikiCat(catId, chipEl) {
+      document.querySelectorAll('.wiki-section').forEach(sec => sec.classList.remove('active'));
+      document.querySelectorAll('.wiki-chip').forEach(ch => ch.classList.remove('active'));
+      document.getElementById(catId).classList.add('active');
+      chipEl.classList.add('active');
+    }
+
+    // --- GESTIONE FOTO WIKI MEMORIZZATE IN LOCALSTORAGE ---
+    function handleWikiPhoto(event, targetContainerId, wikiKey) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          const maxDim = 800; 
+          let width = img.width;
+          let height = img.height;
+          if (width > height && width > maxDim) {
+            height = Math.round((height * maxDim) / width);
+            width = maxDim;
+          } else if (height > maxDim) {
+            width = Math.round((width * maxDim) / height);
+            height = maxDim;
+          }
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+          const compressed = canvas.toDataURL('image/jpeg', 0.8);
+
+          localStorage.setItem('cescospot_wiki_' + wikiKey, compressed);
+          document.getElementById(targetContainerId).innerHTML = `<img src="${compressed}">`;
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function loadWikiPhotos() {
+      const keys = ['palomar', 'clinch', 'fg', 'rig1', 'feeder1'];
+      keys.forEach(k => {
+        const saved = localStorage.getItem('cescospot_wiki_' + k);
+        if (saved) {
+          const container = document.getElementById('wikiImg_' + k);
+          if (container) container.innerHTML = `<img src="${saved}">`;
+        }
+      });
+    }
 
     // --- MAPPE (GOOGLE SATELLITE + OPENCYCLEMAP) ---
     const map = L.map('map', { zoomControl: false, attributionControl: false }).setView([41.9028, 12.4964], 6);
