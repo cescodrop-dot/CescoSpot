@@ -767,10 +767,14 @@
     }
     .catch-thumb img { width: 100%; height: 100%; object-fit: cover; }
 
-    /* Custom Marker Mappa */
+    /* Custom Marker Mappa (Foto o Icona Classica) */
     .custom-map-icon {
-      width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
       color: white; box-shadow: 0 6px 15px rgba(0,0,0,0.7); border: 2px solid white; font-size: 1.3rem; position: relative;
+      overflow: hidden; background-color: var(--accent-blue);
+    }
+    .custom-map-icon img {
+      width: 100%; height: 100%; object-fit: cover; border-radius: 50%;
     }
     .custom-map-icon::after {
       content: ''; position: absolute; bottom: -12px; left: 50%; transform: translateX(-50%);
@@ -1867,14 +1871,20 @@
       mapCircles = {};
 
       spots.forEach(s => {
-        const isEmoji = s.icon && !s.icon.startsWith('fa-');
-        const iconHtml = isEmoji ? `<span style="font-size:1.4rem;">${s.icon}</span>` : `<i class="fa-solid ${s.icon}"></i>`;
+        let iconInnerHtml = '';
+        if (s.photo) {
+          iconInnerHtml = `<img src="${s.photo}">`;
+        } else {
+          const isEmoji = s.icon && !s.icon.startsWith('fa-');
+          iconInnerHtml = isEmoji ? `<span style="font-size:1.4rem;">${s.icon}</span>` : `<i class="fa-solid ${s.icon}"></i>`;
+        }
+
         const markerBorder = s.color === '#f8fafc' ? '#0f172a' : 'white';
 
         const customIcon = L.divIcon({
           className: '',
-          html: `<div class="custom-map-icon" style="background-color: ${s.color}; border-color: ${markerBorder};">${iconHtml}<div style="position: absolute; bottom: -14px; left: 50%; transform: translateX(-50%); border-left: 8px solid transparent; border-right: 8px solid transparent; border-top: 14px solid ${s.color};"></div></div>`,
-          iconSize: [42, 56], iconAnchor: [21, 54], popupAnchor: [0, -45]
+          html: `<div class="custom-map-icon" style="background-color: ${s.photo ? 'transparent' : s.color}; border-color: ${markerBorder};">${iconInnerHtml}<div style="position: absolute; bottom: -14px; left: 50%; transform: translateX(-50%); border-left: 8px solid transparent; border-right: 8px solid transparent; border-top: 14px solid ${s.photo ? 'white' : s.color};"></div></div>`,
+          iconSize: [44, 58], iconAnchor: [22, 56], popupAnchor: [0, -48]
         });
 
         const techsList = s.techniques && s.techniques.length > 0 ? s.techniques.join(', ') : (s.technique || '');
@@ -1943,8 +1953,14 @@
         `;
         
         grouped[zone].forEach(s => {
-          const isEmoji = s.icon && !s.icon.startsWith('fa-');
-          const iconHtml = isEmoji ? `<span style="font-size:1.4rem;">${s.icon}</span>` : `<i class="fa-solid ${s.icon}"></i>`;
+          let iconInnerHtml = '';
+          if (s.photo) {
+            iconInnerHtml = `<img src="${s.photo}">`;
+          } else {
+            const isEmoji = s.icon && !s.icon.startsWith('fa-');
+            iconInnerHtml = isEmoji ? `<span style="font-size:1.4rem;">${s.icon}</span>` : `<i class="fa-solid ${s.icon}"></i>`;
+          }
+
           const markerBorder = s.color === '#f8fafc' ? '#0f172a' : 'white';
           const catchCount = s.catches ? s.catches.length : 0;
           const techsList = s.techniques && s.techniques.length > 0 ? s.techniques.join(', ') : (s.technique || '');
@@ -1959,7 +1975,7 @@
                  style="display:flex; justify-content:space-between; align-items:center; gap:12px; padding:16px; margin-bottom:12px; background:rgba(15,23,42,0.8); border-radius:16px; border:1px solid rgba(255,255,255,0.05);">
               
               <div onclick="focusSpot('${s.id}')" style="display:flex; align-items:flex-start; gap:12px; flex:1; min-width:0; cursor:pointer;">
-                <div class="custom-map-icon" style="background-color: ${s.color}; border-color: ${markerBorder}; position:static; width:44px; height:44px; font-size:1.2rem; flex-shrink:0; margin-top:2px;">${iconHtml}</div>
+                <div class="custom-map-icon" style="background-color: ${s.photo ? 'transparent' : s.color}; border-color: ${markerBorder}; position:static; width:44px; height:44px; flex-shrink:0; margin-top:2px;">${iconInnerHtml}</div>
                 <div style="flex:1; min-width:0; overflow:hidden;">
                   <b style="color:#fff; display:block; word-break:break-word; font-size:1.05rem; line-height:1.25; margin-bottom:4px;">${s.name}</b>
                   <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:4px;">
