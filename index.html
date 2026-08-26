@@ -820,15 +820,16 @@
     .wiki-section.active { display: block; }
 
     .encyclopedia-card {
-      background: rgba(15, 23, 42, 0.8);
+      background: rgba(15, 23, 42, 0.85);
       border: 1px solid rgba(255,255,255,0.08);
       border-radius: 20px;
       padding: 16px;
       margin-bottom: 16px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
     }
     .encyclopedia-card-title {
       color: var(--accent-light-blue);
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       font-weight: 900;
       margin-bottom: 6px;
       display: flex;
@@ -845,10 +846,11 @@
       justify-content: center;
       align-items: center;
       overflow: hidden;
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
     }
     .diagram-container svg {
       width: 100%;
-      max-width: 360px;
+      max-width: 420px;
       height: auto;
       display: block;
     }
@@ -869,6 +871,7 @@
       background: rgba(0,0,0,0.25);
       padding: 8px 10px;
       border-radius: 10px;
+      border-left: 2px solid var(--accent-light-blue);
     }
     .step-badge {
       background: var(--accent-blue);
@@ -1086,6 +1089,7 @@
         <div class="wiki-chip active" onclick="switchWikiCat('wikiKnots', this)">🔗 Nodi & Legature</div>
         <div class="wiki-chip" onclick="switchWikiCat('wikiRigs', this)">⚖️ Lenze & Piombature</div>
         <div class="wiki-chip" onclick="switchWikiCat('wikiFeeder', this)">🧺 Feeder & Fondo</div>
+        <div class="wiki-chip" onclick="switchWikiCat('wikiLures', this)">🪱 Esche & Terminali</div>
         <div class="wiki-chip" onclick="switchWikiCat('wikiRules', this)">🛡️ Etica & Normativa</div>
       </div>
 
@@ -1098,99 +1102,84 @@
             <span>1. Nodo Palomar</span>
             <span style="font-size:0.75rem; color:var(--accent-green);">Ami con occhiello & Moschettoni</span>
           </div>
-          <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:6px;">Il nodo più forte ed equilibrato al mondo. Mantiene il 95% del carico di rottura.</p>
+          <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:6px;">Il più robusto per ami con occhiello e moschettoni. Mantiene oltre il 95% del carico.</p>
           
           <div class="diagram-container">
-            <svg viewBox="0 0 450 360" xmlns="http://www.w3.org/2000/svg">
-              <!-- Step 1 -->
-              <g id="p1" transform="translate(10, 20)">
-                <text x="35" y="40" font-size="28" font-weight="900" fill="#ef4444">1.</text>
-                <path d="M 60 5 L 60 180 C 60 270, 20 270, 20 210 L 40 80" fill="none" stroke="#3b82f6" stroke-width="4.5" stroke-linecap="round"/>
-                <!-- Girella/Amo -->
-                <circle cx="30" cy="275" r="7" fill="none" stroke="#0f172a" stroke-width="4"/>
-                <rect x="25" y="285" width="10" height="20" rx="3" fill="#0f172a"/>
-                <circle cx="30" cy="315" r="7" fill="none" stroke="#0f172a" stroke-width="4"/>
-                <path d="M 28 335 C 38 345, 52 335, 55 330" fill="none" stroke="#64748b" stroke-width="4" marker-end="url(#arrow)"/>
+            <svg viewBox="0 0 440 180" xmlns="http://www.w3.org/2000/svg">
+              <!-- 1 -->
+              <g transform="translate(10, 10)">
+                <text x="35" y="25" font-size="20" font-weight="900" fill="#ef4444">1.</text>
+                <path d="M 45 10 L 45 90 C 45 140, 25 140, 25 100 L 35 40" fill="none" stroke="#2563eb" stroke-width="3.5" stroke-linecap="round"/>
+                <circle cx="35" cy="140" r="5" fill="none" stroke="#0f172a" stroke-width="3"/>
+                <rect x="32" y="146" width="6" height="12" rx="2" fill="#0f172a"/>
+                <circle cx="35" cy="164" r="5" fill="none" stroke="#0f172a" stroke-width="3"/>
               </g>
-
-              <!-- Step 2 -->
-              <g id="p2" transform="translate(120, 20)">
-                <text x="35" y="40" font-size="28" font-weight="900" fill="#ef4444">2.</text>
-                <path d="M 60 5 L 60 110 C 60 160, 20 160, 20 120 C 20 80, 80 80, 80 160 C 80 230, 20 230, 20 210" fill="none" stroke="#3b82f6" stroke-width="4.5" stroke-linecap="round"/>
-                <path d="M 5 230 C -5 220, 5 200, 15 190" fill="none" stroke="#3b82f6" stroke-width="4.5"/>
-                <!-- Girella -->
-                <circle cx="50" cy="275" r="7" fill="none" stroke="#0f172a" stroke-width="4"/>
-                <rect x="45" y="285" width="10" height="20" rx="3" fill="#0f172a"/>
-                <circle cx="50" cy="315" r="7" fill="none" stroke="#0f172a" stroke-width="4"/>
+              <!-- 2 -->
+              <g transform="translate(115, 10)">
+                <text x="35" y="25" font-size="20" font-weight="900" fill="#ef4444">2.</text>
+                <path d="M 45 10 L 45 60 C 45 90, 20 90, 20 65 C 20 40, 60 40, 60 85 C 60 120, 25 120, 25 105" fill="none" stroke="#2563eb" stroke-width="3.5" stroke-linecap="round"/>
+                <circle cx="40" cy="140" r="5" fill="none" stroke="#0f172a" stroke-width="3"/>
+                <rect x="37" y="146" width="6" height="12" rx="2" fill="#0f172a"/>
+                <circle cx="40" cy="164" r="5" fill="none" stroke="#0f172a" stroke-width="3"/>
               </g>
-
-              <!-- Step 3 -->
-              <g id="p3" transform="translate(230, 20)">
-                <text x="35" y="40" font-size="28" font-weight="900" fill="#ef4444">3.</text>
-                <path d="M 60 5 L 60 110 C 60 150, 20 150, 20 115 C 20 75, 80 75, 80 180 C 80 290, 50 310, 50 310 C 20 310, 10 200, 20 125" fill="none" stroke="#3b82f6" stroke-width="4.5" stroke-linecap="round"/>
-                <!-- Girella dentro -->
-                <circle cx="50" cy="255" r="7" fill="none" stroke="#0f172a" stroke-width="4"/>
-                <rect x="45" y="265" width="10" height="20" rx="3" fill="#0f172a"/>
-                <circle cx="50" cy="295" r="7" fill="none" stroke="#0f172a" stroke-width="4"/>
+              <!-- 3 -->
+              <g transform="translate(225, 10)">
+                <text x="35" y="25" font-size="20" font-weight="900" fill="#ef4444">3.</text>
+                <path d="M 45 10 L 45 60 C 45 80, 20 80, 20 60 C 20 35, 60 35, 60 100 C 60 160, 40 170, 40 170 C 20 170, 15 110, 20 70" fill="none" stroke="#2563eb" stroke-width="3.5" stroke-linecap="round"/>
+                <circle cx="40" cy="130" r="5" fill="none" stroke="#0f172a" stroke-width="3"/>
+                <rect x="37" y="136" width="6" height="12" rx="2" fill="#0f172a"/>
+                <circle cx="40" cy="154" r="5" fill="none" stroke="#0f172a" stroke-width="3"/>
               </g>
-
-              <!-- Step 4 -->
-              <g id="p4" transform="translate(340, 20)">
-                <text x="35" y="40" font-size="28" font-weight="900" fill="#ef4444">4.</text>
-                <path d="M 60 5 L 35 240 L 42 160" fill="none" stroke="#3b82f6" stroke-width="4.5" stroke-linecap="round"/>
-                <!-- Nodo stretto -->
-                <ellipse cx="35" cy="245" rx="8" ry="6" fill="#3b82f6"/>
-                <circle cx="35" cy="265" r="7" fill="none" stroke="#0f172a" stroke-width="4"/>
-                <rect x="30" y="275" width="10" height="20" rx="3" fill="#0f172a"/>
-                <circle cx="35" cy="305" r="7" fill="none" stroke="#0f172a" stroke-width="4"/>
-                <!-- Frecce tensione -->
-                <path d="M 55 210 L 55 280 M 55 210 L 51 220 M 55 210 L 59 220 M 55 280 L 51 270 M 55 280 L 59 270" stroke="#64748b" stroke-width="3.5" fill="none"/>
+              <!-- 4 -->
+              <g transform="translate(335, 10)">
+                <text x="35" y="25" font-size="20" font-weight="900" fill="#ef4444">4.</text>
+                <path d="M 45 10 L 35 125 L 40 85" fill="none" stroke="#2563eb" stroke-width="3.5" stroke-linecap="round"/>
+                <ellipse cx="35" cy="128" rx="6" ry="5" fill="#2563eb"/>
+                <circle cx="35" cy="140" r="5" fill="none" stroke="#0f172a" stroke-width="3"/>
+                <rect x="32" y="146" width="6" height="12" rx="2" fill="#0f172a"/>
+                <circle cx="35" cy="164" r="5" fill="none" stroke="#0f172a" stroke-width="3"/>
               </g>
             </svg>
           </div>
 
           <div class="step-list">
-            <div class="step-item"><div class="step-badge">1</div><span>Raddoppia circa 15 cm di lenza e passala nell'occhiello.</span></div>
-            <div class="step-item"><div class="step-badge">2</div><span>Fai un nodo semplice con il filo doppio senza serrare.</span></div>
-            <div class="step-item"><div class="step-badge">3</div><span>Fai passare l'esca o l'amo attraverso l'asola che fuoriesce.</span></div>
-            <div class="step-item"><div class="step-badge">4</div><span>Inumidisci con saliva/acqua, tira entrambi i capi e rifila l'eccedenza.</span></div>
+            <div class="step-item"><div class="step-badge">1</div><span>Raddoppia il filo e passalo nell'occhiello.</span></div>
+            <div class="step-item"><div class="step-badge">2</div><span>Fai un nodo semplice col doppio filo senza stringere.</span></div>
+            <div class="step-item"><div class="step-badge">3</div><span>Passa l'intero amo/moschettone dentro l'asola.</span></div>
+            <div class="step-item"><div class="step-badge">4</div><span>Inumidisci, serra tirando i due capi e taglia l'eccedenza.</span></div>
           </div>
         </div>
 
-        <!-- 2. Nodo Amo a Paletta (Snell Knot) -->
+        <!-- 2. Nodo per Amo a Paletta (Snell Knot) -->
         <div class="encyclopedia-card">
           <div class="encyclopedia-card-title">
-            <span>2. Nodo Amo a Paletta (Senza Asola)</span>
-            <span style="font-size:0.75rem; color:var(--accent-orange);">Indispensabile da Riva</span>
+            <span>2. Nodo per Amo a Paletta (Senza Occhiello)</span>
+            <span style="font-size:0.75rem; color:var(--accent-orange);">Classico da Riva</span>
           </div>
-          <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:6px;">La legatura perfetta per ami dritti a paletta (Bolognese, Feeder, Fondo).</p>
+          <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:6px;">La legatura d'elezione per ami a paletta (Bolognese, Feeder, Fondo).</p>
           
-          <div class="diagram-container" style="background:#0f172a; border:1px solid rgba(255,255,255,0.1);">
-            <svg viewBox="0 0 400 130" xmlns="http://www.w3.org/2000/svg">
-              <!-- Gambo amo -->
-              <rect x="50" y="55" width="280" height="8" fill="#94a3b8" rx="2"/>
-              <polygon points="50,45 50,73 35,59" fill="#94a3b8"/> <!-- Paletta -->
-              <path d="M 330 59 C 360 59 380 90 350 110 C 330 120 310 100 310 90" fill="none" stroke="#94a3b8" stroke-width="8" stroke-linecap="round"/>
-              <!-- Spire filo -->
-              <path d="M 70 30 L 110 30 C 130 30 140 60 140 60" fill="none" stroke="#38bdf8" stroke-width="4"/>
-              <g stroke="#38bdf8" stroke-width="5" fill="none">
-                <line x1="150" y1="45" x2="150" y2="75"/>
-                <line x1="165" y1="45" x2="165" y2="75"/>
-                <line x1="180" y1="45" x2="180" y2="75"/>
-                <line x1="195" y1="45" x2="195" y2="75"/>
-                <line x1="210" y1="45" x2="210" y2="75"/>
-                <line x1="225" y1="45" x2="225" y2="75"/>
-                <line x1="240" y1="45" x2="240" y2="75"/>
+          <div class="diagram-container" style="background:#0f172a;">
+            <svg viewBox="0 0 380 100" xmlns="http://www.w3.org/2000/svg">
+              <rect x="50" y="45" width="240" height="7" fill="#94a3b8" rx="2"/>
+              <polygon points="50,35 50,62 35,48" fill="#94a3b8"/>
+              <path d="M 290 48 C 320 48 340 75 315 95 C 295 105 280 85 280 75" fill="none" stroke="#94a3b8" stroke-width="7" stroke-linecap="round"/>
+              <path d="M 65 25 L 100 25 C 115 25 125 48 125 48" fill="none" stroke="#38bdf8" stroke-width="3.5"/>
+              <g stroke="#38bdf8" stroke-width="4.5" fill="none">
+                <line x1="135" y1="35" x2="135" y2="62"/>
+                <line x1="150" y1="35" x2="150" y2="62"/>
+                <line x1="165" y1="35" x2="165" y2="62"/>
+                <line x1="180" y1="35" x2="180" y2="62"/>
+                <line x1="195" y1="35" x2="195" y2="62"/>
+                <line x1="210" y1="35" x2="210" y2="62"/>
               </g>
-              <path d="M 245 60 C 260 60 280 85 220 85 L 120 85" fill="none" stroke="#38bdf8" stroke-width="4" stroke-dasharray="4,4"/>
+              <path d="M 215 48 C 230 48 250 70 190 70 L 105 70" fill="none" stroke="#38bdf8" stroke-width="3" stroke-dasharray="3,3"/>
             </svg>
           </div>
 
           <div class="step-list">
-            <div class="step-item"><div class="step-badge">1</div><span>Posa il filo lungo il gambo dell'amo formando un'ampia asola verso la curva.</span></div>
-            <div class="step-item"><div class="step-badge">2</div><span>Avvolgi il capo libero attorno al gambo e al filo per 6-8 spire ordinate verso la paletta.</span></div>
-            <div class="step-item"><div class="step-badge">3</div><span>Infila il capo nell'asola inferiore rimasta aperta.</span></div>
-            <div class="step-item"><div class="step-badge">4</div><span>Bagna la lenza e serra trazionando la lenza madre: verifica che il filo esca davanti alla paletta!</span></div>
+            <div class="step-item"><div class="step-badge">1</div><span>Posa il filo lungo il gambo formando un'asola verso la curva dell'amo.</span></div>
+            <div class="step-item"><div class="step-badge">2</div><span>Avvolgi il capo attorno al gambo e al filo per 6-8 spire ordinate verso la paletta.</span></div>
+            <div class="step-item"><div class="step-badge">3</div><span>Passa il capo nell'asola e tira la lenza madre. <b>Importante:</b> il filo deve uscire davanti alla paletta.</span></div>
           </div>
         </div>
 
@@ -1198,29 +1187,55 @@
         <div class="encyclopedia-card">
           <div class="encyclopedia-card-title">
             <span>3. Clinch Rinforzato (Improved Clinch)</span>
-            <span style="font-size:0.75rem; color:var(--accent-amber);">Rapido in Pesca</span>
+            <span style="font-size:0.75rem; color:var(--accent-amber);">Rapido per Moschettoni</span>
           </div>
-          <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:6px;">Il nodo più veloce per collegare girelle, artificiali o moschettoni.</p>
+          <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:6px;">Ideale per legature veloci su occhielli, moschettoni ed esche artificiali.</p>
           <div class="step-list">
-            <div class="step-item"><div class="step-badge">1</div><span>Infila il capo nell'occhiello e avvolgilo 5-7 volte sulla lenza madre.</span></div>
-            <div class="step-item"><div class="step-badge">2</div><span>Passa il capo nell'asola triangolare che si è formata vicino all'occhiello.</span></div>
-            <div class="step-item"><div class="step-badge">3</div><span>Ripassa il capo nella grande asola appena creata.</span></div>
-            <div class="step-item"><div class="step-badge">4</div><span>Inumidisci bene e tira lentamente la lenza madre per compattare le spire.</span></div>
+            <div class="step-item"><div class="step-badge">1</div><span>Infila il capo nell'occhiello e avvolgilo 5-7 volte sul trave.</span></div>
+            <div class="step-item"><div class="step-badge">2</div><span>Infila il capo nella piccola asola vicino all'occhiello.</span></div>
+            <div class="step-item"><div class="step-badge">3</div><span>Ripassa il capo nella grande ansa formatasi e serra bagnando con saliva.</span></div>
           </div>
         </div>
 
         <!-- 4. Nodo FG -->
         <div class="encyclopedia-card">
           <div class="encyclopedia-card-title">
-            <span>4. Nodo FG (Trecciato ⇄ Fluorocarbon)</span>
-            <span style="font-size:0.75rem; color:var(--accent-light-blue);">Top Spinning & Feeder</span>
+            <span>4. Nodo FG (Treccia ⇄ Fluorocarbon)</span>
+            <span style="font-size:0.75rem; color:var(--accent-light-blue);">Top Tenuta & Scorrevolezza</span>
           </div>
-          <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:6px;">Zero spessore: scorre nei passanti della canna senza fare attrito.</p>
+          <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:6px;">Zero spessore, perfetto per passare negli anelli della canna da spinning o feeder.</p>
           <div class="step-list">
-            <div class="step-item"><div class="step-badge">1</div><span>Tieni il trecciato in tensione (tra i denti o con le dita) e intreccia il fluorocarbon sopra e sotto per 16-20 spire a croce.</span></div>
-            <div class="step-item"><div class="step-badge">2</div><span>Blocca la treccia con un mezzo collo sul fluorocarbon e serra con forza le spire finché non cambiano colore.</span></div>
-            <div class="step-item"><div class="step-badge">3</div><span>Esegui 4 mezzi colli alternati di chiusura con il trecciato.</span></div>
-            <div class="step-item"><div class="step-badge">4</div><span>Taglia il fluorocarbon lasciando 1mm e brucia leggermente la punta per creare una pallina di sicurezza.</span></div>
+            <div class="step-item"><div class="step-badge">1</div><span>Tieni il trecciato teso e incrocia il fluorocarbon per 16-20 spire a croce.</span></div>
+            <div class="step-item"><div class="step-badge">2</div><span>Fai un mezzo collo di blocco col trecciato e serra con forza le spire finché scuriscono.</span></div>
+            <div class="step-item"><div class="step-badge">3</div><span>Chiudi con 3-4 mezzi colli alternati e brucia la puntina del fluorocarbon.</span></div>
+          </div>
+        </div>
+
+        <!-- 5. Nodo Albright -->
+        <div class="encyclopedia-card">
+          <div class="encyclopedia-card-title">
+            <span>5. Nodo Albright Special</span>
+            <span style="font-size:0.75rem; color:var(--accent-green);">Giunzione Veloce Treccia-Terminale</span>
+          </div>
+          <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:6px;">Ottima alternativa rapida all'FG quando si è in pesca e c'è poco tempo o vento.</p>
+          <div class="step-list">
+            <div class="step-item"><div class="step-badge">1</div><span>Piega a metà il fluorocarbon (o filo più spesso) formando un'asola.</span></div>
+            <div class="step-item"><div class="step-badge">2</div><span>Entra con la treccia nell'asola e fai 8-10 spire strette verso la curva, poi 4 spire di ritorno sopra le prime.</span></div>
+            <div class="step-item"><div class="step-badge">3</div><span>Riesci dall'asola nello stesso verso in cui sei entrato, bagna e serra.</span></div>
+          </div>
+        </div>
+
+        <!-- 6. Nodo Rapala / Asola Libera -->
+        <div class="encyclopedia-card">
+          <div class="encyclopedia-card-title">
+            <span>6. Nodo Rapala (Loop Knot)</span>
+            <span style="font-size:0.75rem; color:var(--accent-orange);">Massimo Movimento Artificiali</span>
+          </div>
+          <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:6px;">Crea un'asola non scorrevole che lascia l'artificiale (minnow/crank) libero di scodinzolare.</p>
+          <div class="step-list">
+            <div class="step-item"><div class="step-badge">1</div><span>Fai un nodo semplice a circa 10 cm dalla fine del filo senza stringerlo.</span></div>
+            <div class="step-item"><div class="step-badge">2</div><span>Passa il capo nell'occhiello dell'artificiale e poi ripassalo dentro il nodo semplice.</span></div>
+            <div class="step-item"><div class="step-badge">3</div><span>Fai 3 giri con il capo sul trave, ripassa nel nodo semplice e nell'asola appena creata. Inumidisci e serra.</span></div>
           </div>
         </div>
 
@@ -1229,44 +1244,64 @@
       <!-- SEZIONE 2: LENZE & PIOMBATURE -->
       <div id="wikiRigs" class="wiki-section">
         
-        <!-- Spallinata Bolognese -->
+        <!-- Spallinata Aperta -->
         <div class="encyclopedia-card">
           <div class="encyclopedia-card-title">
-            <span>Spallinata a Scalare (Galleggiante / Bolognese)</span>
-            <span style="font-size:0.75rem; color:var(--accent-light-blue);">Fiumi e Corrente</span>
+            <span>1. Spallinata Aperta a Scalare (Bolognese)</span>
+            <span style="font-size:0.75rem; color:var(--accent-light-blue);">Acque Lente / Pesci Sospettosi</span>
           </div>
-          <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:8px;">Distribuzione dei piombini dal più grande (in alto) al più piccolo (in basso), distanziandoli progressivamente.</p>
+          <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:8px;">Piombi decrescenti dal grande (in alto) al piccolo (in basso), con distanze via via maggiori.</p>
           
-          <div class="diagram-container" style="background:#0f172a; border:1px solid rgba(255,255,255,0.1); height:110px;">
-            <svg viewBox="0 0 380 90" xmlns="http://www.w3.org/2000/svg">
-              <line x1="20" y1="45" x2="360" y2="45" stroke="#38bdf8" stroke-width="2.5"/>
-              <!-- Piombi a scalare -->
-              <circle cx="50" cy="45" r="10" fill="#94a3b8"/>
-              <circle cx="85" cy="45" r="9" fill="#94a3b8"/>
-              <circle cx="130" cy="45" r="7.5" fill="#94a3b8"/>
-              <circle cx="185" cy="45" r="6" fill="#94a3b8"/>
-              <circle cx="250" cy="45" r="5" fill="#94a3b8"/>
-              <circle cx="320" cy="45" r="4" fill="#94a3b8"/>
-              <text x="35" y="80" fill="#94a3b8" font-size="12" font-weight="700">Verso Galleggiante (Vicini)</text>
-              <text x="235" y="80" fill="#38bdf8" font-size="12" font-weight="700">Verso Terminale (Lontani)</text>
+          <div class="diagram-container" style="background:#0f172a;">
+            <svg viewBox="0 0 380 75" xmlns="http://www.w3.org/2000/svg">
+              <line x1="20" y1="35" x2="360" y2="35" stroke="#38bdf8" stroke-width="2.5"/>
+              <circle cx="50" cy="35" r="9" fill="#94a3b8"/><text x="44" y="58" fill="#94a3b8" font-size="10">#4</text>
+              <circle cx="85" cy="35" r="8" fill="#94a3b8"/><text x="79" y="58" fill="#94a3b8" font-size="10">#6</text>
+              <circle cx="135" cy="35" r="7" fill="#94a3b8"/><text x="129" y="58" fill="#94a3b8" font-size="10">#8</text>
+              <circle cx="195" cy="35" r="6" fill="#94a3b8"/><text x="189" y="58" fill="#94a3b8" font-size="10">#9</text>
+              <circle cx="265" cy="35" r="5" fill="#94a3b8"/><text x="259" y="58" fill="#94a3b8" font-size="10">#10</text>
+              <circle cx="340" cy="35" r="4" fill="#94a3b8"/><text x="334" y="58" fill="#94a3b8" font-size="10">#11</text>
             </svg>
           </div>
-
           <div class="step-list">
-            <div class="step-item"><div class="step-badge">✓</div><span><b>Regola d'oro:</b> In corrente sostenuta raggruppa i piombi verso il basso; in acque lente o con pesci diffidenti allarga la spallinata su 100-150 cm per una calata naturale.</span></div>
+            <div class="step-item"><div class="step-badge">✓</div><span><b>Utilizzo:</b> Cavedani, Barbi e Spigole con esca singola (cagnotto/pane) per una discesa lentissima e naturale.</span></div>
           </div>
         </div>
 
-        <!-- Piombatura Pesca al Tocco -->
+        <!-- Spallinata Chiusa / Bulk -->
         <div class="encyclopedia-card">
           <div class="encyclopedia-card-title">
-            <span>Corona per Pesca al Tocco (Trota Torrente)</span>
-            <span style="font-size:0.75rem; color:var(--accent-green);">Buche e Cascate</span>
+            <span>2. Spallinata Chiusa a Bulk + Piombi Spia</span>
+            <span style="font-size:0.75rem; color:var(--accent-orange);">Corrente Media & Veloce</span>
           </div>
-          <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:8px;">Corona di 25-35 piombini sferici spaccati concentrati in 40-60 cm per sondare il fondo delle buche correntizie.</p>
+          <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:8px;">I piombi principali raggruppati a formare un "bulk", seguiti da 2-3 piombini piccoli distanziati.</p>
           <div class="step-list">
-            <div class="step-item"><div class="step-badge">1</div><span>Posiziona la corona a circa 30-40 cm dall'amo a paletta.</span></div>
-            <div class="step-item"><div class="step-badge">2</div><span>Mantieni la corona leggermente scalata per evitare incagli tra i sassi del fondo.</span></div>
+            <div class="step-item"><div class="step-badge">✓</div><span><b>Utilizzo:</b> Porta subito l'esca sul fondale tagliando la corrente di superficie e segnala le tocche di risalita.</span></div>
+          </div>
+        </div>
+
+        <!-- Corona Tocco -->
+        <div class="encyclopedia-card">
+          <div class="encyclopedia-card-title">
+            <span>3. Corona da Trota Torrente (Pesca al Tocco)</span>
+            <span style="font-size:0.75rem; color:var(--accent-green);">Buche, Raschi & Cascate</span>
+          </div>
+          <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:8px;">Serie di 25-35 piombini sferici spaccati concentrati in 40-60 cm.</p>
+          <div class="step-list">
+            <div class="step-item"><div class="step-badge">✓</div><span><b>Consiglio:</b> Mantieni la corona leggermente curva assecondando la corrente per far rotolare l'esca sul fondo senza incagliarsi.</span></div>
+          </div>
+        </div>
+
+        <!-- Galleggiante Scorrevole -->
+        <div class="encyclopedia-card">
+          <div class="encyclopedia-card-title">
+            <span>4. Montatura Galleggiante Scorrevole</span>
+            <span style="font-size:0.75rem; color:var(--accent-amber);">Fondali Alti (Laghi & Dighe)</span>
+          </div>
+          <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:8px;">Indispensabile quando la profondità dell'acqua supera la lunghezza della canna.</p>
+          <div class="step-list">
+            <div class="step-item"><div class="step-badge">1</div><span>Lenza madre ➔ Nodo di fermo in lana/silicone ➔ Perlina salvanodo ➔ Galleggiante scorrevole.</span></div>
+            <div class="step-item"><div class="step-badge">2</div><span>Torpille o bulk di taratura ➔ Girella di giunzione ➔ Terminale di 30-50 cm.</span></div>
           </div>
         </div>
 
@@ -1278,39 +1313,103 @@
         <!-- Running Rig Feeder -->
         <div class="encyclopedia-card">
           <div class="encyclopedia-card-title">
-            <span>Running Rig (Feeder Libero Scorrevole)</span>
-            <span style="font-size:0.75rem; color:var(--accent-green);">Top Sensibilità</span>
+            <span>1. Running Rig (Scorrevole Libero)</span>
+            <span style="font-size:0.75rem; color:var(--accent-green);">Massima Sensibilità</span>
           </div>
-          <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:8px;">La montatura regolamentare e più sensibile: il pesce non sente il peso del pasturatore quando mangia.</p>
+          <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:8px;">La montatura moderna per eccellenza: il pesce mangia senza percepire la resistenza del pasturatore.</p>
           
-          <div class="diagram-container" style="background:#0f172a; border:1px solid rgba(255,255,255,0.1); height:110px;">
-            <svg viewBox="0 0 380 90" xmlns="http://www.w3.org/2000/svg">
-              <line x1="20" y1="45" x2="360" y2="45" stroke="#38bdf8" stroke-width="2.5"/>
-              <!-- Pasturatore su moschettone -->
-              <circle cx="100" cy="45" r="6" fill="#f97316"/>
-              <line x1="100" y1="45" x2="100" y2="70" stroke="#f97316" stroke-width="3"/>
-              <rect x="85" y="70" width="30" height="15" rx="3" fill="#64748b"/>
-              <!-- Paracolpi & Brillatura -->
-              <circle cx="180" cy="45" r="7" fill="#22c55e"/> <!-- Perlina -->
-              <line x1="187" y1="45" x2="260" y2="45" stroke="#eab308" stroke-width="5"/> <!-- Brillatura -->
-              <!-- Micro girella -->
-              <circle cx="265" cy="45" r="5" fill="#fff"/>
-              <line x1="270" y1="45" x2="360" y2="45" stroke="#fff" stroke-width="1.8"/> <!-- Terminale -->
-              <text x="185" y="32" fill="#eab308" font-size="11" font-weight="700">Brillatura 10cm</text>
+          <div class="diagram-container" style="background:#0f172a;">
+            <svg viewBox="0 0 380 85" xmlns="http://www.w3.org/2000/svg">
+              <line x1="20" y1="40" x2="360" y2="40" stroke="#38bdf8" stroke-width="2.5"/>
+              <circle cx="85" cy="40" r="5" fill="#f97316"/>
+              <line x1="85" y1="40" x2="85" y2="65" stroke="#f97316" stroke-width="2.5"/>
+              <rect x="72" y="65" width="26" height="14" rx="2" fill="#64748b"/>
+              <circle cx="160" cy="40" r="6" fill="#22c55e"/>
+              <line x1="166" y1="40" x2="235" y2="40" stroke="#eab308" stroke-width="4.5"/>
+              <circle cx="240" cy="40" r="4" fill="#fff"/>
+              <line x1="245" y1="40" x2="355" y2="40" stroke="#fff" stroke-width="1.8"/>
+              <text x="165" y="28" fill="#eab308" font-size="10" font-weight="700">Brillatura 8-10cm</text>
             </svg>
           </div>
 
           <div class="step-list">
-            <div class="step-item"><div class="step-badge">1</div><span>Infila una girella con moschettone sulla lenza madre per agganciare il pasturatore.</span></div>
-            <div class="step-item"><div class="step-badge">2</div><span>Inserisci un gommino salva-nodo (stopper o perlina morbida).</span></div>
-            <div class="step-item"><div class="step-badge">3</div><span>Crea una brillatura (treccia ritorta) di 8-10 cm per distanziare il pasturatore dal finale ed evitare grovigli.</span></div>
-            <div class="step-item"><div class="step-badge">4</div><span>Collega il terminale (da 40 a 100 cm in fluorocarbon).</span></div>
+            <div class="step-item"><div class="step-badge">1</div><span>Pasturatore su moschettone libero sulla lenza madre.</span></div>
+            <div class="step-item"><div class="step-badge">2</div><span>Gommino paracolpi / perlina salvanodo.</span></div>
+            <div class="step-item"><div class="step-badge">3</div><span>Brillatura ritorta di 8-10 cm per distanziare il terminale ed evitare grovigli.</span></div>
+            <div class="step-item"><div class="step-badge">4</div><span>Microgirella e terminale in fluorocarbon da 50 a 100 cm.</span></div>
+          </div>
+        </div>
+
+        <!-- Paternoster Feeder -->
+        <div class="encyclopedia-card">
+          <div class="encyclopedia-card-title">
+            <span>2. Paternoster Rig (Feeder a Bracciolo)</span>
+            <span style="font-size:0.75rem; color:var(--accent-amber);">Acque Correnti & Brema</span>
+          </div>
+          <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:8px;">Pasturatore posizionato su un bracciolo laterale a perdere, con terminale diretto in asse.</p>
+          <div class="step-list">
+            <div class="step-item"><div class="step-badge">✓</div><span>Segnala in modo impeccabile sia le mangiate in trazione che quelle in allentamento (quando il pesce viene verso riva).</span></div>
+          </div>
+        </div>
+
+        <!-- Method Feeder -->
+        <div class="encyclopedia-card">
+          <div class="encyclopedia-card-title">
+            <span>3. Method Feeder In-Line</span>
+            <span style="font-size:0.75rem; color:var(--accent-orange);">Carpe, Carassi & Laghetto</span>
+          </div>
+          <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:8px;">Pasturatore piatto sagomato con terminale corto (8-10 cm) annegato nella pastura o nei pellet.</p>
+          <div class="step-list">
+            <div class="step-item"><div class="step-badge">✓</div><span>Autoferrante: il pesce aspira la pallina di pastura, trova l'esca e si ferra da solo contro il peso del piombo.</span></div>
           </div>
         </div>
 
       </div>
 
-      <!-- SEZIONE 4: ETICA & NORMATIVA -->
+      <!-- SEZIONE 4: ESCHE, SILICONI & TERMINALI -->
+      <div id="wikiLures" class="wiki-section">
+        
+        <!-- Jig Head & Siliconi -->
+        <div class="encyclopedia-card">
+          <div class="encyclopedia-card-title">
+            <span>1. Testina Piombata (Jig Head Rig)</span>
+            <span style="font-size:0.75rem; color:var(--accent-light-blue);">Spinning & Trout Area</span>
+          </div>
+          <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:8px;">L'innesco fondamentale per shad, grub e siliconi: amo piombato dritto sulla schiena dell'esca.</p>
+          <div class="step-list">
+            <div class="step-item"><div class="step-badge">1</div><span>Misura la lunghezza dell'amo lungo il corpo in silicone per capire il punto di uscita.</span></div>
+            <div class="step-item"><div class="step-badge">2</div><span>Infila la punta dalla testa e falla scorrere dritta al centro del corpo.</span></div>
+            <div class="step-item"><div class="step-badge">3</div><span>Fai fuoriuscire la punta sulla schiena: l'esca deve risultare perfettamente dritta, mai incurvata!</span></div>
+          </div>
+        </div>
+
+        <!-- Texas & Carolina Rig -->
+        <div class="encyclopedia-card">
+          <div class="encyclopedia-card-title">
+            <span>2. Texas Rig (Antincaglio Totale)</span>
+            <span style="font-size:0.75rem; color:var(--accent-green);">Ostacoli, Rifiuti & Erbai</span>
+          </div>
+          <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:8px;">Piombo a proiettile (bullet) scorrevole e amo offset con punta nascosta nel silicone.</p>
+          <div class="step-list">
+            <div class="step-item"><div class="step-badge">✓</div><span>Scivola tra canneti, rami sommersi e alghe senza incagliarsi mai. Ideale per Black Bass, Luccio e Lucioperca.</span></div>
+          </div>
+        </div>
+
+        <!-- Drop Shot Rig -->
+        <div class="encyclopedia-card">
+          <div class="encyclopedia-card-title">
+            <span>3. Drop Shot Rig</span>
+            <span style="font-size:0.75rem; color:var(--accent-orange);">Persico Reale & Pescata a Vista</span>
+          </div>
+          <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:8px;">Amo montato a 90° direttamente sul trave con nodo Palomar e piombo a sgancio rapido all'estremità inferiore.</p>
+          <div class="step-list">
+            <div class="step-item"><div class="step-badge">✓</div><span>Permette di far danzare l'esca sul posto a mezz'acqua senza spostare il piombo dal fondale.</span></div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- SEZIONE 5: ETICA & NORMATIVA -->
       <div id="wikiRules" class="wiki-section">
         
         <div class="encyclopedia-card" style="border-color:var(--accent-green);">
@@ -1319,15 +1418,15 @@
             Il <b>Catch & Release</b> garantisce il futuro delle nostre acque e la salvaguardia della fauna ittica:
           </p>
           <div class="step-list">
-            <div class="step-item"><div class="step-badge">1</div><span><b>Mani sempre bagnate:</b> Non toccare mai il pesce con le mani asciutte per non rimuovere il muco protettivo.</span></div>
+            <div class="step-item"><div class="step-badge">1</div><span><b>Mani sempre bagnate:</b> Non toccare mai il pesce con le mani asciutte per non asportare il muco protettivo.</span></div>
             <div class="step-item"><div class="step-badge">2</div><span><b>Slamatura rapida:</b> Slama il pesce direttamente in acqua o su un materassino umido utilizzando pinze o slamatore.</span></div>
-            <div class="step-item"><div class="step-badge">3</div><span><b>Zero rifiuti:</b> Non abbandonare mai spezzoni di trecciato, nylon, ami o buste di plastica lungo gli argini.</span></div>
+            <div class="step-item"><div class="step-badge">3</div><span><b>Zero rifiuti:</b> Non abbandonare mai spezzoni di trecciato, nylon, ami o piombi lungo gli argini.</span></div>
           </div>
         </div>
 
         <!-- Tabella Conversione Fili -->
         <div class="widget-card" style="padding:14px; margin-bottom:16px;">
-          <div class="widget-title" style="margin-bottom:8px;"><i class="fa-solid fa-table-list" style="color:var(--accent-amber);"></i> Conversione Fili da Pesca</div>
+          <div class="widget-title" style="margin-bottom:8px;"><i class="fa-solid fa-table-list" style="color:var(--accent-amber);"></i> Tabella Conversione Fili da Pesca</div>
           <table style="width:100%; border-collapse:collapse; font-size:0.8rem; text-align:center;">
             <thead>
               <tr style="color:var(--accent-light-blue); border-bottom:1px solid rgba(255,255,255,0.1);">
@@ -1350,7 +1449,7 @@
 
         <!-- MISURE MINIME E DIVIETI -->
         <div class="widget-card" style="padding:14px; margin-bottom:16px;">
-          <div class="widget-title" style="margin-bottom:8px;"><i class="fa-solid fa-shield-halved" style="color:var(--accent-green);"></i> Misure Minime & Divieti (Riva)</div>
+          <div class="widget-title" style="margin-bottom:8px;"><i class="fa-solid fa-shield-halved" style="color:var(--accent-green);"></i> Misure Minime & Divieti di Frega</div>
           <table style="width:100%; border-collapse:collapse; font-size:0.8rem; text-align:center;">
             <thead>
               <tr style="color:var(--accent-green); border-bottom:1px solid rgba(255,255,255,0.1);">
@@ -1360,7 +1459,7 @@
               </tr>
             </thead>
             <tbody style="color:var(--text-light); opacity:0.9;">
-              <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:6px 0;">Trota Fario</td><td>22-25 cm</td><td>1Ott - 1Feb (variabile)</td></tr>
+              <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:6px 0;">Trota Fario</td><td>22-25 cm</td><td>1Ott - 1Feb (variabile regionale)</td></tr>
               <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:6px 0;">Luccio</td><td>50-60 cm</td><td>1Feb - 31Mar</td></tr>
               <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:6px 0;">Black Bass</td><td>30 cm</td><td>1Apr - 31Mag (Catch & Release)</td></tr>
               <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:6px 0;">Barbo / Cavedano</td><td>N.D. / 20cm</td><td>1Mag - 30Giu</td></tr>
