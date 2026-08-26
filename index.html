@@ -1070,6 +1070,8 @@
         <div class="tech-chip" onclick="setTechFilter('Galleggiante / Bolognese', this)">Galleggiante</div>
         <div class="tech-chip" onclick="setTechFilter('Fondo / Surfcasting', this)">Fondo / Surf</div>
         <div class="tech-chip" onclick="setTechFilter('Trout Area', this)">Trout Area</div>
+        <div class="tech-chip" onclick="setTechFilter('Pesca al tocco', this)">Pesca al tocco</div>
+        <div class="tech-chip" onclick="setTechFilter('Esche siliconiche piombate', this)">Siliconiche piombate</div>
       </div>
 
       <!-- Backup JSON, GPX e Import personalizzato -->
@@ -1092,7 +1094,7 @@
     <button class="nav-item" onclick="switchTab('tabMe', this)"><i class="fa-solid fa-bookmark"></i>Archivio</button>
   </nav>
 
-  <!-- Modal Aggiungi/Modifica Spot -->
+  <!-- Modal Aggiungi/Modifica Spot con TUTTI i campi unificati -->
   <div class="modal" id="modalAddSpot">
     <div class="modal-drag-handle"></div>
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
@@ -1116,7 +1118,7 @@
         <input type="text" class="form-control" id="spotZone" placeholder="Ricerca in corso o inserisci manualmente...">
       </div>
 
-      <!-- SELEZIONE MULTIPLA TECNICA A TENDINA -->
+      <!-- SELEZIONE MULTIPLA TECNICA A TENDINA (Inclusi Pesca al tocco e Siliconiche piombate) -->
       <div class="form-group">
         <label style="font-size:0.8rem; font-weight:800; color:var(--text-muted); margin-left:4px;">TECNICHE (SELEZIONE MULTIPLA)</label>
         <div class="multiselect-container">
@@ -1149,6 +1151,21 @@
         <div style="display:flex; gap:8px; margin-top:8px;">
           <input type="text" class="form-control" id="customSpeciesInput" placeholder="Altra specie a mano..." style="margin-top:0; padding:10px 14px; font-size:0.9rem;">
           <button type="button" class="btn-backup" style="flex:0 0 auto; padding:10px 16px; background:var(--accent-blue); color:#fff;" onclick="addCustomSpecies()"><i class="fa-solid fa-plus"></i></button>
+        </div>
+      </div>
+
+      <!-- SELEZIONE MULTIPLA ESCHE / ARTIFICIALI NEL SPOT -->
+      <div class="form-group">
+        <label style="font-size:0.8rem; font-weight:800; color:var(--text-muted); margin-left:4px;">ESCHE / ARTIFICIALI (SELEZIONE MULTIPLA)</label>
+        <div class="multiselect-container">
+          <div class="selected-badges-box" id="selectedSpotLuresBadges"></div>
+          <select class="form-control" id="spotLureSelect" onchange="selectSpotLure(this)" style="padding:14px 16px;">
+            <option value="">+ Aggiungi Esca / Artificiale...</option>
+          </select>
+        </div>
+        <div style="display:flex; gap:8px; margin-top:8px;">
+          <input type="text" class="form-control" id="customSpotLureInput" placeholder="Altra esca a mano..." style="margin-top:0; padding:10px 14px; font-size:0.9rem;">
+          <button type="button" class="btn-backup" style="flex:0 0 auto; padding:10px 16px; background:var(--accent-blue); color:#fff;" onclick="addCustomSpotLure()"><i class="fa-solid fa-plus"></i></button>
         </div>
       </div>
 
@@ -1372,8 +1389,8 @@
 
     <!-- SEZIONE 4: ETICA & NORMATIVA -->
     <div id="wikiRules" class="wiki-section">
-      <div class="knot-card" style="border-color:var(--accent-green);">
-        <div class="knot-title"><span style="color:var(--accent-green);"><i class="fa-solid fa-hand-holding-heart"></i> Catch & Release & Rispetto</span></div>
+      <div class="encyclopedia-card" style="border-color:var(--accent-green);">
+        <div class="encyclopedia-card-title"><span style="color:var(--accent-green);"><i class="fa-solid fa-hand-holding-heart"></i> Catch & Release & Rispetto</span></div>
         <p style="font-size:0.8rem; color:var(--text-muted); line-height:1.4; margin-bottom:8px;">
           Il <b>Catch & Release</b> è fondamentale per la tutela degli spot. Bagnati sempre le mani prima di toccare il pesce, slamalo delicatamente in acqua e non abbandonare mai lenze o esche.
         </p>
@@ -1541,8 +1558,8 @@
       isSat = !isSat;
     }
 
-    // --- LISTE TECNICHE, SPECIE E ESCHE ---
-    const allTechniques = ["Spinning", "Feeder", "Carpfishing", "Mosca", "Galleggiante / Bolognese", "Fondo / Surfcasting", "Trout Area", "Baitcasting", "Spinning UL", "Eging", "Bolentino", "Altro"];
+    // --- LISTE TECNICHE, SPECIE E ESCHE (AGGIUNTE "Pesca al tocco" e "Esche siliconiche piombate") ---
+    const allTechniques = ["Spinning", "Feeder", "Carpfishing", "Mosca", "Galleggiante / Bolognese", "Fondo / Surfcasting", "Trout Area", "Baitcasting", "Spinning UL", "Eging", "Bolentino", "Pesca al tocco", "Esche siliconiche piombate", "Altro"];
     const freshwaterSpecies = ["Amur", "Anguilla", "Barbo", "Carassio", "Carpa Comune", "Carpa Specchio", "Cavedano", "Cheppia", "Luccio", "Luccioperca", "Persico Reale", "Black Bass", "Pesce Gatto", "Scardola", "Siluro", "Storione", "Temolo", "Tinca", "Trota Fario", "Trota Iridea", "Trota Marmorata", "Vairone"];
     const saltwaterSpecies = ["Spigola / Branzino", "Orata", "Sarago", "Mormora", "Serra", "Leccia", "Palamita", "Dentice", "Cefalo", "Ombrina", "Triglia", "Grongo", "Murena", "Sgombro", "Lattarino"];
     const allLures = ["Minnow", "Jerkbait", "Crankbait", "VIB / Lipless", "Spoon", "Rotante (Mepps)", "Onde / Jighead", "Siliconico (Shad/Grub)", "Carolina / Texas Rig", "Drop Shot", "Boilie Spezie / Frutta", "Pellet", "Mais / Lombrico", "Cagnotto / Vermara", "Pane", "Artificiale Eging", "Altro"];
@@ -1550,6 +1567,7 @@
     let currentEnvironmentSpecies = freshwaterSpecies;
     let selectedTechniquesSet = new Set();
     let selectedSpeciesSet = new Set();
+    let selectedSpotLuresSet = new Set();
 
     let selectedCatchSpeciesSet = new Set();
     let selectedLuresSet = new Set();
@@ -1632,6 +1650,48 @@
       selectedSpeciesSet.add(val);
       input.value = '';
       renderSpeciesSelector(Array.from(selectedSpeciesSet));
+    }
+
+    // Gestione Esche Spot
+    function renderSpotLureSelect(selectedList = []) {
+      selectedSpotLuresSet = new Set(selectedList);
+      const selectEl = document.getElementById('spotLureSelect');
+      const badgesBox = document.getElementById('selectedSpotLuresBadges');
+
+      let badgesHtml = '';
+      selectedSpotLuresSet.forEach(lure => {
+        badgesHtml += `<div class="multi-badge">${lure} <i class="fa-solid fa-xmark" onclick="removeSpotLure('${lure}')"></i></div>`;
+      });
+      badgesBox.innerHTML = badgesHtml;
+
+      let optionsHtml = `<option value="">+ Aggiungi Esca / Artificiale...</option>`;
+      allLures.forEach(lure => {
+        if (!selectedSpotLuresSet.has(lure)) {
+          optionsHtml += `<option value="${lure}">${lure}</option>`;
+        }
+      });
+      selectEl.innerHTML = optionsHtml;
+    }
+
+    function selectSpotLure(selectEl) {
+      const val = selectEl.value;
+      if (!val) return;
+      selectedSpotLuresSet.add(val);
+      renderSpotLureSelect(Array.from(selectedSpotLuresSet));
+    }
+
+    function removeSpotLure(lure) {
+      selectedSpotLuresSet.delete(lure);
+      renderSpotLureSelect(Array.from(selectedSpotLuresSet));
+    }
+
+    function addCustomSpotLure() {
+      const input = document.getElementById('customSpotLureInput');
+      const val = input.value.trim();
+      if (!val) return;
+      selectedSpotLuresSet.add(val);
+      input.value = '';
+      renderSpotLureSelect(Array.from(selectedSpotLuresSet));
     }
 
     // Gestione Specie Cattura Diario
@@ -1874,6 +1934,7 @@
           zone: 'In fase di rilevamento...',
           techniques: [],
           targets: [],
+          spotLures: [],
           photo: '',
           radius: null,
           notes: `Salvato al volo alle ${timeStr}`,
@@ -1917,9 +1978,10 @@
       spots.forEach(s => {
         const techs = s.techniques ? s.techniques.join(', ') : (s.technique || '');
         const tgts = s.targets ? s.targets.join(', ') : (s.target || '');
+        const lures = s.spotLures ? s.spotLures.join(', ') : '';
         gpx += `  <wpt lat="${s.lat}" lon="${s.lng}">\n`;
         gpx += `    <name>${escapeXml(s.name)}</name>\n`;
-        gpx += `    <desc>${escapeXml((techs ? 'Tecniche: ' + techs + ' | ' : '') + (tgts ? 'Target: ' + tgts + ' | ' : '') + (s.notes || ''))}</desc>\n`;
+        gpx += `    <desc>${escapeXml((techs ? 'Tecniche: ' + techs + ' | ' : '') + (tgts ? 'Target: ' + tgts + ' | ' : '') + (lures ? 'Esche: ' + lures + ' | ' : '') + (s.notes || ''))}</desc>\n`;
         gpx += `  </wpt>\n`;
       });
       gpx += `</gpx>`;
@@ -2010,6 +2072,7 @@
       
       renderTechniqueSelect([]);
       renderSpeciesSelector([]);
+      renderSpotLureSelect([]);
 
       fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${center.lat}&lon=${center.lng}&zoom=14`)
         .then(res => res.json())
@@ -2043,6 +2106,7 @@
       const techniques = Array.from(selectedTechniquesSet);
       const radius = parseFloat(document.getElementById('spotRadius').value) || null;
       const targets = Array.from(selectedSpeciesSet);
+      const spotLures = Array.from(selectedSpotLuresSet);
       const photo = document.getElementById('spotPhotoData').value || '';
       const notes = document.getElementById('spotNotes').value || '';
       const lat = parseFloat(document.getElementById('tempLat').value);
@@ -2051,10 +2115,10 @@
       if (editingSpotId) {
         const idx = spots.findIndex(s => s.id === editingSpotId);
         if (idx !== -1) {
-          spots[idx] = { ...spots[idx], name, zone, techniques, radius, targets, photo, notes, color: selectedColor, icon: selectedIcon };
+          spots[idx] = { ...spots[idx], name, zone, techniques, radius, targets, spotLures, photo, notes, color: selectedColor, icon: selectedIcon };
         }
       } else {
-        spots.push({ id: Date.now().toString(), name, zone, techniques, radius, targets, photo, notes, color: selectedColor, icon: selectedIcon, lat, lng, catches: [], date: new Date().toLocaleDateString() });
+        spots.push({ id: Date.now().toString(), name, zone, techniques, radius, targets, spotLures, photo, notes, color: selectedColor, icon: selectedIcon, lat, lng, catches: [], date: new Date().toLocaleDateString() });
       }
       
       localStorage.setItem('cescospot_data', JSON.stringify(spots));
@@ -2081,6 +2145,7 @@
       detectWaterEnvironment(spot.lat, spot.lng, spot.zone || '');
       renderTechniqueSelect(spot.techniques || (spot.technique ? [spot.technique] : []));
       renderSpeciesSelector(spot.targets || (spot.target ? [spot.target] : []));
+      renderSpotLureSelect(spot.spotLures || []);
       
       if (spot.photo) {
         document.getElementById('spotPhotoData').value = spot.photo;
@@ -2267,10 +2332,13 @@
 
         const techsList = s.techniques && s.techniques.length > 0 ? s.techniques.join(', ') : (s.technique || '');
         const targetsList = s.targets && s.targets.length > 0 ? s.targets.join(', ') : (s.target || '');
+        const luresList = s.spotLures && s.spotLures.length > 0 ? s.spotLures.join(', ') : '';
+        
         let popup = `<b style="font-size:1.1rem;">${s.name}</b><br><small>Zona: ${s.zone || 'Generale'}</small>`;
         if(techsList) popup += `<br><small style="color:#f97316;">Tecniche: ${techsList}</small>`;
         if(s.radius) popup += `<br><small style="color:#38bdf8;">Raggio lancio: ${s.radius}m</small>`;
         if(targetsList) popup += `<br><small>Target: ${targetsList}</small>`;
+        if(luresList) popup += `<br><small style="color:#eab308;">Esche: ${luresList}</small>`;
         if(s.catches && s.catches.length > 0) popup += `<br><small style="color:#22c55e;"><b>Catture: ${s.catches.length}</b></small>`;
         if(s.notes) popup += `<br><small><i>${s.notes}</i></small>`;
 
@@ -2343,13 +2411,15 @@
           const catchCount = s.catches ? s.catches.length : 0;
           const techsList = s.techniques && s.techniques.length > 0 ? s.techniques.join(', ') : (s.technique || '');
           const targetsList = s.targets && s.targets.length > 0 ? s.targets.join(', ') : (s.target || '');
+          const luresList = s.spotLures && s.spotLures.length > 0 ? s.spotLures.join(', ') : '';
           const techsSearch = s.techniques ? s.techniques.join(' ') : (s.technique || '');
           const targetsSearch = s.targets ? s.targets.join(' ') : (s.target || '');
+          const luresSearch = s.spotLures ? s.spotLures.join(' ') : '';
 
           htmlSec += `
             <div class="widget-card spot-item" 
                  data-technique="${techsList}"
-                 data-search-text="${(s.name + ' ' + techsSearch + ' ' + targetsSearch + ' ' + s.notes).toLowerCase()}" 
+                 data-search-text="${(s.name + ' ' + techsSearch + ' ' + targetsSearch + ' ' + luresSearch + ' ' + s.notes).toLowerCase()}" 
                  style="display:flex; justify-content:space-between; align-items:center; gap:12px; padding:16px; margin-bottom:12px; background:rgba(15,23,42,0.8); border-radius:16px; border:1px solid rgba(255,255,255,0.05);">
               
               <div onclick="focusSpot('${s.id}')" style="display:flex; align-items:flex-start; gap:12px; flex:1; min-width:0; cursor:pointer;">
@@ -2362,6 +2432,7 @@
                     ${catchCount > 0 ? `<span style="background:rgba(34,197,94,0.2); color:var(--accent-green); font-size:0.7rem; font-weight:800; padding:2px 8px; border-radius:10px;"><i class="fa-solid fa-fish"></i> ${catchCount}</span>` : ''}
                   </div>
                   ${targetsList ? `<div style="color:var(--accent-light-blue); font-size:0.8rem; font-weight:700; line-height:1.2;">Target: ${targetsList}</div>` : ''}
+                  ${luresList ? `<div style="color:var(--accent-amber); font-size:0.75rem; font-weight:700; line-height:1.2; margin-top:2px;">Esche: ${luresList}</div>` : ''}
                 </div>
               </div>
 
