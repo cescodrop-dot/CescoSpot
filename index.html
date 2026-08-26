@@ -778,7 +778,7 @@
     }
     .custom-map-icon::after {
       content: ''; position: absolute; bottom: -12px; left: 50%; transform: translateX(-50%);
-      border-left: 8px solid transparent; border-right: 8px solid transparent; border-top: 12px solid inherit;
+      border-left: 8px solid transparent; border-right: 8px solid transparent; border-top: 14px solid inherit;
       filter: drop-shadow(0px 4px 3px rgba(0,0,0,0.5));
     }
     
@@ -1139,16 +1139,27 @@
     <!-- Lista Catture Registrate -->
     <div id="catchesListContainer" style="margin-bottom:20px;"></div>
 
-    <!-- Modulo Aggiunta Cattura -->
+    <!-- Modulo Aggiunta/Modifica Cattura -->
     <div style="background:rgba(15,23,42,0.8); border:1px solid rgba(255,255,255,0.08); border-radius:20px; padding:18px;">
-      <h5 style="color:var(--accent-orange); font-size:1rem; font-weight:800; margin-bottom:12px;"><i class="fa-solid fa-plus"></i> Nuova Cattura</h5>
+      <h5 style="color:var(--accent-orange); font-size:1rem; font-weight:800; margin-bottom:12px;" id="catchFormTitle"><i class="fa-solid fa-plus"></i> Nuova Cattura</h5>
       
       <input type="hidden" id="catchSpotId">
+      <input type="hidden" id="catchEditId">
       <input type="hidden" id="catchPhotoData">
 
+      <!-- SELEZIONE SPECIE CATTURA (A TENDINA MULTIPLA) -->
       <div class="form-group">
         <label style="font-size:0.75rem; font-weight:800; color:var(--text-muted);">SPECIE *</label>
-        <input type="text" class="form-control" id="catchSpecies" placeholder="Es. Luccio, Cavedano, Orata..." required>
+        <div class="multiselect-container">
+          <div class="selected-badges-box" id="selectedCatchSpeciesBadges"></div>
+          <select class="form-control" id="catchSpeciesSelect" onchange="selectCatchSpecies(this)" style="padding:12px 14px; font-size:0.95rem;">
+            <option value="">+ Seleziona Specie Cattura...</option>
+          </select>
+        </div>
+        <div style="display:flex; gap:8px; margin-top:6px;">
+          <input type="text" class="form-control" id="customCatchSpeciesInput" placeholder="Altra specie a mano..." style="margin-top:0; padding:8px 12px; font-size:0.85rem;">
+          <button type="button" class="btn-backup" style="flex:0 0 auto; padding:8px 14px; background:var(--accent-blue); color:#fff;" onclick="addCustomCatchSpecies()"><i class="fa-solid fa-plus"></i></button>
+        </div>
       </div>
 
       <div style="display:flex; gap:12px;">
@@ -1162,9 +1173,19 @@
         </div>
       </div>
 
+      <!-- SELEZIONE ESCHE / ARTIFICIALI (A TENDINA MULTIPLA) -->
       <div class="form-group">
-        <label style="font-size:0.75rem; font-weight:800; color:var(--text-muted);">ESCA / ARTIFICIALE USATO</label>
-        <input type="text" class="form-control" id="catchLure" placeholder="Es. Minnow 9cm, Boilie Spezie, Mais...">
+        <label style="font-size:0.75rem; font-weight:800; color:var(--text-muted);">ESCHE / ARTIFICIALI (SELEZIONE MULTIPLA)</label>
+        <div class="multiselect-container">
+          <div class="selected-badges-box" id="selectedLuresBadges"></div>
+          <select class="form-control" id="lureSelect" onchange="selectLure(this)" style="padding:12px 14px; font-size:0.95rem;">
+            <option value="">+ Seleziona Esca / Artificiale...</option>
+          </select>
+        </div>
+        <div style="display:flex; gap:8px; margin-top:6px;">
+          <input type="text" class="form-control" id="customLureInput" placeholder="Altra esca a mano..." style="margin-top:0; padding:8px 12px; font-size:0.85rem;">
+          <button type="button" class="btn-backup" style="flex:0 0 auto; padding:8px 14px; background:var(--accent-blue); color:#fff;" onclick="addCustomLure()"><i class="fa-solid fa-plus"></i></button>
+        </div>
       </div>
 
       <div class="form-group">
@@ -1176,7 +1197,8 @@
         <input type="file" id="catchPhotoInput" accept="image/*" style="display:none;" onchange="handlePhotoUpload(event, 'catchPhotoData', 'catchPhotoBox')">
       </div>
 
-      <button type="button" class="btn-submit" style="background:var(--accent-orange);" onclick="saveCatch()">Registra nel Diario</button>
+      <button type="button" class="btn-submit" style="background:var(--accent-orange);" id="btnSaveCatch" onclick="saveCatch()">Registra nel Diario</button>
+      <button type="button" class="btn-submit" style="background:rgba(255,255,255,0.1); color:var(--text-light); margin-top:8px; display:none;" id="btnCancelCatchEdit" onclick="resetCatchForm()">Annulla Modifica</button>
     </div>
   </div>
 
@@ -1289,7 +1311,7 @@
     function openKnotsModal() { document.getElementById('modalKnots').classList.add('open'); }
     function closeKnotsModal() { document.getElementById('modalKnots').classList.remove('open'); }
 
-    // --- MAPPE MIGLIORI (GOOGLE SATELLITE + OPENCYCLEMAP) ---
+    // --- MAPPE (GOOGLE SATELLITE + OPENCYCLEMAP) ---
     const map = L.map('map', { zoomControl: false, attributionControl: false }).setView([41.9028, 12.4964], 6);
 
     const satLayer = L.layerGroup([
@@ -1307,16 +1329,20 @@
       isSat = !isSat;
     }
 
-    // --- LISTE TECNICHE E SPECIE (ACQUA DOLCE VS SALATA) ---
+    // --- LISTE TECNICHE, SPECIE E ESCHE ---
     const allTechniques = ["Spinning", "Feeder", "Carpfishing", "Mosca", "Galleggiante / Bolognese", "Fondo / Surfcasting", "Trout Area", "Baitcasting", "Spinning UL", "Eging", "Bolentino", "Altro"];
     const freshwaterSpecies = ["Amur", "Anguilla", "Barbo", "Carassio", "Carpa Comune", "Carpa Specchio", "Cavedano", "Cheppia", "Luccio", "Luccioperca", "Persico Reale", "Black Bass", "Pesce Gatto", "Scardola", "Siluro", "Storione", "Temolo", "Tinca", "Trota Fario", "Trota Iridea", "Trota Marmorata", "Vairone"];
     const saltwaterSpecies = ["Spigola / Branzino", "Orata", "Sarago", "Mormora", "Serra", "Leccia", "Palamita", "Dentice", "Cefalo", "Ombrina", "Triglia", "Grongo", "Murena", "Sgombro", "Lattarino"];
+    const allLures = ["Minnow", "Jerkbait", "Crankbait", "VIB / Lipless", "Spoon", "Rotante (Mepps)", "Onde / Jighead", "Siliconico (Shad/Grub)", "Carolina / Texas Rig", "Drop Shot", "Boilie Spezie / Frutta", "Pellet", "Mais / Lombrico", "Cagnotto / Vermara", "Pane", "Artificiale Eging", "Altro"];
 
     let currentEnvironmentSpecies = freshwaterSpecies;
     let selectedTechniquesSet = new Set();
     let selectedSpeciesSet = new Set();
 
-    // Gestione Tecniche a Tendina Multipla
+    let selectedCatchSpeciesSet = new Set();
+    let selectedLuresSet = new Set();
+
+    // Gestione Tecniche Spot
     function renderTechniqueSelect(selectedList = []) {
       selectedTechniquesSet = new Set(selectedList);
       const selectEl = document.getElementById('techniqueSelect');
@@ -1349,7 +1375,7 @@
       renderTechniqueSelect(Array.from(selectedTechniquesSet));
     }
 
-    // Gestione Specie Target a Tendina Multipla
+    // Gestione Specie Target Spot
     function renderSpeciesSelector(selectedList = []) {
       selectedSpeciesSet = new Set(selectedList);
       const selectEl = document.getElementById('speciesSelect');
@@ -1394,6 +1420,95 @@
       selectedSpeciesSet.add(val);
       input.value = '';
       renderSpeciesSelector(Array.from(selectedSpeciesSet));
+    }
+
+    // Gestione Specie Cattura Diario
+    function renderCatchSpeciesSelect(selectedList = []) {
+      selectedCatchSpeciesSet = new Set(selectedList);
+      const selectEl = document.getElementById('catchSpeciesSelect');
+      const badgesBox = document.getElementById('selectedCatchSpeciesBadges');
+
+      let badgesHtml = '';
+      selectedCatchSpeciesSet.forEach(specie => {
+        badgesHtml += `<div class="multi-badge">${specie} <i class="fa-solid fa-xmark" onclick="removeCatchSpecies('${specie}')"></i></div>`;
+      });
+      badgesBox.innerHTML = badgesHtml;
+
+      let fullList = [...freshwaterSpecies, ...saltwaterSpecies];
+      selectedCatchSpeciesSet.forEach(specie => {
+        if (!fullList.includes(specie)) fullList.push(specie);
+      });
+
+      let optionsHtml = `<option value="">+ Seleziona Specie Cattura...</option>`;
+      fullList.forEach(specie => {
+        if (!selectedCatchSpeciesSet.has(specie)) {
+          optionsHtml += `<option value="${specie}">${specie}</option>`;
+        }
+      });
+      selectEl.innerHTML = optionsHtml;
+    }
+
+    function selectCatchSpecies(selectEl) {
+      const val = selectEl.value;
+      if (!val) return;
+      selectedCatchSpeciesSet.add(val);
+      renderCatchSpeciesSelect(Array.from(selectedCatchSpeciesSet));
+    }
+
+    function removeCatchSpecies(specie) {
+      selectedCatchSpeciesSet.delete(specie);
+      renderCatchSpeciesSelect(Array.from(selectedCatchSpeciesSet));
+    }
+
+    function addCustomCatchSpecies() {
+      const input = document.getElementById('customCatchSpeciesInput');
+      const val = input.value.trim();
+      if (!val) return;
+      selectedCatchSpeciesSet.add(val);
+      input.value = '';
+      renderCatchSpeciesSelect(Array.from(selectedCatchSpeciesSet));
+    }
+
+    // Gestione Esche / Artificiali Diario
+    function renderLureSelect(selectedList = []) {
+      selectedLuresSet = new Set(selectedList);
+      const selectEl = document.getElementById('lureSelect');
+      const badgesBox = document.getElementById('selectedLuresBadges');
+
+      let badgesHtml = '';
+      selectedLuresSet.forEach(lure => {
+        badgesHtml += `<div class="multi-badge">${lure} <i class="fa-solid fa-xmark" onclick="removeLure('${lure}')"></i></div>`;
+      });
+      badgesBox.innerHTML = badgesHtml;
+
+      let optionsHtml = `<option value="">+ Seleziona Esca / Artificiale...</option>`;
+      allLures.forEach(lure => {
+        if (!selectedLuresSet.has(lure)) {
+          optionsHtml += `<option value="${lure}">${lure}</option>`;
+        }
+      });
+      selectEl.innerHTML = optionsHtml;
+    }
+
+    function selectLure(selectEl) {
+      const val = selectEl.value;
+      if (!val) return;
+      selectedLuresSet.add(val);
+      renderLureSelect(Array.from(selectedLuresSet));
+    }
+
+    function removeLure(lure) {
+      selectedLuresSet.delete(lure);
+      renderLureSelect(Array.from(selectedLuresSet));
+    }
+
+    function addCustomLure() {
+      const input = document.getElementById('customLureInput');
+      const val = input.value.trim();
+      if (!val) return;
+      selectedLuresSet.add(val);
+      input.value = '';
+      renderLureSelect(Array.from(selectedLuresSet));
     }
 
     function detectWaterEnvironment(lat, lng, zoneStr) {
@@ -1782,55 +1897,105 @@
       }
     }
 
+    // --- GESTIONE DIARIO CATTURE (LOGBOOK) & MODIFICA CATTURA ---
     function openLogbook(spotId) {
       const spot = spots.find(s => s.id === spotId);
       if (!spot) return;
       document.getElementById('catchSpotId').value = spotId;
       document.getElementById('logbookTitle').innerText = `Catture: ${spot.name}`;
-      document.getElementById('catchSpecies').value = '';
-      document.getElementById('catchWeight').value = '';
-      document.getElementById('catchLength').value = '';
-      document.getElementById('catchLure').value = '';
-      removePhoto('catchPhotoData', 'catchPhotoBox');
+      resetCatchForm();
       renderCatchesList(spot);
       document.getElementById('modalLogbook').classList.add('open');
     }
 
     function closeLogbookModal() { document.getElementById('modalLogbook').classList.remove('open'); }
 
+    function resetCatchForm() {
+      document.getElementById('catchEditId').value = '';
+      document.getElementById('catchFormTitle').innerHTML = `<i class="fa-solid fa-plus"></i> Nuova Cattura`;
+      document.getElementById('btnSaveCatch').innerText = "Registra nel Diario";
+      document.getElementById('btnCancelCatchEdit').style.display = 'none';
+
+      renderCatchSpeciesSelect([]);
+      renderLureSelect([]);
+      document.getElementById('catchWeight').value = '';
+      document.getElementById('catchLength').value = '';
+      removePhoto('catchPhotoData', 'catchPhotoBox');
+    }
+
     function saveCatch() {
       const spotId = document.getElementById('catchSpotId').value;
+      const editId = document.getElementById('catchEditId').value;
       const spot = spots.find(s => s.id === spotId);
       if (!spot) return;
 
-      const species = document.getElementById('catchSpecies').value.trim();
-      if (!species) { alert("Inserisci la specie!"); return; }
+      const speciesList = Array.from(selectedCatchSpeciesSet);
+      if (speciesList.length === 0) { alert("Seleziona almeno una specie!"); return; }
 
       const weight = document.getElementById('catchWeight').value;
       const length = document.getElementById('catchLength').value;
-      const lure = document.getElementById('catchLure').value.trim();
+      const luresList = Array.from(selectedLuresSet);
       const photo = document.getElementById('catchPhotoData').value;
 
       if (!spot.catches) spot.catches = [];
-      spot.catches.unshift({
-        id: Date.now().toString(),
-        species,
-        weight: weight ? parseFloat(weight) : null,
-        length: length ? parseFloat(length) : null,
-        lure: lure || '',
-        photo: photo || '',
-        date: new Date().toLocaleDateString(),
-        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-      });
+
+      if (editId) {
+        // Modifica cattura esistente
+        const cIdx = spot.catches.findIndex(c => c.id === editId);
+        if (cIdx !== -1) {
+          spot.catches[cIdx] = {
+            ...spot.catches[cIdx],
+            species: speciesList.join(', '),
+            speciesList,
+            weight: weight ? parseFloat(weight) : null,
+            length: length ? parseFloat(length) : null,
+            lures: luresList,
+            photo: photo || spot.catches[cIdx].photo
+          };
+        }
+      } else {
+        // Nuova cattura
+        spot.catches.unshift({
+          id: Date.now().toString(),
+          species: speciesList.join(', '),
+          speciesList,
+          weight: weight ? parseFloat(weight) : null,
+          length: length ? parseFloat(length) : null,
+          lures: luresList,
+          photo: photo || '',
+          date: new Date().toLocaleDateString(),
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        });
+      }
 
       localStorage.setItem('cescospot_data', JSON.stringify(spots));
       renderCatchesList(spot);
       renderSavedSpotsUI();
-      document.getElementById('catchSpecies').value = '';
-      document.getElementById('catchWeight').value = '';
-      document.getElementById('catchLength').value = '';
-      document.getElementById('catchLure').value = '';
-      removePhoto('catchPhotoData', 'catchPhotoBox');
+      resetCatchForm();
+    }
+
+    function editCatch(spotId, catchId) {
+      const spot = spots.find(s => s.id === spotId);
+      if (!spot || !spot.catches) return;
+      const catchItem = spot.catches.find(c => c.id === catchId);
+      if (!catchItem) return;
+
+      document.getElementById('catchEditId').value = catchId;
+      document.getElementById('catchFormTitle').innerHTML = `<i class="fa-solid fa-pen"></i> Modifica Cattura`;
+      document.getElementById('btnSaveCatch').innerText = "Salva Modifiche";
+      document.getElementById('btnCancelCatchEdit').style.display = 'block';
+
+      renderCatchSpeciesSelect(catchItem.speciesList || [catchItem.species]);
+      renderLureSelect(catchItem.lures || (catchItem.lure ? [catchItem.lure] : []));
+      document.getElementById('catchWeight').value = catchItem.weight !== null ? catchItem.weight : '';
+      document.getElementById('catchLength').value = catchItem.length !== null ? catchItem.length : '';
+
+      if (catchItem.photo) {
+        document.getElementById('catchPhotoData').value = catchItem.photo;
+        document.getElementById('catchPhotoBox').innerHTML = `<img src="${catchItem.photo}"><button type="button" class="btn-remove-photo" onclick="event.stopPropagation(); removePhoto('catchPhotoData', 'catchPhotoBox')"><i class="fa-solid fa-trash"></i></button>`;
+      } else {
+        removePhoto('catchPhotoData', 'catchPhotoBox');
+      }
     }
 
     function deleteCatch(spotId, catchId) {
@@ -1856,10 +2021,13 @@
           <div style="flex:1; overflow:hidden;">
             <b style="color:#fff; font-size:1rem;">${c.species}</b>
             <div style="font-size:0.8rem; color:var(--accent-orange); font-weight:700;">${c.weight ? `${c.weight} kg` : ''} ${c.length ? `• ${c.length} cm` : ''}</div>
-            ${c.lure ? `<div style="font-size:0.75rem; color:var(--text-muted);">Esca: ${c.lure}</div>` : ''}
+            ${c.lures && c.lures.length > 0 ? `<div style="font-size:0.75rem; color:var(--text-muted);">Esche: ${c.lures.join(', ')}</div>` : (c.lure ? `<div style="font-size:0.75rem; color:var(--text-muted);">Esca: ${c.lure}</div>` : '')}
             <div style="font-size:0.7rem; color:var(--text-muted); margin-top:2px;">${c.date} ${c.time}</div>
           </div>
-          <button type="button" style="background:none; border:none; color:var(--accent-red); font-size:1.1rem; padding:8px; cursor:pointer;" onclick="deleteCatch('${spot.id}', '${c.id}')"><i class="fa-solid fa-trash"></i></button>
+          <div style="display:flex; gap:4px;">
+            <button type="button" style="background:none; border:none; color:var(--accent-light-blue); font-size:1rem; padding:6px; cursor:pointer;" onclick="editCatch('${spot.id}', '${c.id}')" title="Modifica"><i class="fa-solid fa-pen"></i></button>
+            <button type="button" style="background:none; border:none; color:var(--accent-red); font-size:1rem; padding:6px; cursor:pointer;" onclick="deleteCatch('${spot.id}', '${c.id}')" title="Elimina"><i class="fa-solid fa-trash"></i></button>
+          </div>
         </div>
       `).join('');
     }
