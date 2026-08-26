@@ -887,6 +887,63 @@
       flex-shrink: 0;
     }
 
+    /* Modal Custom Import Dialog */
+    .import-dialog-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      z-index: 9999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .import-dialog-overlay.open { display: flex; }
+    .import-dialog-card {
+      background: var(--panel-bg);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 24px;
+      padding: 24px 20px;
+      width: 100%;
+      max-width: 380px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+      text-align: center;
+    }
+    .import-dialog-title {
+      font-size: 1.15rem;
+      font-weight: 900;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+    .import-dialog-text {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+      line-height: 1.4;
+    }
+    .import-dialog-btns {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .btn-dialog-opt {
+      width: 100%;
+      padding: 14px;
+      border-radius: 14px;
+      border: none;
+      font-size: 0.95rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: transform 0.15s;
+    }
+    .btn-dialog-opt:active { transform: scale(0.96); }
+
     .leaflet-control-scale { margin-bottom: 24px !important; margin-left: 16px !important; border-color: rgba(255,255,255,0.5) !important; color: #fff !important; }
 
     ::-webkit-scrollbar { width: 6px; height: 6px; }
@@ -945,7 +1002,7 @@
         <i class="fa-solid fa-fish" style="color:var(--accent-light-blue);"></i> CescoSpot <span>PRO</span>
       </div>
 
-      <!-- PULSANTE BUSSOLA CON ATTIVAZIONE/DISATTIVAZIONE TOGGLE -->
+      <!-- PULSANTE BUSSOLA TOGGLE ATTIVA/DISATTIVA -->
       <div id="compassControlContainer">
         <button class="btn-compass-perm" onclick="toggleCompass()" title="Attiva/Disattiva Bussola"><i class="fa-solid fa-location-arrow"></i></button>
       </div>
@@ -1512,7 +1569,7 @@
     <button class="nav-item" onclick="switchTab('tabMe', this)"><i class="fa-solid fa-bookmark"></i>Archivio</button>
   </nav>
 
-  <!-- Modal Aggiungi/Modifica Spot -->
+  <!-- Modal Aggiungi/Modifica Spot con TUTTI i campi unificati (Comunicanti) -->
   <div class="modal" id="modalAddSpot">
     <div class="modal-drag-handle"></div>
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
@@ -1693,6 +1750,20 @@
 
       <button type="button" class="btn-submit" style="background:var(--accent-orange);" id="btnSaveCatch" onclick="saveCatch()">Registra nel Diario</button>
       <button type="button" class="btn-submit" style="background:rgba(255,255,255,0.1); color:var(--text-light); margin-top:8px; display:none;" id="btnCancelCatchEdit" onclick="resetCatchForm()">Annulla Modifica</button>
+    </div>
+  </div>
+
+  <!-- MODALE CUSTOM IMPORT DIALOG CON TASTO ANNULLA -->
+  <div class="import-dialog-overlay" id="importDialogOverlay">
+    <div class="import-dialog-card">
+      <div style="font-size: 2.2rem; color: var(--accent-light-blue); margin-bottom: 8px;"><i class="fa-solid fa-file-import"></i></div>
+      <div class="import-dialog-title" id="importDialogTitle">Ripristino Database</div>
+      <div class="import-dialog-text" id="importDialogText">Trovati spot nel file. Scegli come procedere:</div>
+      <div class="import-dialog-btns">
+        <button class="btn-dialog-opt" style="background: var(--accent-blue); color: #fff;" onclick="confirmImportAction('merge')"><i class="fa-solid fa-code-merge"></i> Unisci agli attuali</button>
+        <button class="btn-dialog-opt" style="background: rgba(239, 68, 68, 0.2); color: var(--accent-red); border: 1px solid rgba(239, 68, 68, 0.3);" onclick="confirmImportAction('replace')"><i class="fa-solid fa-trash-can"></i> Sostituisci tutto</button>
+        <button class="btn-dialog-opt" style="background: rgba(255, 255, 255, 0.08); color: var(--text-light);" onclick="confirmImportAction('cancel')"><i class="fa-solid fa-xmark"></i> Annulla operazione</button>
+      </div>
     </div>
   </div>
 
@@ -2099,6 +2170,7 @@
     let mapCircles = {};
     let editingSpotId = null;
     let tempMarker = null;
+    let pendingImportData = null; // Memorizza temporaneamente il file caricato
     
     try {
       const savedData = localStorage.getItem('cescospot_data');
@@ -2228,6 +2300,7 @@
       setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 100);
     }
 
+    // --- IMPORTAZIONE CUSTOM CON DIALOG A 3 SCELTE ---
     function handleCustomImport(event) {
       const file = event.target.files[0];
       if (!file) return;
@@ -2236,30 +2309,39 @@
         try {
           const importedData = JSON.parse(e.target.result);
           if (Array.isArray(importedData)) {
-            const userChoice = confirm(
-              `Trovati ${importedData.length} spot nel file.\n\n` +
-              `👉 Premi [ OK ] per UNIRE i nuovi spot ai tuoi attuali.\n` +
-              `👉 Premi [ ANNULLA ] per SOSTITUIRE TUTTO.`
-            );
-            if (userChoice) {
-              let addedCount = 0;
-              importedData.forEach(imp => { 
-                if (!spots.some(s => s.id === imp.id)) { spots.push(imp); addedCount++; }
-              });
-              alert(`Importazione completata! Aggiunti ${addedCount} nuovi spot.`);
-            } else {
-              if (confirm("Confermi di voler SOSTITUIRE tutti i tuoi spot attuali?")) {
-                spots = importedData;
-                alert("Backup sostituito con successo.");
-              }
-            }
-            localStorage.setItem('cescospot_data', JSON.stringify(spots));
-            renderMapSpots();
+            pendingImportData = importedData;
+            document.getElementById('importDialogText').innerHTML = `Trovati <b>${importedData.length} spot</b> nel file di backup.<br>Come desideri procedere?`;
+            document.getElementById('importDialogOverlay').classList.add('open');
           } else { alert("File non compatibile."); }
         } catch (err) { alert("File JSON non valido."); }
         event.target.value = ''; 
       };
       reader.readAsText(file);
+    }
+
+    function confirmImportAction(action) {
+      const overlay = document.getElementById('importDialogOverlay');
+      overlay.classList.remove('open');
+
+      if (!pendingImportData || action === 'cancel') {
+        pendingImportData = null;
+        return; // Annullato senza toccare nulla
+      }
+
+      if (action === 'merge') {
+        let addedCount = 0;
+        pendingImportData.forEach(imp => { 
+          if (!spots.some(s => s.id === imp.id)) { spots.push(imp); addedCount++; }
+        });
+        alert(`Importazione completata! Aggiunti ${addedCount} nuovi spot.`);
+      } else if (action === 'replace') {
+        spots = pendingImportData;
+        alert("Backup sostituito con successo.");
+      }
+
+      localStorage.setItem('cescospot_data', JSON.stringify(spots));
+      renderMapSpots();
+      pendingImportData = null;
     }
 
     function focusSpot(id) {
@@ -2922,7 +3004,7 @@
       }
     }
 
-    // --- GESTIONE BUSSOLA ON / OFF ---
+    // --- GESTIONE BUSSOLA ON / OFF (TOGGLE COMPLETO) ---
     let compassActive = false;
     let lastHeading = 0;
 
@@ -2942,7 +3024,7 @@
         });
         compassActive = false;
       } else {
-        // Attivazione
+        // Attivazione con richiesta permessi
         if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
           DeviceOrientationEvent.requestPermission().then(response => {
             if (response === 'granted') {
