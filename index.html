@@ -93,7 +93,7 @@
     .btn-install { background: #fff; color: var(--accent-blue); border: none; padding: 10px 18px; border-radius: 20px; font-weight: 800; font-size: 0.85rem; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
     .btn-close-banner { background: none; border: none; color: rgba(255,255,255,0.7); font-size: 1.6rem; cursor: pointer; padding: 0 0 0 14px; }
 
-    /* Top Compass Bar Perfettamente Bilanciata */
+    /* Top Compass Bar */
     .top-telemetry-bar {
       background: rgba(15, 23, 42, 0.95);
       backdrop-filter: blur(24px);
@@ -164,7 +164,6 @@
       max-width: 380px;
     }
     
-    /* Blocco Sinistro a larghezza fissa */
     .telemetry-val {
       font-size: 1.05rem;
       font-weight: 800;
@@ -184,7 +183,6 @@
       text-transform: uppercase;
     }
 
-    /* Logo Centrale Perfettamente Centrato */
     .app-brand-logo {
       font-size: 0.85rem;
       font-weight: 900;
@@ -205,7 +203,6 @@
     }
     .app-brand-logo span { color: var(--accent-light-blue); }
     
-    /* Blocco Destro (Tasto Attiva) a larghezza fissa speculare */
     #compassControlContainer {
       width: 85px;
       display: flex;
@@ -685,36 +682,34 @@
     }
     .btn-submit:active { transform: scale(0.96); }
 
-    /* Checkbox Badge per Specie Multipla */
-    .species-selector-box {
-      background: rgba(7, 13, 29, 0.6);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 14px;
-      padding: 12px;
-      max-height: 160px;
-      overflow-y: auto;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
+    /* Multiselect a Tendina Stile Moderno */
+    .multiselect-container {
       margin-top: 8px;
     }
-    .species-chip {
-      background: rgba(30, 41, 59, 0.8);
-      border: 1px solid rgba(255,255,255,0.1);
-      color: var(--text-light);
+    .selected-badges-box {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+    .multi-badge {
+      background: var(--accent-blue);
+      color: #fff;
       padding: 6px 12px;
       border-radius: 16px;
       font-size: 0.8rem;
       font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    .multi-badge i {
       cursor: pointer;
-      user-select: none;
-      transition: all 0.2s;
+      font-size: 0.9rem;
+      opacity: 0.8;
     }
-    .species-chip.selected {
-      background: var(--accent-blue);
-      border-color: var(--accent-light-blue);
-      color: #fff;
-    }
+    .multi-badge i:hover { opacity: 1; }
 
     /* Anteprima Foto */
     .photo-preview-box {
@@ -838,7 +833,7 @@
     </div>
   </div>
 
-  <!-- Barra Bussola con Layout a 3 Colonne (Logo Fisso e Stabile al Centro) -->
+  <!-- Barra Bussola con 3 Colonne Bilanciate -->
   <div class="top-telemetry-bar">
     <div class="compass-track">
       <div class="compass-ticks" id="compassTicks">
@@ -1058,37 +1053,38 @@
         <input type="text" class="form-control" id="spotZone" placeholder="Ricerca in corso o inserisci manualmente...">
       </div>
 
-      <div style="display:flex; gap:12px;">
-        <div class="form-group" style="flex:1;">
-          <label style="font-size:0.8rem; font-weight:800; color:var(--text-muted); margin-left:4px;">TECNICA</label>
-          <select class="form-control" id="spotTechnique" style="padding:14px 16px;">
-            <option value="">Seleziona...</option>
-            <option value="Spinning">Spinning</option>
-            <option value="Feeder">Feeder</option>
-            <option value="Carpfishing">Carpfishing</option>
-            <option value="Mosca">Mosca</option>
-            <option value="Galleggiante / Bolognese">Galleggiante</option>
-            <option value="Fondo / Surfcasting">Fondo / Surf</option>
-            <option value="Trout Area">Trout Area</option>
-            <option value="Altro">Altro</option>
+      <!-- SELEZIONE MULTIPLA TECNICA (A TENDINA) -->
+      <div class="form-group">
+        <label style="font-size:0.8rem; font-weight:800; color:var(--text-muted); margin-left:4px;">TECNICHE (SELEZIONE MULTIPLA)</label>
+        <div class="multiselect-container">
+          <div class="selected-badges-box" id="selectedTechniquesBadges"></div>
+          <select class="form-control" id="techniqueSelect" onchange="selectTechnique(this)" style="padding:14px 16px;">
+            <option value="">+ Aggiungi Tecnica...</option>
           </select>
         </div>
+      </div>
 
+      <div style="display:flex; gap:12px;">
         <div class="form-group" style="flex:1;">
           <label style="font-size:0.8rem; font-weight:800; color:var(--text-muted); margin-left:4px;">RAGGIO LANCIO (M)</label>
           <input type="number" class="form-control" id="spotRadius" placeholder="Es. 30 (opzionale)">
         </div>
       </div>
 
-      <!-- SELEZIONE MULTIPLA SPECIE TARGET -->
+      <!-- SELEZIONE MULTIPLA SPECIE TARGET (A TENDINA) -->
       <div class="form-group">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
           <label style="font-size:0.8rem; font-weight:800; color:var(--text-muted); margin-left:4px;">SPECIE TARGET (SELEZIONE MULTIPLA)</label>
           <span id="waterEnvironmentBadge" style="font-size:0.7rem; font-weight:800; padding:2px 8px; border-radius:10px; background:rgba(34,197,94,0.2); color:var(--accent-green);">Acqua Dolce</span>
         </div>
-        <div class="species-selector-box" id="speciesSelectorBox"></div>
+        <div class="multiselect-container">
+          <div class="selected-badges-box" id="selectedSpeciesBadges"></div>
+          <select class="form-control" id="speciesSelect" onchange="selectSpecies(this)" style="padding:14px 16px;">
+            <option value="">+ Aggiungi Specie Target...</option>
+          </select>
+        </div>
         <div style="display:flex; gap:8px; margin-top:8px;">
-          <input type="text" class="form-control" id="customSpeciesInput" placeholder="Aggiungi altra specie a mano..." style="margin-top:0; padding:10px 14px; font-size:0.9rem;">
+          <input type="text" class="form-control" id="customSpeciesInput" placeholder="Altra specie a mano..." style="margin-top:0; padding:10px 14px; font-size:0.9rem;">
           <button type="button" class="btn-backup" style="flex:0 0 auto; padding:10px 16px; background:var(--accent-blue); color:#fff;" onclick="addCustomSpecies()"><i class="fa-solid fa-plus"></i></button>
         </div>
       </div>
@@ -1289,40 +1285,88 @@
     function openKnotsModal() { document.getElementById('modalKnots').classList.add('open'); }
     function closeKnotsModal() { document.getElementById('modalKnots').classList.remove('open'); }
 
-    // --- LISTE SPECIE: ACQUA DOLCE VS SALATA ---
+    // --- LISTE TECNICHE E SPECIE MULTI-SELECT A TENDINA ---
+    const allTechniques = ["Spinning", "Feeder", "Carpfishing", "Mosca", "Galleggiante / Bolognese", "Fondo / Surfcasting", "Trout Area", "Baitcasting", "spinning UL", "Eging", "Bolentino", "Altro"];
     const freshwaterSpecies = ["Amur", "Anguilla", "Barbo", "Carassio", "Carpa Comune", "Carpa Specchio", "Cavedano", "Cheppia", "Luccio", "Luccioperca", "Persico Reale", "Black Bass", "Pesce Gatto", "Scardola", "Siluro", "Storione", "Temolo", "Tinca", "Trota Fario", "Trota Iridea", "Trota Marmorata", "Vairone"];
     const saltwaterSpecies = ["Spigola / Branzino", "Orata", "Sarago", "Mormora", "Serra", "Leccia", "Palamita", "Dentice", "Cefalo", "Ombrina", "Triglia", "Grongo", "Murena", "Sgombro", "Lattarino"];
 
     let currentEnvironmentSpecies = freshwaterSpecies;
+    let selectedTechniquesSet = new Set();
     let selectedSpeciesSet = new Set();
 
-    function renderSpeciesSelector(selectedList = []) {
-      const box = document.getElementById('speciesSelectorBox');
-      selectedSpeciesSet = new Set(selectedList);
+    // Gestione Tecniche a Tendina
+    function renderTechniqueSelect(selectedList = []) {
+      selectedTechniquesSet = new Set(selectedList);
+      const selectEl = document.getElementById('techniqueSelect');
+      const badgesBox = document.getElementById('selectedTechniquesBadges');
 
-      let html = '';
-      currentEnvironmentSpecies.forEach(specie => {
-        const isSel = selectedSpeciesSet.has(specie);
-        html += `<div class="species-chip ${isSel ? 'selected' : ''}" onclick="toggleSpeciesChip('${specie}', this)">${specie}</div>`;
+      // Rendering dei badge selezionati
+      let badgesHtml = '';
+      selectedTechniquesSet.forEach(tech => {
+        badgesHtml += `<div class="multi-badge">${tech} <i class="fa-solid fa-xmark" onclick="removeTechnique('${tech}')"></i></div>`;
       });
+      badgesBox.innerHTML = badgesHtml;
 
-      selectedSpeciesSet.forEach(specie => {
-        if (!currentEnvironmentSpecies.includes(specie)) {
-          html += `<div class="species-chip selected" onclick="toggleSpeciesChip('${specie}', this)">${specie} <i class="fa-solid fa-xmark"></i></div>`;
+      // Rendering delle opzioni rimanenti nella tendina
+      let optionsHtml = `<option value="">+ Aggiungi Tecnica...</option>`;
+      allTechniques.forEach(tech => {
+        if (!selectedTechniquesSet.has(tech)) {
+          optionsHtml += `<option value="${tech}">${tech}</option>`;
         }
       });
-
-      box.innerHTML = html;
+      selectEl.innerHTML = optionsHtml;
     }
 
-    function toggleSpeciesChip(specie, el) {
-      if (selectedSpeciesSet.has(specie)) {
-        selectedSpeciesSet.delete(specie);
-        el.classList.remove('selected');
-      } else {
-        selectedSpeciesSet.add(specie);
-        el.classList.add('selected');
-      }
+    function selectTechnique(selectEl) {
+      const val = selectEl.value;
+      if (!val) return;
+      selectedTechniquesSet.add(val);
+      renderTechniqueSelect(Array.from(selectedTechniquesSet));
+    }
+
+    function removeTechnique(tech) {
+      selectedTechniquesSet.delete(tech);
+      renderTechniqueSelect(Array.from(selectedTechniquesSet));
+    }
+
+    // Gestione Specie Target a Tendina
+    function renderSpeciesSelector(selectedList = []) {
+      selectedSpeciesSet = new Set(selectedList);
+      const selectEl = document.getElementById('speciesSelect');
+      const badgesBox = document.getElementById('selectedSpeciesBadges');
+
+      // Rendering dei badge selezionati
+      let badgesHtml = '';
+      selectedSpeciesSet.forEach(specie => {
+        badgesHtml += `<div class="multi-badge">${specie} <i class="fa-solid fa-xmark" onclick="removeSpecies('${specie}')"></i></div>`;
+      });
+      badgesBox.innerHTML = badgesHtml;
+
+      // Rendering delle opzioni rimanenti nella tendina (includendo eventuali specie custom)
+      let availableList = [...currentEnvironmentSpecies];
+      selectedSpeciesSet.forEach(specie => {
+        if (!availableList.includes(specie)) availableList.push(specie);
+      });
+
+      let optionsHtml = `<option value="">+ Aggiungi Specie Target...</option>`;
+      availableList.forEach(specie => {
+        if (!selectedSpeciesSet.has(specie)) {
+          optionsHtml += `<option value="${specie}">${specie}</option>`;
+        }
+      });
+      selectEl.innerHTML = optionsHtml;
+    }
+
+    function selectSpecies(selectEl) {
+      const val = selectEl.value;
+      if (!val) return;
+      selectedSpeciesSet.add(val);
+      renderSpeciesSelector(Array.from(selectedSpeciesSet));
+    }
+
+    function removeSpecies(specie) {
+      selectedSpeciesSet.delete(specie);
+      renderSpeciesSelector(Array.from(selectedSpeciesSet));
     }
 
     function addCustomSpecies() {
@@ -1502,7 +1546,7 @@
           id: Date.now().toString(),
           name: `Spot Rapido (${timeStr})`,
           zone: 'In fase di rilevamento...',
-          technique: '',
+          techniques: [],
           targets: [],
           photo: '',
           radius: null,
@@ -1545,9 +1589,11 @@
       if (spots.length === 0) { alert("Nessuno spot da esportare."); return; }
       let gpx = `<?xml version="1.0" encoding="UTF-8"?>\n<gpx version="1.1" creator="CescoSpot PRO" xmlns="http://www.topografix.com/GPX/1/1">\n`;
       spots.forEach(s => {
+        const techs = s.techniques ? s.techniques.join(', ') : (s.technique || '');
+        const tgts = s.targets ? s.targets.join(', ') : (s.target || '');
         gpx += `  <wpt lat="${s.lat}" lon="${s.lng}">\n`;
         gpx += `    <name>${escapeXml(s.name)}</name>\n`;
-        gpx += `    <desc>${escapeXml((s.technique ? 'Tecnica: ' + s.technique + ' | ' : '') + (s.targets ? 'Target: ' + s.targets.join(', ') + ' | ' : '') + (s.notes || ''))}</desc>\n`;
+        gpx += `    <desc>${escapeXml((techs ? 'Tecniche: ' + techs + ' | ' : '') + (tgts ? 'Target: ' + tgts + ' | ' : '') + (s.notes || ''))}</desc>\n`;
         gpx += `  </wpt>\n`;
       });
       gpx += `</gpx>`;
@@ -1586,7 +1632,7 @@
           if (Array.isArray(importedData)) {
             const userChoice = confirm(
               `Trovati ${importedData.length} spot nel file.\n\n` +
-              `👉 Premi [ OK ] per UNIRE i nuevos spot ai tuoi attuali.\n` +
+              `👉 Premi [ OK ] per UNIRE i nuovi spot ai tuoi attuali.\n` +
               `👉 Premi [ ANNULLA ] per SOSTITUIRE TUTTO.`
             );
             if (userChoice) {
@@ -1632,10 +1678,11 @@
       
       document.getElementById('spotName').value = '';
       document.getElementById('spotZone').value = 'Ricerca zona in corso...';
-      document.getElementById('spotTechnique').value = '';
       document.getElementById('spotRadius').value = '';
       document.getElementById('spotNotes').value = '';
       removePhoto('spotPhotoData', 'spotPhotoBox');
+      
+      renderTechniqueSelect([]);
       renderSpeciesSelector([]);
 
       fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${center.lat}&lon=${center.lng}&zoom=14`)
@@ -1667,7 +1714,7 @@
     function saveSpotFromModal() {
       const name = document.getElementById('spotName').value || 'Nuovo Spot';
       const zone = document.getElementById('spotZone').value.trim() || 'Generale';
-      const technique = document.getElementById('spotTechnique').value || '';
+      const techniques = Array.from(selectedTechniquesSet);
       const radius = parseFloat(document.getElementById('spotRadius').value) || null;
       const targets = Array.from(selectedSpeciesSet);
       const photo = document.getElementById('spotPhotoData').value || '';
@@ -1678,10 +1725,10 @@
       if (editingSpotId) {
         const idx = spots.findIndex(s => s.id === editingSpotId);
         if (idx !== -1) {
-          spots[idx] = { ...spots[idx], name, zone, technique, radius, targets, photo, notes, color: selectedColor, icon: selectedIcon };
+          spots[idx] = { ...spots[idx], name, zone, techniques, radius, targets, photo, notes, color: selectedColor, icon: selectedIcon };
         }
       } else {
-        spots.push({ id: Date.now().toString(), name, zone, technique, radius, targets, photo, notes, color: selectedColor, icon: selectedIcon, lat, lng, catches: [], date: new Date().toLocaleDateString() });
+        spots.push({ id: Date.now().toString(), name, zone, techniques, radius, targets, photo, notes, color: selectedColor, icon: selectedIcon, lat, lng, catches: [], date: new Date().toLocaleDateString() });
       }
       
       localStorage.setItem('cescospot_data', JSON.stringify(spots));
@@ -1700,13 +1747,13 @@
       document.getElementById('modalTitle').innerText = "Modifica Spot";
       document.getElementById('spotName').value = spot.name;
       document.getElementById('spotZone').value = spot.zone || 'Generale';
-      document.getElementById('spotTechnique').value = spot.technique || '';
       document.getElementById('spotRadius').value = spot.radius || '';
       document.getElementById('spotNotes').value = spot.notes || '';
       document.getElementById('tempLat').value = spot.lat;
       document.getElementById('tempLng').value = spot.lng;
 
       detectWaterEnvironment(spot.lat, spot.lng, spot.zone || '');
+      renderTechniqueSelect(spot.techniques || (spot.technique ? [spot.technique] : []));
       renderSpeciesSelector(spot.targets || (spot.target ? [spot.target] : []));
       
       if (spot.photo) {
@@ -1835,9 +1882,10 @@
           iconSize: [42, 56], iconAnchor: [21, 54], popupAnchor: [0, -45]
         });
 
+        const techsList = s.techniques && s.techniques.length > 0 ? s.techniques.join(', ') : (s.technique || '');
         const targetsList = s.targets && s.targets.length > 0 ? s.targets.join(', ') : (s.target || '');
         let popup = `<b style="font-size:1.1rem;">${s.name}</b><br><small>Zona: ${s.zone || 'Generale'}</small>`;
-        if(s.technique) popup += `<br><small style="color:#f97316;">Tecnica: ${s.technique}</small>`;
+        if(techsList) popup += `<br><small style="color:#f97316;">Tecniche: ${techsList}</small>`;
         if(s.radius) popup += `<br><small style="color:#38bdf8;">Raggio lancio: ${s.radius}m</small>`;
         if(targetsList) popup += `<br><small>Target: ${targetsList}</small>`;
         if(s.catches && s.catches.length > 0) popup += `<br><small style="color:#22c55e;"><b>Catture: ${s.catches.length}</b></small>`;
@@ -1904,13 +1952,15 @@
           const iconHtml = isEmoji ? `<span style="font-size:1.4rem;">${s.icon}</span>` : `<i class="fa-solid ${s.icon}"></i>`;
           const markerBorder = s.color === '#f8fafc' ? '#0f172a' : 'white';
           const catchCount = s.catches ? s.catches.length : 0;
+          const techsList = s.techniques && s.techniques.length > 0 ? s.techniques.join(', ') : (s.technique || '');
           const targetsList = s.targets && s.targets.length > 0 ? s.targets.join(', ') : (s.target || '');
+          const techsSearch = s.techniques ? s.techniques.join(' ') : (s.technique || '');
           const targetsSearch = s.targets ? s.targets.join(' ') : (s.target || '');
 
           htmlSec += `
             <div class="widget-card spot-item" 
-                 data-technique="${s.technique || ''}"
-                 data-search-text="${(s.name + ' ' + targetsSearch + ' ' + s.technique + ' ' + s.notes).toLowerCase()}" 
+                 data-technique="${techsList}"
+                 data-search-text="${(s.name + ' ' + techsSearch + ' ' + targetsSearch + ' ' + s.notes).toLowerCase()}" 
                  style="display:flex; justify-content:space-between; align-items:center; gap:12px; padding:16px; margin-bottom:12px; background:rgba(15,23,42,0.8); border-radius:16px; border:1px solid rgba(255,255,255,0.05);">
               
               <div onclick="focusSpot('${s.id}')" style="display:flex; align-items:flex-start; gap:12px; flex:1; min-width:0; cursor:pointer;">
@@ -1918,7 +1968,7 @@
                 <div style="flex:1; min-width:0; overflow:hidden;">
                   <b style="color:#fff; display:block; word-break:break-word; font-size:1.05rem; line-height:1.25; margin-bottom:4px;">${s.name}</b>
                   <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:4px;">
-                    ${s.technique ? `<span style="background:rgba(249,115,22,0.2); color:var(--accent-orange); font-size:0.7rem; font-weight:800; padding:2px 8px; border-radius:10px;">${s.technique}</span>` : ''}
+                    ${techsList ? `<span style="background:rgba(249,115,22,0.2); color:var(--accent-orange); font-size:0.7rem; font-weight:800; padding:2px 8px; border-radius:10px;">${techsList}</span>` : ''}
                     ${s.radius ? `<span style="background:rgba(56,189,248,0.2); color:var(--accent-light-blue); font-size:0.7rem; font-weight:800; padding:2px 8px; border-radius:10px;"><i class="fa-solid fa-bullseye"></i> ${s.radius}m</span>` : ''}
                     ${catchCount > 0 ? `<span style="background:rgba(34,197,94,0.2); color:var(--accent-green); font-size:0.7rem; font-weight:800; padding:2px 8px; border-radius:10px;"><i class="fa-solid fa-fish"></i> ${catchCount}</span>` : ''}
                   </div>
@@ -1951,7 +2001,8 @@
         let visibleCount = 0;
         section.querySelectorAll('.spot-item').forEach(item => {
           const matchesText = item.getAttribute('data-search-text').includes(q) || section.getAttribute('data-zone-name').includes(q);
-          const matchesTech = selectedTechFilter === 'all' || item.getAttribute('data-technique') === selectedTechFilter;
+          const techAttr = item.getAttribute('data-technique');
+          const matchesTech = selectedTechFilter === 'all' || techAttr.includes(selectedTechFilter);
           if (matchesText && matchesTech) { item.style.display = 'flex'; visibleCount++; } else { item.style.display = 'none'; }
         });
         section.style.display = visibleCount === 0 ? 'none' : 'block';
