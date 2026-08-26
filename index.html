@@ -835,27 +835,53 @@
       justify-content: space-between;
       align-items: center;
     }
-    .encyclopedia-photo-box {
-      width: 100%;
-      height: 180px;
+    
+    .diagram-container {
+      background: #ffffff;
       border-radius: 14px;
-      background: rgba(0,0,0,0.5);
-      border: 2px dashed rgba(56, 189, 248, 0.3);
+      padding: 12px;
+      margin: 10px 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+    .diagram-container svg {
+      width: 100%;
+      max-width: 360px;
+      height: auto;
+      display: block;
+    }
+
+    .step-list {
+      margin-top: 8px;
       display: flex;
       flex-direction: column;
+      gap: 6px;
+    }
+    .step-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 0.8rem;
+      color: var(--text-light);
+      line-height: 1.35;
+      background: rgba(0,0,0,0.25);
+      padding: 8px 10px;
+      border-radius: 10px;
+    }
+    .step-badge {
+      background: var(--accent-blue);
+      color: #fff;
+      font-weight: 900;
+      font-size: 0.75rem;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      color: var(--text-muted);
-      cursor: pointer;
-      margin-top: 10px;
-      overflow: hidden;
-      position: relative;
-    }
-    .encyclopedia-photo-box img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
+      flex-shrink: 0;
     }
 
     .leaflet-control-scale { margin-bottom: 24px !important; margin-left: 16px !important; border-color: rgba(255,255,255,0.5) !important; color: #fff !important; }
@@ -1051,7 +1077,7 @@
       <button class="btn-refresh-weather" id="btnUpdateWeather" onclick="updateForecastData(this)"><i class="fa-solid fa-arrows-rotate"></i> Aggiorna Condizioni</button>
     </div>
 
-    <!-- TAB 3: ENCICLOPEDIA DEL PESCATORE (Spostata qui, a destra del meteo) -->
+    <!-- TAB 3: ENCICLOPEDIA DEL PESCATORE -->
     <div id="tabWiki" class="tab-content" style="padding:16px;">
       <h2 style="font-size:1.3rem; color:#fff; font-weight:900; margin-bottom:14px;"><i class="fa-solid fa-book-open" style="color:var(--accent-light-blue);"></i> Enciclopedia del Pescatore</h2>
       
@@ -1065,103 +1091,238 @@
 
       <!-- SEZIONE 1: NODI -->
       <div id="wikiKnots" class="wiki-section active">
-        <!-- Nodo Palomar -->
+        
+        <!-- 1. Nodo Palomar -->
         <div class="encyclopedia-card">
           <div class="encyclopedia-card-title">
             <span>1. Nodo Palomar</span>
-            <span style="font-size:0.75rem; color:var(--accent-green);">Ami con Occhiello & Moschettoni</span>
+            <span style="font-size:0.75rem; color:var(--accent-green);">Ami con occhiello & Moschettoni</span>
           </div>
-          <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:8px;">Il più robusto per ami senza asola e moschettoni.</p>
+          <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:6px;">Il nodo più forte ed equilibrato al mondo. Mantiene il 95% del carico di rottura.</p>
           
-          <input type="file" id="wikiUpload_palomar" accept="image/*" style="display:none;" onchange="handleWikiPhoto(event, 'wikiImg_palomar', 'palomar')">
-          <div class="encyclopedia-photo-box" onclick="document.getElementById('wikiUpload_palomar').click()">
-            <div id="wikiImg_palomar">
-              <i class="fa-solid fa-image" style="font-size:2rem; color:var(--accent-light-blue);"></i>
-              <span style="font-size:0.8rem; font-weight:700; display:block; margin-top:4px;">Tocca per caricare foto schema Palomar</span>
-            </div>
+          <div class="diagram-container">
+            <svg viewBox="0 0 450 360" xmlns="http://www.w3.org/2000/svg">
+              <!-- Step 1 -->
+              <g id="p1" transform="translate(10, 20)">
+                <text x="35" y="40" font-size="28" font-weight="900" fill="#ef4444">1.</text>
+                <path d="M 60 5 L 60 180 C 60 270, 20 270, 20 210 L 40 80" fill="none" stroke="#3b82f6" stroke-width="4.5" stroke-linecap="round"/>
+                <!-- Girella/Amo -->
+                <circle cx="30" cy="275" r="7" fill="none" stroke="#0f172a" stroke-width="4"/>
+                <rect x="25" y="285" width="10" height="20" rx="3" fill="#0f172a"/>
+                <circle cx="30" cy="315" r="7" fill="none" stroke="#0f172a" stroke-width="4"/>
+                <path d="M 28 335 C 38 345, 52 335, 55 330" fill="none" stroke="#64748b" stroke-width="4" marker-end="url(#arrow)"/>
+              </g>
+
+              <!-- Step 2 -->
+              <g id="p2" transform="translate(120, 20)">
+                <text x="35" y="40" font-size="28" font-weight="900" fill="#ef4444">2.</text>
+                <path d="M 60 5 L 60 110 C 60 160, 20 160, 20 120 C 20 80, 80 80, 80 160 C 80 230, 20 230, 20 210" fill="none" stroke="#3b82f6" stroke-width="4.5" stroke-linecap="round"/>
+                <path d="M 5 230 C -5 220, 5 200, 15 190" fill="none" stroke="#3b82f6" stroke-width="4.5"/>
+                <!-- Girella -->
+                <circle cx="50" cy="275" r="7" fill="none" stroke="#0f172a" stroke-width="4"/>
+                <rect x="45" y="285" width="10" height="20" rx="3" fill="#0f172a"/>
+                <circle cx="50" cy="315" r="7" fill="none" stroke="#0f172a" stroke-width="4"/>
+              </g>
+
+              <!-- Step 3 -->
+              <g id="p3" transform="translate(230, 20)">
+                <text x="35" y="40" font-size="28" font-weight="900" fill="#ef4444">3.</text>
+                <path d="M 60 5 L 60 110 C 60 150, 20 150, 20 115 C 20 75, 80 75, 80 180 C 80 290, 50 310, 50 310 C 20 310, 10 200, 20 125" fill="none" stroke="#3b82f6" stroke-width="4.5" stroke-linecap="round"/>
+                <!-- Girella dentro -->
+                <circle cx="50" cy="255" r="7" fill="none" stroke="#0f172a" stroke-width="4"/>
+                <rect x="45" y="265" width="10" height="20" rx="3" fill="#0f172a"/>
+                <circle cx="50" cy="295" r="7" fill="none" stroke="#0f172a" stroke-width="4"/>
+              </g>
+
+              <!-- Step 4 -->
+              <g id="p4" transform="translate(340, 20)">
+                <text x="35" y="40" font-size="28" font-weight="900" fill="#ef4444">4.</text>
+                <path d="M 60 5 L 35 240 L 42 160" fill="none" stroke="#3b82f6" stroke-width="4.5" stroke-linecap="round"/>
+                <!-- Nodo stretto -->
+                <ellipse cx="35" cy="245" rx="8" ry="6" fill="#3b82f6"/>
+                <circle cx="35" cy="265" r="7" fill="none" stroke="#0f172a" stroke-width="4"/>
+                <rect x="30" y="275" width="10" height="20" rx="3" fill="#0f172a"/>
+                <circle cx="35" cy="305" r="7" fill="none" stroke="#0f172a" stroke-width="4"/>
+                <!-- Frecce tensione -->
+                <path d="M 55 210 L 55 280 M 55 210 L 51 220 M 55 210 L 59 220 M 55 280 L 51 270 M 55 280 L 59 270" stroke="#64748b" stroke-width="3.5" fill="none"/>
+              </g>
+            </svg>
+          </div>
+
+          <div class="step-list">
+            <div class="step-item"><div class="step-badge">1</div><span>Raddoppia circa 15 cm di lenza e passala nell'occhiello.</span></div>
+            <div class="step-item"><div class="step-badge">2</div><span>Fai un nodo semplice con il filo doppio senza serrare.</span></div>
+            <div class="step-item"><div class="step-badge">3</div><span>Fai passare l'esca o l'amo attraverso l'asola che fuoriesce.</span></div>
+            <div class="step-item"><div class="step-badge">4</div><span>Inumidisci con saliva/acqua, tira entrambi i capi e rifila l'eccedenza.</span></div>
           </div>
         </div>
 
-        <!-- Nodo Clinch -->
+        <!-- 2. Nodo Amo a Paletta (Snell Knot) -->
         <div class="encyclopedia-card">
           <div class="encyclopedia-card-title">
-            <span>2. Clinch Rinforzato</span>
+            <span>2. Nodo Amo a Paletta (Senza Asola)</span>
+            <span style="font-size:0.75rem; color:var(--accent-orange);">Indispensabile da Riva</span>
+          </div>
+          <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:6px;">La legatura perfetta per ami dritti a paletta (Bolognese, Feeder, Fondo).</p>
+          
+          <div class="diagram-container" style="background:#0f172a; border:1px solid rgba(255,255,255,0.1);">
+            <svg viewBox="0 0 400 130" xmlns="http://www.w3.org/2000/svg">
+              <!-- Gambo amo -->
+              <rect x="50" y="55" width="280" height="8" fill="#94a3b8" rx="2"/>
+              <polygon points="50,45 50,73 35,59" fill="#94a3b8"/> <!-- Paletta -->
+              <path d="M 330 59 C 360 59 380 90 350 110 C 330 120 310 100 310 90" fill="none" stroke="#94a3b8" stroke-width="8" stroke-linecap="round"/>
+              <!-- Spire filo -->
+              <path d="M 70 30 L 110 30 C 130 30 140 60 140 60" fill="none" stroke="#38bdf8" stroke-width="4"/>
+              <g stroke="#38bdf8" stroke-width="5" fill="none">
+                <line x1="150" y1="45" x2="150" y2="75"/>
+                <line x1="165" y1="45" x2="165" y2="75"/>
+                <line x1="180" y1="45" x2="180" y2="75"/>
+                <line x1="195" y1="45" x2="195" y2="75"/>
+                <line x1="210" y1="45" x2="210" y2="75"/>
+                <line x1="225" y1="45" x2="225" y2="75"/>
+                <line x1="240" y1="45" x2="240" y2="75"/>
+              </g>
+              <path d="M 245 60 C 260 60 280 85 220 85 L 120 85" fill="none" stroke="#38bdf8" stroke-width="4" stroke-dasharray="4,4"/>
+            </svg>
+          </div>
+
+          <div class="step-list">
+            <div class="step-item"><div class="step-badge">1</div><span>Posa il filo lungo il gambo dell'amo formando un'ampia asola verso la curva.</span></div>
+            <div class="step-item"><div class="step-badge">2</div><span>Avvolgi il capo libero attorno al gambo e al filo per 6-8 spire ordinate verso la paletta.</span></div>
+            <div class="step-item"><div class="step-badge">3</div><span>Infila il capo nell'asola inferiore rimasta aperta.</span></div>
+            <div class="step-item"><div class="step-badge">4</div><span>Bagna la lenza e serra trazionando la lenza madre: verifica che il filo esca davanti alla paletta!</span></div>
+          </div>
+        </div>
+
+        <!-- 3. Clinch Rinforzato -->
+        <div class="encyclopedia-card">
+          <div class="encyclopedia-card-title">
+            <span>3. Clinch Rinforzato (Improved Clinch)</span>
             <span style="font-size:0.75rem; color:var(--accent-amber);">Rapido in Pesca</span>
           </div>
-          <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:8px;">Ideale per cambi rapidi di esche su ami con occhiello.</p>
-          
-          <input type="file" id="wikiUpload_clinch" accept="image/*" style="display:none;" onchange="handleWikiPhoto(event, 'wikiImg_clinch', 'clinch')">
-          <div class="encyclopedia-photo-box" onclick="document.getElementById('wikiUpload_clinch').click()">
-            <div id="wikiImg_clinch">
-              <i class="fa-solid fa-image" style="font-size:2rem; color:var(--accent-light-blue);"></i>
-              <span style="font-size:0.8rem; font-weight:700; display:block; margin-top:4px;">Tocca per caricare foto schema Clinch</span>
-            </div>
+          <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:6px;">Il nodo più veloce per collegare girelle, artificiali o moschettoni.</p>
+          <div class="step-list">
+            <div class="step-item"><div class="step-badge">1</div><span>Infila il capo nell'occhiello e avvolgilo 5-7 volte sulla lenza madre.</span></div>
+            <div class="step-item"><div class="step-badge">2</div><span>Passa il capo nell'asola triangolare che si è formata vicino all'occhiello.</span></div>
+            <div class="step-item"><div class="step-badge">3</div><span>Ripassa il capo nella grande asola appena creata.</span></div>
+            <div class="step-item"><div class="step-badge">4</div><span>Inumidisci bene e tira lentamente la lenza madre per compattare le spire.</span></div>
           </div>
         </div>
 
-        <!-- Nodo FG -->
+        <!-- 4. Nodo FG -->
         <div class="encyclopedia-card">
           <div class="encyclopedia-card-title">
-            <span>3. Nodo FG</span>
-            <span style="font-size:0.75rem; color:var(--accent-orange);">Treccia ⇄ Fluorocarbon</span>
+            <span>4. Nodo FG (Trecciato ⇄ Fluorocarbon)</span>
+            <span style="font-size:0.75rem; color:var(--accent-light-blue);">Top Spinning & Feeder</span>
           </div>
-          <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:8px;">Il re dei nodi di giunzione per mulinello da spinning.</p>
-          
-          <input type="file" id="wikiUpload_fg" accept="image/*" style="display:none;" onchange="handleWikiPhoto(event, 'wikiImg_fg', 'fg')">
-          <div class="encyclopedia-photo-box" onclick="document.getElementById('wikiUpload_fg').click()">
-            <div id="wikiImg_fg">
-              <i class="fa-solid fa-image" style="font-size:2rem; color:var(--accent-light-blue);"></i>
-              <span style="font-size:0.8rem; font-weight:700; display:block; margin-top:4px;">Tocca per caricare foto schema FG</span>
-            </div>
+          <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:6px;">Zero spessore: scorre nei passanti della canna senza fare attrito.</p>
+          <div class="step-list">
+            <div class="step-item"><div class="step-badge">1</div><span>Tieni il trecciato in tensione (tra i denti o con le dita) e intreccia il fluorocarbon sopra e sotto per 16-20 spire a croce.</span></div>
+            <div class="step-item"><div class="step-badge">2</div><span>Blocca la treccia con un mezzo collo sul fluorocarbon e serra con forza le spire finché non cambiano colore.</span></div>
+            <div class="step-item"><div class="step-badge">3</div><span>Esegui 4 mezzi colli alternati di chiusura con il trecciato.</span></div>
+            <div class="step-item"><div class="step-badge">4</div><span>Taglia il fluorocarbon lasciando 1mm e brucia leggermente la punta per creare una pallina di sicurezza.</span></div>
           </div>
         </div>
+
       </div>
 
       <!-- SEZIONE 2: LENZE & PIOMBATURE -->
       <div id="wikiRigs" class="wiki-section">
+        
+        <!-- Spallinata Bolognese -->
         <div class="encyclopedia-card">
           <div class="encyclopedia-card-title">
-            <span>Spallinata a Scalare (Bolognese)</span>
-            <span style="font-size:0.75rem; color:var(--accent-light-blue);">Presentazione Naturale</span>
+            <span>Spallinata a Scalare (Galleggiante / Bolognese)</span>
+            <span style="font-size:0.75rem; color:var(--accent-light-blue);">Fiumi e Corrente</span>
           </div>
-          <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:8px;">Distribuzione dei piombini decrescente verso il terminale per una calata morbida dell'esca.</p>
+          <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:8px;">Distribuzione dei piombini dal più grande (in alto) al più piccolo (in basso), distanziandoli progressivamente.</p>
           
-          <input type="file" id="wikiUpload_rig1" accept="image/*" style="display:none;" onchange="handleWikiPhoto(event, 'wikiImg_rig1', 'rig1')">
-          <div class="encyclopedia-photo-box" onclick="document.getElementById('wikiUpload_rig1').click()">
-            <div id="wikiImg_rig1">
-              <i class="fa-solid fa-image" style="font-size:2rem; color:var(--accent-light-blue);"></i>
-              <span style="font-size:0.8rem; font-weight:700; display:block; margin-top:4px;">Tocca per caricare schema spallinata</span>
-            </div>
+          <div class="diagram-container" style="background:#0f172a; border:1px solid rgba(255,255,255,0.1); height:110px;">
+            <svg viewBox="0 0 380 90" xmlns="http://www.w3.org/2000/svg">
+              <line x1="20" y1="45" x2="360" y2="45" stroke="#38bdf8" stroke-width="2.5"/>
+              <!-- Piombi a scalare -->
+              <circle cx="50" cy="45" r="10" fill="#94a3b8"/>
+              <circle cx="85" cy="45" r="9" fill="#94a3b8"/>
+              <circle cx="130" cy="45" r="7.5" fill="#94a3b8"/>
+              <circle cx="185" cy="45" r="6" fill="#94a3b8"/>
+              <circle cx="250" cy="45" r="5" fill="#94a3b8"/>
+              <circle cx="320" cy="45" r="4" fill="#94a3b8"/>
+              <text x="35" y="80" fill="#94a3b8" font-size="12" font-weight="700">Verso Galleggiante (Vicini)</text>
+              <text x="235" y="80" fill="#38bdf8" font-size="12" font-weight="700">Verso Terminale (Lontani)</text>
+            </svg>
+          </div>
+
+          <div class="step-list">
+            <div class="step-item"><div class="step-badge">✓</div><span><b>Regola d'oro:</b> In corrente sostenuta raggruppa i piombi verso il basso; in acque lente o con pesci diffidenti allarga la spallinata su 100-150 cm per una calata naturale.</span></div>
           </div>
         </div>
+
+        <!-- Piombatura Pesca al Tocco -->
+        <div class="encyclopedia-card">
+          <div class="encyclopedia-card-title">
+            <span>Corona per Pesca al Tocco (Trota Torrente)</span>
+            <span style="font-size:0.75rem; color:var(--accent-green);">Buche e Cascate</span>
+          </div>
+          <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:8px;">Corona di 25-35 piombini sferici spaccati concentrati in 40-60 cm per sondare il fondo delle buche correntizie.</p>
+          <div class="step-list">
+            <div class="step-item"><div class="step-badge">1</div><span>Posiziona la corona a circa 30-40 cm dall'amo a paletta.</span></div>
+            <div class="step-item"><div class="step-badge">2</div><span>Mantieni la corona leggermente scalata per evitare incagli tra i sassi del fondo.</span></div>
+          </div>
+        </div>
+
       </div>
 
       <!-- SEZIONE 3: FEEDER & FONDO -->
       <div id="wikiFeeder" class="wiki-section">
+        
+        <!-- Running Rig Feeder -->
         <div class="encyclopedia-card">
           <div class="encyclopedia-card-title">
-            <span>Running Rig (Feeder Libero)</span>
-            <span style="font-size:0.75rem; color:var(--accent-green);">Anti-Sgusciante</span>
+            <span>Running Rig (Feeder Libero Scorrevole)</span>
+            <span style="font-size:0.75rem; color:var(--accent-green);">Top Sensibilità</span>
           </div>
-          <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:8px;">Montatura scorrevole con girella e stopper per avvertire anche le tocche più timide a fondo.</p>
+          <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:8px;">La montatura regolamentare e più sensibile: il pesce non sente il peso del pasturatore quando mangia.</p>
           
-          <input type="file" id="wikiUpload_feeder1" accept="image/*" style="display:none;" onchange="handleWikiPhoto(event, 'wikiImg_feeder1', 'feeder1')">
-          <div class="encyclopedia-photo-box" onclick="document.getElementById('wikiUpload_feeder1').click()">
-            <div id="wikiImg_feeder1">
-              <i class="fa-solid fa-image" style="font-size:2rem; color:var(--accent-light-blue);"></i>
-              <span style="font-size:0.8rem; font-weight:700; display:block; margin-top:4px;">Tocca per caricare schema Running Rig</span>
-            </div>
+          <div class="diagram-container" style="background:#0f172a; border:1px solid rgba(255,255,255,0.1); height:110px;">
+            <svg viewBox="0 0 380 90" xmlns="http://www.w3.org/2000/svg">
+              <line x1="20" y1="45" x2="360" y2="45" stroke="#38bdf8" stroke-width="2.5"/>
+              <!-- Pasturatore su moschettone -->
+              <circle cx="100" cy="45" r="6" fill="#f97316"/>
+              <line x1="100" y1="45" x2="100" y2="70" stroke="#f97316" stroke-width="3"/>
+              <rect x="85" y="70" width="30" height="15" rx="3" fill="#64748b"/>
+              <!-- Paracolpi & Brillatura -->
+              <circle cx="180" cy="45" r="7" fill="#22c55e"/> <!-- Perlina -->
+              <line x1="187" y1="45" x2="260" y2="45" stroke="#eab308" stroke-width="5"/> <!-- Brillatura -->
+              <!-- Micro girella -->
+              <circle cx="265" cy="45" r="5" fill="#fff"/>
+              <line x1="270" y1="45" x2="360" y2="45" stroke="#fff" stroke-width="1.8"/> <!-- Terminale -->
+              <text x="185" y="32" fill="#eab308" font-size="11" font-weight="700">Brillatura 10cm</text>
+            </svg>
+          </div>
+
+          <div class="step-list">
+            <div class="step-item"><div class="step-badge">1</div><span>Infila una girella con moschettone sulla lenza madre per agganciare il pasturatore.</span></div>
+            <div class="step-item"><div class="step-badge">2</div><span>Inserisci un gommino salva-nodo (stopper o perlina morbida).</span></div>
+            <div class="step-item"><div class="step-badge">3</div><span>Crea una brillatura (treccia ritorta) di 8-10 cm per distanziare il pasturatore dal finale ed evitare grovigli.</span></div>
+            <div class="step-item"><div class="step-badge">4</div><span>Collega il terminale (da 40 a 100 cm in fluorocarbon).</span></div>
           </div>
         </div>
+
       </div>
 
       <!-- SEZIONE 4: ETICA & NORMATIVA -->
       <div id="wikiRules" class="wiki-section">
+        
         <div class="encyclopedia-card" style="border-color:var(--accent-green);">
-          <div class="encyclopedia-card-title"><span style="color:var(--accent-green);"><i class="fa-solid fa-hand-holding-heart"></i> Catch & Release & Rispetto</span></div>
-          <p style="font-size:0.8rem; color:var(--text-muted); line-height:1.4; margin-bottom:8px;">
-            Il <b>Catch & Release</b> è fondamentale per la tutela degli spot. Bagnati sempre le mani prima di toccare il pesce, slamalo delicatamente in acqua e non abbandonare mai lenze o esche.
+          <div class="encyclopedia-card-title"><span style="color:var(--accent-green);"><i class="fa-solid fa-hand-holding-heart"></i> Catch & Release & Rispetto Ambientale</span></div>
+          <p style="font-size:0.85rem; color:var(--text-light); line-height:1.45; margin-bottom:8px;">
+            Il <b>Catch & Release</b> garantisce il futuro delle nostre acque e la salvaguardia della fauna ittica:
           </p>
+          <div class="step-list">
+            <div class="step-item"><div class="step-badge">1</div><span><b>Mani sempre bagnate:</b> Non toccare mai il pesce con le mani asciutte per non rimuovere il muco protettivo.</span></div>
+            <div class="step-item"><div class="step-badge">2</div><span><b>Slamatura rapida:</b> Slama il pesce direttamente in acqua o su un materassino umido utilizzando pinze o slamatore.</span></div>
+            <div class="step-item"><div class="step-badge">3</div><span><b>Zero rifiuti:</b> Non abbandonare mai spezzoni di trecciato, nylon, ami o buste di plastica lungo gli argini.</span></div>
+          </div>
         </div>
 
         <!-- Tabella Conversione Fili -->
@@ -1207,7 +1368,9 @@
             </tbody>
           </table>
         </div>
+
       </div>
+
     </div>
 
     <!-- TAB 4: ARCHIVIO SPOT & DIARIO -->
@@ -1245,7 +1408,7 @@
 
   </div>
 
-  <!-- Bottom Navigation Bar (Aggiornata con Enciclopedia a destra del Meteo) -->
+  <!-- Bottom Navigation Bar -->
   <nav class="bottom-nav">
     <button class="nav-item active" onclick="switchTab('tabMap', this)"><i class="fa-solid fa-map-location-dot"></i>Mappa</button>
     <button class="nav-item" onclick="switchTab('tabForecasts', this)"><i class="fa-solid fa-cloud-sun"></i>Meteo</button>
@@ -1253,7 +1416,7 @@
     <button class="nav-item" onclick="switchTab('tabMe', this)"><i class="fa-solid fa-bookmark"></i>Archivio</button>
   </nav>
 
-  <!-- Modal Aggiungi/Modifica Spot (Unificato con tutti i campi) -->
+  <!-- Modal Aggiungi/Modifica Spot con TUTTI i campi unificati (Comunicanti) -->
   <div class="modal" id="modalAddSpot">
     <div class="modal-drag-handle"></div>
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
@@ -1485,50 +1648,6 @@
       document.querySelectorAll('.wiki-chip').forEach(ch => ch.classList.remove('active'));
       document.getElementById(catId).classList.add('active');
       chipEl.classList.add('active');
-    }
-
-    // --- GESTIONE FOTO WIKI MEMORIZZATE IN LOCALSTORAGE ---
-    function handleWikiPhoto(event, targetContainerId, wikiKey) {
-      const file = event.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const img = new Image();
-        img.onload = function() {
-          const canvas = document.createElement('canvas');
-          const maxDim = 800; 
-          let width = img.width;
-          let height = img.height;
-          if (width > height && width > maxDim) {
-            height = Math.round((height * maxDim) / width);
-            width = maxDim;
-          } else if (height > maxDim) {
-            width = Math.round((width * maxDim) / height);
-            height = maxDim;
-          }
-          canvas.width = width;
-          canvas.height = height;
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0, width, height);
-          const compressed = canvas.toDataURL('image/jpeg', 0.8);
-
-          localStorage.setItem('cescospot_wiki_' + wikiKey, compressed);
-          document.getElementById(targetContainerId).innerHTML = `<img src="${compressed}">`;
-        };
-        img.src = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    }
-
-    function loadWikiPhotos() {
-      const keys = ['palomar', 'clinch', 'fg', 'rig1', 'feeder1'];
-      keys.forEach(k => {
-        const saved = localStorage.getItem('cescospot_wiki_' + k);
-        if (saved) {
-          const container = document.getElementById('wikiImg_' + k);
-          if (container) container.innerHTML = `<img src="${saved}">`;
-        }
-      });
     }
 
     // --- MAPPE (GOOGLE SATELLITE + OPENCYCLEMAP) ---
@@ -2023,7 +2142,7 @@
           if (Array.isArray(importedData)) {
             const userChoice = confirm(
               `Trovati ${importedData.length} spot nel file.\n\n` +
-              `👉 Premi [ OK ] per UNIRE i nuevos spot ai tuoi attuali.\n` +
+              `👉 Premi [ OK ] per UNIRE i nuovi spot ai tuoi attuali.\n` +
               `👉 Premi [ ANNULLA ] per SOSTITUIRE TUTTO.`
             );
             if (userChoice) {
@@ -2674,7 +2793,6 @@
       btn.classList.add('active');
       if(tabId === 'tabMap') setTimeout(() => map.invalidateSize(), 300);
       if(tabId === 'tabForecasts') updateForecastData();
-      if(tabId === 'tabWiki') loadWikiPhotos();
     }
 
     let watchId = null;
