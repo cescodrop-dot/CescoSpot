@@ -944,6 +944,52 @@
     }
     .btn-dialog-opt:active { transform: scale(0.96); }
 
+    /* Stile Popup Mappa Moderno */
+    .leaflet-popup-content-wrapper {
+      background: rgba(15, 23, 42, 0.95) !important;
+      color: #f8fafc !important;
+      border-radius: 18px !important;
+      border: 1px solid rgba(255, 255, 255, 0.15) !important;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.7) !important;
+      padding: 4px !important;
+    }
+    .leaflet-popup-tip {
+      background: rgba(15, 23, 42, 0.95) !important;
+    }
+    .leaflet-popup-content {
+      margin: 12px 14px !important;
+      line-height: 1.4 !important;
+    }
+    .popup-action-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      width: 100%;
+      padding: 8px 10px;
+      margin-top: 8px;
+      border-radius: 10px;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      background: rgba(2, 132, 199, 0.25);
+      color: var(--accent-light-blue);
+      font-weight: 800;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .popup-action-btn:active { transform: scale(0.96); background: var(--accent-blue); color: #fff; }
+
+    /* Highlight spot all'apertura da popup */
+    @keyframes spotPulse {
+      0% { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.8); }
+      70% { box-shadow: 0 0 0 12px rgba(56, 189, 248, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0); }
+    }
+    .spot-highlight {
+      animation: spotPulse 1.5s ease-out 2;
+      border-color: var(--accent-light-blue) !important;
+    }
+
     .leaflet-control-scale { margin-bottom: 24px !important; margin-left: 16px !important; border-color: rgba(255,255,255,0.5) !important; color: #fff !important; }
 
     ::-webkit-scrollbar { width: 6px; height: 6px; }
@@ -1569,7 +1615,7 @@
     <button class="nav-item" onclick="switchTab('tabMe', this)"><i class="fa-solid fa-bookmark"></i>Archivio</button>
   </nav>
 
-  <!-- Modal Aggiungi/Modifica Spot con TUTTI i campi unificati (Comunicanti) -->
+  <!-- Modal Aggiungi/Modifica Spot -->
   <div class="modal" id="modalAddSpot">
     <div class="modal-drag-handle"></div>
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
@@ -1753,7 +1799,7 @@
     </div>
   </div>
 
-  <!-- MODALE CUSTOM IMPORT DIALOG CON TASTO ANNULLA -->
+  <!-- MODALE CUSTOM IMPORT DIALOG -->
   <div class="import-dialog-overlay" id="importDialogOverlay">
     <div class="import-dialog-card">
       <div style="font-size: 2.2rem; color: var(--accent-light-blue); margin-bottom: 8px;"><i class="fa-solid fa-file-import"></i></div>
@@ -2170,7 +2216,7 @@
     let mapCircles = {};
     let editingSpotId = null;
     let tempMarker = null;
-    let pendingImportData = null; // Memorizza temporaneamente il file caricato
+    let pendingImportData = null;
     
     try {
       const savedData = localStorage.getItem('cescospot_data');
@@ -2325,7 +2371,7 @@
 
       if (!pendingImportData || action === 'cancel') {
         pendingImportData = null;
-        return; // Annullato senza toccare nulla
+        return;
       }
 
       if (action === 'merge') {
@@ -2350,6 +2396,30 @@
       switchTab('tabMap', document.querySelectorAll('.nav-item')[0]);
       map.setView([spot.lat, spot.lng], 16);
       if (mapMarkers[id]) setTimeout(() => mapMarkers[id].openPopup(), 400); 
+    }
+
+    // FUNZIONE PER APRIRE E SCORRERE DIRETTAMENTE ALLO SPOT NELL'ARCHIVIO DALLA MAPPA
+    function openSpotInArchive(spotId) {
+      map.closePopup();
+      switchTab('tabMe', document.querySelectorAll('.nav-item')[3]);
+      
+      setTimeout(() => {
+        const spotEl = document.getElementById(`spot_card_${spotId}`);
+        if (spotEl) {
+          const sectionEl = spotEl.closest('.zone-section');
+          if (sectionEl) {
+            const contentEl = sectionEl.querySelector('.zone-content');
+            const iconEl = sectionEl.querySelector('.zone-header i');
+            if (contentEl && contentEl.style.display === 'none') {
+              contentEl.style.display = 'block';
+              if (iconEl) iconEl.classList.replace('fa-chevron-right', 'fa-chevron-down');
+            }
+          }
+          spotEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          spotEl.classList.add('spot-highlight');
+          setTimeout(() => spotEl.classList.remove('spot-highlight'), 3000);
+        }
+      }, 350);
     }
 
     function openInMaps(lat, lng) {
@@ -2645,13 +2715,30 @@
         const targetsList = s.targets && s.targets.length > 0 ? s.targets.join(', ') : (s.target || '');
         const luresList = s.spotLures && s.spotLures.length > 0 ? s.spotLures.join(', ') : '';
         
-        let popup = `<b style="font-size:1.1rem;">${s.name}</b><br><small>Zona: ${s.zone || 'Generale'}</small>`;
-        if(techsList) popup += `<br><small style="color:#f97316;">Tecniche: ${techsList}</small>`;
-        if(s.radius) popup += `<br><small style="color:#38bdf8;">Raggio lancio: ${s.radius}m</small>`;
-        if(targetsList) popup += `<br><small>Target: ${targetsList}</small>`;
-        if(luresList) popup += `<br><small style="color:#eab308;">Esche: ${luresList}</small>`;
-        if(s.catches && s.catches.length > 0) popup += `<br><small style="color:#22c55e;"><b>Catture: ${s.catches.length}</b></small>`;
-        if(s.notes) popup += `<br><small><i>${s.notes}</i></small>`;
+        let popup = `
+          <div style="min-width: 220px;">
+            <b style="font-size:1.15rem; color:#fff; display:block; margin-bottom:2px;">${s.name}</b>
+            <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:4px;">Zona: ${s.zone || 'Generale'}</div>
+            ${techsList ? `<div style="font-size:0.8rem; color:var(--accent-orange); font-weight:700;">Tecniche: ${techsList}</div>` : ''}
+            ${s.radius ? `<div style="font-size:0.8rem; color:var(--accent-light-blue);">Raggio lancio: ${s.radius}m</div>` : ''}
+            ${targetsList ? `<div style="font-size:0.8rem; color:var(--text-light); margin-top:2px;">Target: ${targetsList}</div>` : ''}
+            ${luresList ? `<div style="font-size:0.75rem; color:var(--accent-amber);">Esche: ${luresList}</div>` : ''}
+            ${s.catches && s.catches.length > 0 ? `<div style="font-size:0.8rem; color:var(--accent-green); font-weight:800; margin-top:3px;"><i class="fa-solid fa-fish"></i> Catture: ${s.catches.length}</div>` : ''}
+            ${s.notes ? `<div style="font-size:0.78rem; color:var(--text-muted); margin-top:4px; font-style:italic; border-top:1px solid rgba(255,255,255,0.08); padding-top:4px;">${s.notes}</div>` : ''}
+            
+            <button type="button" class="popup-action-btn" onclick="openSpotInArchive('${s.id}')">
+              <i class="fa-solid fa-bookmark"></i> Vedi nell'Archivio
+            </button>
+            <div style="display:flex; gap:6px; margin-top:6px;">
+              <button type="button" class="popup-action-btn" style="flex:1; margin-top:0; border-color:rgba(34,197,94,0.3); background:rgba(34,197,94,0.2); color:var(--accent-green);" onclick="openInMaps(${s.lat}, ${s.lng})">
+                <i class="fa-solid fa-route"></i> Naviga
+              </button>
+              <button type="button" class="popup-action-btn" style="flex:1; margin-top:0; border-color:rgba(249,115,22,0.3); background:rgba(249,115,22,0.2); color:var(--accent-orange);" onclick="openLogbook('${s.id}')">
+                <i class="fa-solid fa-book-bookmark"></i> Diario
+              </button>
+            </div>
+          </div>
+        `;
 
         mapMarkers[s.id] = L.marker([s.lat, s.lng], { icon: customIcon }).addTo(map).bindPopup(popup);
 
@@ -2729,9 +2816,10 @@
 
           htmlSec += `
             <div class="widget-card spot-item" 
+                 id="spot_card_${s.id}"
                  data-technique="${techsList}"
                  data-search-text="${(s.name + ' ' + techsSearch + ' ' + targetsSearch + ' ' + luresSearch + ' ' + s.notes).toLowerCase()}" 
-                 style="display:flex; justify-content:space-between; align-items:center; gap:12px; padding:16px; margin-bottom:12px; background:rgba(15,23,42,0.8); border-radius:16px; border:1px solid rgba(255,255,255,0.05);">
+                 style="display:flex; justify-content:space-between; align-items:center; gap:12px; padding:16px; margin-bottom:12px; background:rgba(15,23,42,0.8); border-radius:16px; border:1px solid rgba(255,255,255,0.05); transition: border-color 0.3s, box-shadow 0.3s;">
               
               <div onclick="focusSpot('${s.id}')" style="display:flex; align-items:flex-start; gap:12px; flex:1; min-width:0; cursor:pointer;">
                 <div class="custom-map-icon" style="background-color: ${s.photo ? 'transparent' : s.color}; border-color: ${markerBorder}; position:static; width:44px; height:44px; flex-shrink:0; margin-top:2px;">${iconInnerHtml}</div>
@@ -3004,7 +3092,7 @@
       }
     }
 
-    // --- GESTIONE BUSSOLA ON / OFF (TOGGLE COMPLETO) ---
+    // --- GESTIONE BUSSOLA ON / OFF (TOGGLE) ---
     let compassActive = false;
     let lastHeading = 0;
 
@@ -3012,7 +3100,6 @@
       const btn = document.querySelector('.btn-compass-perm');
       
       if (compassActive) {
-        // Disattivazione
         window.removeEventListener('deviceorientation', handleOrientation, true);
         btn.classList.remove('active');
         document.getElementById('hdgVal').innerHTML = `<i class="fa-regular fa-compass" style="font-size: 1rem; color: var(--text-muted);"></i> --° <small>HDG</small>`;
@@ -3024,7 +3111,6 @@
         });
         compassActive = false;
       } else {
-        // Attivazione con richiesta permessi
         if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
           DeviceOrientationEvent.requestPermission().then(response => {
             if (response === 'granted') {
