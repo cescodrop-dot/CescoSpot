@@ -118,7 +118,7 @@
       background: rgba(15, 23, 42, 0.95);
       backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
-      padding: calc(12px + env(safe-area-inset-top)) 24px 12px 24px;
+      padding: calc(10px + env(safe-area-inset-top)) 20px 10px 20px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -132,8 +132,8 @@
       position: relative;
       width: 100%;
       max-width: 380px;
-      margin-bottom: 12px;
-      padding-bottom: 16px;
+      margin-bottom: 8px;
+      padding-bottom: 14px;
     }
 
     .compass-ticks {
@@ -143,7 +143,7 @@
       font-weight: 800;
       color: var(--text-muted);
       letter-spacing: 1px;
-      font-size: 0.8rem;
+      font-size: 0.75rem;
     }
     
     .compass-ticks span {
@@ -152,26 +152,26 @@
       align-items: center;
       transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
       transform-origin: center bottom;
-      width: 28px;
+      width: 26px;
     }
     
     .compass-ticks span::after {
       content: '';
       width: 2px;
-      height: 6px;
+      height: 5px;
       background: currentColor;
-      margin-top: 5px;
+      margin-top: 4px;
       border-radius: 2px;
       transition: background 0.3s;
     }
 
     .compass-pointer {
       position: absolute;
-      bottom: -8px;
+      bottom: -6px;
       left: 50%;
       transform: translateX(-50%);
       color: var(--accent-red);
-      font-size: 1.6rem;
+      font-size: 1.4rem;
       transition: left 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
       filter: drop-shadow(0 2px 8px rgba(239, 68, 68, 0.9));
       z-index: 10;
@@ -186,35 +186,57 @@
     }
     
     .telemetry-val {
-      font-size: 1.8rem;
+      font-size: 1.5rem;
       font-weight: 900;
       color: var(--text-light);
       letter-spacing: 1px;
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 8px;
       text-shadow: 0 2px 10px rgba(0,0,0,0.6);
     }
     
     .telemetry-val small {
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       color: var(--accent-light-blue);
       font-weight: 700;
       text-transform: uppercase;
+    }
+
+    /* Logo Centrale Elegante */
+    .app-brand-logo {
+      font-size: 0.95rem;
+      font-weight: 900;
+      letter-spacing: 0.5px;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 6px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      white-space: nowrap;
+    }
+    .app-brand-logo span {
+      color: var(--accent-light-blue);
+    }
+    @media(max-width: 360px) {
+      .app-brand-logo { display: none; } /* Nasconde solo su schermi microscopici per evitare collisioni */
     }
     
     .btn-compass-perm {
       background: rgba(255,255,255,0.1);
       color: var(--text-light);
       border: 1px solid rgba(255,255,255,0.15);
-      padding: 10px 18px;
-      border-radius: 14px;
-      font-size: 0.85rem;
+      padding: 9px 14px;
+      border-radius: 12px;
+      font-size: 0.8rem;
       font-weight: 800;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
       transition: all 0.2s;
       box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     }
@@ -685,17 +707,36 @@
     }
     .btn-submit:active { transform: scale(0.96); }
 
-    /* Custom Autocomplete */
-    .autocomplete-items {
-      position: absolute; border: 1px solid rgba(255,255,255,0.1); border-top: none; z-index: 3000;
-      top: 100%; left: 0; right: 0; background: var(--panel-bg); max-height: 220px; overflow-y: auto;
-      border-radius: 0 0 14px 14px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); display: none;
+    /* Checkbox Badge per Specie Multipla */
+    .species-selector-box {
+      background: rgba(7, 13, 29, 0.6);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      padding: 12px;
+      max-height: 160px;
+      overflow-y: auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
     }
-    .autocomplete-items div {
-      padding: 14px 16px; cursor: pointer; color: var(--text-light); border-bottom: 1px solid rgba(255,255,255,0.05);
-      font-size: 1rem; font-weight: 600;
+    .species-chip {
+      background: rgba(30, 41, 59, 0.8);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--text-light);
+      padding: 6px 12px;
+      border-radius: 16px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.2s;
     }
-    .autocomplete-items div:active { background-color: rgba(56,189,248,0.2); color: var(--accent-light-blue); }
+    .species-chip.selected {
+      background: var(--accent-blue);
+      border-color: var(--accent-light-blue);
+      color: #fff;
+    }
 
     /* Anteprima Foto */
     .photo-preview-box {
@@ -819,7 +860,7 @@
     </div>
   </div>
 
-  <!-- Barra Bussola -->
+  <!-- Barra Bussola con Logo Centrale Posizionato Correttamente -->
   <div class="top-telemetry-bar">
     <div class="compass-track">
       <div class="compass-ticks" id="compassTicks">
@@ -830,9 +871,15 @@
     
     <div class="compass-main">
       <div class="telemetry-val" id="hdgVal">
-        <i class="fa-regular fa-compass" style="font-size: 1.6rem; color: var(--text-muted);"></i>
+        <i class="fa-regular fa-compass" style="font-size: 1.4rem; color: var(--text-muted);"></i>
         --° <small>HDG</small>
       </div>
+
+      <!-- LOGO CENTRALE RICHIESTO -->
+      <div class="app-brand-logo">
+        <i class="fa-solid fa-fish" style="color:var(--accent-light-blue);"></i> CescoSpot <span>PRO</span>
+      </div>
+
       <div id="compassControlContainer">
         <button class="btn-compass-perm" onclick="initCompass()"><i class="fa-solid fa-location-arrow"></i> Attiva</button>
       </div>
@@ -854,9 +901,7 @@
 
       <div class="left-controls">
         <button class="map-btn" onclick="toggleMapSearch()" title="Cerca un luogo"><i class="fa-solid fa-magnifying-glass"></i></button>
-        <!-- Modalità Notturna Salva-Vista (Punto 1) -->
         <button class="map-btn" id="nightModeBtn" onclick="toggleNightMode()" title="Modalità Notturna Rossa"><i class="fa-solid fa-moon"></i></button>
-        <!-- Prontuario Nodi & Tabelle (Punto 1) -->
         <button class="map-btn" onclick="openKnotsModal()" title="Prontuario Nodi & Fili"><i class="fa-solid fa-circle-nodes"></i></button>
         <div class="map-btn-group">
           <button class="map-btn" onclick="map.zoomIn()" title="Zoom In"><i class="fa-solid fa-plus"></i></button>
@@ -871,7 +916,6 @@
 
       <div class="bottom-left-gps">
         <button class="map-btn" onclick="startTracking()" id="gpsBtn" title="Traccia Posizione"><i class="fa-solid fa-location-crosshairs"></i></button>
-        <!-- Spot Rapido al Volo 1-Tap (Punto 1) -->
         <button class="map-btn" onclick="quickDropSpot()" title="Spot Rapido al Volo" style="color:var(--accent-amber);"><i class="fa-solid fa-bolt"></i></button>
       </div>
 
@@ -889,7 +933,7 @@
         <div class="w-desc-text" id="wDesc">In attesa di dati...</div>
       </div>
 
-      <!-- PREVISIONI ORARIE 24H (PUNTO 2) -->
+      <!-- PREVISIONI ORARIE 24H -->
       <div class="widget-card">
         <div class="widget-title"><i class="fa-solid fa-clock" style="color:var(--accent-light-blue);"></i> Previsioni Orarie (24h)</div>
         <div class="hourly-forecast-track" id="hourlyForecastTrack">
@@ -897,7 +941,7 @@
         </div>
       </div>
 
-      <!-- LIVELLO & PORTATA FIUME DA RIVA (PUNTO 2) -->
+      <!-- LIVELLO & PORTATA FIUME DA RIVA -->
       <div class="widget-card">
         <div class="widget-title"><i class="fa-solid fa-water-ladder" style="color:var(--accent-light-blue);"></i> Idrologia & Fiumi da Riva</div>
         <div style="background:rgba(15,23,42,0.7); padding:14px 16px; border-radius:14px; border:1px solid rgba(255,255,255,0.05); margin-bottom:12px; display:flex; align-items:center; justify-content:space-between;">
@@ -945,7 +989,7 @@
         </div>
       </div>
 
-      <!-- Stato del Mare, Maree & Temperatura Acqua (Punto 2) -->
+      <!-- Stato del Mare, Maree & Temperatura Acqua -->
       <div class="widget-card">
         <div class="widget-title"><i class="fa-solid fa-water" style="color:var(--accent-light-blue);"></i> Mare & Maree da Riva</div>
         <div class="metric-grid">
@@ -993,12 +1037,12 @@
         <div class="tech-chip" onclick="setTechFilter('Trout Area', this)">Trout Area</div>
       </div>
 
-      <!-- Backup JSON e GPX (Punto 4) -->
+      <!-- Backup JSON, GPX e Import personalizzato -->
       <div class="backup-bar">
         <button class="btn-backup" onclick="exportSpots()"><i class="fa-solid fa-file-arrow-down" style="color:var(--accent-light-blue);"></i>Backup JSON</button>
         <button class="btn-backup" onclick="exportGPX()"><i class="fa-solid fa-map-location-dot" style="color:var(--accent-orange);"></i>Esporta GPX</button>
         <button class="btn-backup" onclick="document.getElementById('importFile').click()"><i class="fa-solid fa-file-arrow-up" style="color:var(--accent-green);"></i>Ripristina</button>
-        <input type="file" id="importFile" style="display:none" accept=".json" onchange="importSpots(event)">
+        <input type="file" id="importFile" style="display:none" accept=".json" onchange="handleCustomImport(event)">
       </div>
 
       <div id="savedSpotsContainer"></div>
@@ -1053,17 +1097,23 @@
           </select>
         </div>
 
-        <!-- RAGGIO DI LANCIO / PASTURA (PUNTO 4) -->
         <div class="form-group" style="flex:1;">
           <label style="font-size:0.8rem; font-weight:800; color:var(--text-muted); margin-left:4px;">RAGGIO LANCIO (M)</label>
           <input type="number" class="form-control" id="spotRadius" placeholder="Es. 30 (opzionale)">
         </div>
       </div>
 
+      <!-- SELEZIONE MULTIPLA SPECIE TARGET AUTOMATICA (ACQUA DOLCE VS SALATA) -->
       <div class="form-group">
-        <label style="font-size:0.8rem; font-weight:800; color:var(--text-muted); margin-left:4px;">SPECIE TARGET</label>
-        <input type="text" class="form-control" id="spotTarget" autocomplete="off" placeholder="Inizia a digitare (es. Carpa, Luccio, Spigola...)">
-        <div id="autocomplete-list" class="autocomplete-items"></div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+          <label style="font-size:0.8rem; font-weight:800; color:var(--text-muted); margin-left:4px;">SPECIE TARGET (SELEZIONE MULTIPLA)</label>
+          <span id="waterEnvironmentBadge" style="font-size:0.7rem; font-weight:800; padding:2px 8px; border-radius:10px; background:rgba(34,197,94,0.2); color:var(--accent-green);">Acqua Dolce</span>
+        </div>
+        <div class="species-selector-box" id="speciesSelectorBox"></div>
+        <div style="display:flex; gap:8px; margin-top:8px;">
+          <input type="text" class="form-control" id="customSpeciesInput" placeholder="Aggiungi altra specie a mano..." style="margin-top:0; padding:10px 14px; font-size:0.9rem;">
+          <button type="button" class="btn-backup" style="flex:0 0 auto; padding:10px 16px; background:var(--accent-blue); color:#fff;" onclick="addCustomSpecies()"><i class="fa-solid fa-plus"></i></button>
+        </div>
       </div>
 
       <!-- Foto Postazione da Riva -->
@@ -1153,12 +1203,12 @@
     </div>
   </div>
 
-  <!-- MODAL PRONTUARIO NODI & TABELLE (PUNTO 1) -->
+  <!-- MODAL PRONTUARIO NODI & TABELLE -->
   <div class="modal" id="modalKnots">
     <div class="modal-drag-handle"></div>
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
       <button type="button" style="background:none; border:none; font-size:1.8rem; color:var(--text-muted); cursor:pointer;" onclick="closeKnotsModal()"><i class="fa-solid fa-xmark"></i></button>
-      <h4 style="font-size:1.2rem; color:#fff; font-weight:900;">Nodi & Tabelle Fili</h4>
+      <h4 style="font-size:1.2rem; color:#fff; font-weight:900;">Nodi, Fili & Normativa</h4>
       <div style="width:30px;"></div>
     </div>
 
@@ -1185,25 +1235,35 @@
       </table>
     </div>
 
-    <!-- Nodi Essenziali -->
-    <div class="knot-card">
-      <div class="knot-title"><span>1. Nodo Palomar</span><span style="font-size:0.75rem; color:var(--accent-green);">Ami, Moschettoni, Girelle</span></div>
-      <p style="font-size:0.8rem; color:var(--text-muted); line-height:1.4;">Doppia il filo nell'occhiello, fai un nodo semplice con l'asola, passa l'amo all'interno dell'asola, inumidisci e serra con forza. Resistenza 95%.</p>
+    <!-- MISURE MINIME E DIVIETI -->
+    <div class="widget-card" style="padding:14px; margin-bottom:16px;">
+      <div class="widget-title" style="margin-bottom:8px;"><i class="fa-solid fa-shield-halved" style="color:var(--accent-green);"></i> Misure Minime & Divieti (Riva)</div>
+      <table style="width:100%; border-collapse:collapse; font-size:0.8rem; text-align:center;">
+        <thead>
+          <tr style="color:var(--accent-green); border-bottom:1px solid rgba(255,255,255,0.1);">
+            <th style="padding:6px 0;">Specie</th>
+            <th style="padding:6px 0;">Misura Min.</th>
+            <th style="padding:6px 0;">Periodo Frega / Divieto</th>
+          </tr>
+        </thead>
+        <tbody style="color:var(--text-light); opacity:0.9;">
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:6px 0;">Trota Fario</td><td>22-25 cm</td><td>1Ott - 1Feb (variabile)</td></tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:6px 0;">Luccio</td><td>50-60 cm</td><td>1Feb - 31Mar</td></tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:6px 0;">Black Bass</td><td>30 cm</td><td>1Apr - 31Mag (Catch&Release)</td></tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:6px 0;">Barbo / Cavedano</td><td>N.D. / 20cm</td><td>1Mag - 30Giu</td></tr>
+          <tr><td style="padding:6px 0;">Spigola (Mare)</td><td>25 cm</td><td>Nessun divieto fisso</td></tr>
+        </tbody>
+      </table>
     </div>
 
     <div class="knot-card">
-      <div class="knot-title"><span>2. Nodo FG (Treccia ⇄ Fluorocarbon)</span><span style="font-size:0.75rem; color:var(--accent-orange);">Top Spinning / Mare</span></div>
-      <p style="font-size:0.8rem; color:var(--text-muted); line-height:1.4;">Treccia tesa con 16-20 spire alternate a croce sul fluorocarbon, blocco con mezzo collo, serrare e chiudere con rizoma. Il più sottile per passare nei passanti.</p>
+      <div class="knot-title"><span>1. Nodo Palomar</span><span style="font-size:0.75rem; color:var(--accent-green);">Ami, Moschettoni</span></div>
+      <p style="font-size:0.8rem; color:var(--text-muted); line-height:1.4;">Doppia il filo nell'occhiello, fai un nodo semplice, passa l'amo nell'asola, inumidisci e serra. Resistenza 95%.</p>
     </div>
 
     <div class="knot-card">
-      <div class="knot-title"><span>3. Nodo Albright / Mahin</span><span style="font-size:0.75rem; color:var(--accent-light-blue);">Shock Leader Rapido</span></div>
-      <p style="font-size:0.8rem; color:var(--text-muted); line-height:1.4;">Crea un'asola col terminale grosso, infila la treccia e fai 8-10 spire a salire e 4 a scendere, ripassa dall'asola nello stesso verso, inumidisci e tira.</p>
-    </div>
-
-    <div class="knot-card">
-      <div class="knot-title"><span>4. Nodo Senza Nodo (Knotless)</span><span style="font-size:0.75rem; color:var(--accent-amber);">Carpfishing & Hair Rig</span></div>
-      <p style="font-size:0.8rem; color:var(--text-muted); line-height:1.4;">Infila il trecciato da dietro l'occhiello, lascia l'asola dell'innesco, avvolgi 7-8 spire fitte sul gambo e ripassa dal retro dell'occhiello verso la punta.</p>
+      <div class="knot-title"><span>2. Nodo FG (Treccia ⇄ Fluorocarbon)</span><span style="font-size:0.75rem; color:var(--accent-orange);">Top Spinning</span></div>
+      <p style="font-size:0.8rem; color:var(--text-muted); line-height:1.4;">Treccia tesa con 16-20 spire a croce sul fluorocarbon, blocco con mezzo collo e nodo di chiusura.</p>
     </div>
   </div>
 
@@ -1249,7 +1309,7 @@
       setTimeout(() => installBanner.style.display = 'none', 400);
     }
 
-    // --- MODALITÀ NOTTURNA ROSSA (PUNTO 1) ---
+    // --- MODALITÀ NOTTURNA ROSSA ---
     function toggleNightMode() {
       document.body.classList.toggle('night-mode');
       const isNight = document.body.classList.contains('night-mode');
@@ -1265,37 +1325,71 @@
     function openKnotsModal() { document.getElementById('modalKnots').classList.add('open'); }
     function closeKnotsModal() { document.getElementById('modalKnots').classList.remove('open'); }
 
-    // --- AUTOCOMPLETE SPECIE TARGET ---
-    const speciesArray = ["Amur (Carpa Erbivora)", "Anguilla", "Barbo", "Carassio", "Carpa Comune", "Carpa Specchio", "Cavedano", "Cheppia", "Luccio", "Luccioperca (Sandra)", "Persico Reale", "Persico Trota (Black Bass)", "Pesce Gatto", "Scardola", "Siluro", "Storione", "Temolo", "Tinca", "Trota Fario", "Trota Iridea", "Trota Marmorata", "Vairone", "Spigola / Branzino", "Orata", "Sarago", "Mormora", "Serra", "Leccia", "Palamita", "Dentice", "Cefalo"];
-    const targetInput = document.getElementById('spotTarget');
-    const autoList = document.getElementById('autocomplete-list');
+    // --- LISTE SPECIE: ACQUA DOLCE VS SALATA ---
+    const freshwaterSpecies = ["Amur", "Anguilla", "Barbo", "Carassio", "Carpa Comune", "Carpa Specchio", "Cavedano", "Cheppia", "Luccio", "Luccioperca", "Persico Reale", "Black Bass", "Pesce Gatto", "Scardola", "Siluro", "Storione", "Temolo", "Tinca", "Trota Fario", "Trota Iridea", "Trota Marmorata", "Vairone"];
+    const saltwaterSpecies = ["Spigola / Branzino", "Orata", "Sarago", "Mormora", "Serra", "Leccia", "Palamita", "Dentice", "Cefalo", "Ombrina", "Triglia", "Grongo", "Murena", "Sgombro", "Lattarino"];
 
-    function updateAutocomplete() {
-        const val = targetInput.value.toLowerCase();
-        autoList.innerHTML = '';
-        if (!val) { autoList.style.display = 'none'; return; }
-        
-        let matches = speciesArray.filter(s => s.toLowerCase().includes(val));
-        if (matches.length === 0) { autoList.style.display = 'none'; return; }
-        
-        autoList.style.display = 'block';
-        matches.forEach(match => {
-            const d = document.createElement('div');
-            d.innerHTML = match;
-            d.addEventListener('pointerdown', function(e) {
-                e.preventDefault(); 
-                targetInput.value = match;
-                autoList.style.display = 'none';
-            });
-            autoList.appendChild(d);
-        });
+    let currentEnvironmentSpecies = freshwaterSpecies;
+    let selectedSpeciesSet = new Set();
+
+    function renderSpeciesSelector(selectedList = []) {
+      const box = document.getElementById('speciesSelectorBox');
+      selectedSpeciesSet = new Set(selectedList);
+
+      let html = '';
+      currentEnvironmentSpecies.forEach(specie => {
+        const isSel = selectedSpeciesSet.has(specie);
+        html += `<div class="species-chip ${isSel ? 'selected' : ''}" onclick="toggleSpeciesChip('${specie}', this)">${specie}</div>`;
+      });
+
+      selectedSpeciesSet.forEach(specie => {
+        if (!currentEnvironmentSpecies.includes(specie)) {
+          html += `<div class="species-chip selected" onclick="toggleSpeciesChip('${specie}', this)">${specie} <i class="fa-solid fa-xmark"></i></div>`;
+        }
+      });
+
+      box.innerHTML = html;
     }
 
-    targetInput.addEventListener('input', updateAutocomplete);
-    targetInput.addEventListener('focus', updateAutocomplete);
-    targetInput.addEventListener('blur', () => { setTimeout(() => { autoList.style.display = 'none'; }, 200); });
+    function toggleSpeciesChip(specie, el) {
+      if (selectedSpeciesSet.has(specie)) {
+        selectedSpeciesSet.delete(specie);
+        el.classList.remove('selected');
+      } else {
+        selectedSpeciesSet.add(specie);
+        el.classList.add('selected');
+      }
+    }
 
-    // --- COMPRESSIONE E GESTIONE FOTO LOCALI ---
+    function addCustomSpecies() {
+      const input = document.getElementById('customSpeciesInput');
+      const val = input.value.trim();
+      if (!val) return;
+      selectedSpeciesSet.add(val);
+      input.value = '';
+      renderSpeciesSelector(Array.from(selectedSpeciesSet));
+    }
+
+    function detectWaterEnvironment(lat, lng, zoneStr) {
+      const badge = document.getElementById('waterEnvironmentBadge');
+      const lowerZone = zoneStr.toLowerCase();
+      const isSea = lowerZone.includes('mare') || lowerZone.includes('spiaggia') || lowerZone.includes('marina') || lowerZone.includes('porto') || lowerZone.includes('costa') || lowerZone.includes('golfo');
+
+      if (isSea) {
+        currentEnvironmentSpecies = saltwaterSpecies;
+        badge.innerText = "Acqua Salata (Mare)";
+        badge.style.background = "rgba(2,132,199,0.2)";
+        badge.style.color = "var(--accent-light-blue)";
+      } else {
+        currentEnvironmentSpecies = freshwaterSpecies;
+        badge.innerText = "Acqua Dolce (Fiume/Lago)";
+        badge.style.background = "rgba(34,197,94,0.2)";
+        badge.style.color = "var(--accent-green)";
+      }
+      renderSpeciesSelector(Array.from(selectedSpeciesSet));
+    }
+
+    // --- COMPRESSIONE FOTO LOCALI ---
     function handlePhotoUpload(event, hiddenInputId, previewBoxId) {
       const file = event.target.files[0];
       if (!file) return;
@@ -1345,7 +1439,7 @@
       `;
     }
 
-    // --- MAPPA E LIVELLI (Leaflet) ---
+    // --- MAPPA E LIVELLI ---
     const map = L.map('map', { zoomControl: false, attributionControl: false }).setView([41.9028, 12.4964], 6);
 
     const satLayer = L.layerGroup([
@@ -1364,19 +1458,15 @@
       isSat = !isSat;
     }
 
-    // --- GEOCODER (RICERCA LUOGHI SULLA MAPPA) ---
     function toggleMapSearch() {
       const overlay = document.getElementById('mapSearchOverlay');
       overlay.classList.toggle('open');
-      if (overlay.classList.contains('open')) {
-        document.getElementById('mapSearchInput').focus();
-      }
+      if (overlay.classList.contains('open')) document.getElementById('mapSearchInput').focus();
     }
 
     function performMapSearch() {
       const q = document.getElementById('mapSearchInput').value;
       if (!q) return;
-      
       fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q)}&limit=1`)
         .then(res => res.json())
         .then(data => {
@@ -1384,16 +1474,10 @@
             map.flyTo([data[0].lat, data[0].lon], 13);
             toggleMapSearch();
             document.getElementById('mapSearchInput').value = '';
-          } else {
-            alert("Luogo non trovato. Prova con una città o indirizzo più specifico.");
-          }
-        })
-        .catch(err => {
-          alert("Errore di connessione per la ricerca.");
-        });
+          } else { alert("Luogo non trovato."); }
+        }).catch(() => { alert("Errore di connessione."); });
     }
 
-    // --- ELENCO ICONE ---
     const iconList = [
       { id: '📍', type: 'emoji', name: 'Pin Esatto' },
       { id: '🐟', type: 'emoji', name: 'Pesce / Spot' },
@@ -1426,10 +1510,8 @@
       const card = document.createElement('div');
       card.className = `icon-card ${index === 0 ? 'selected' : ''}`;
       card.dataset.icon = item.id;
-      
       let iconHtml = item.type === 'emoji' ? `<span class="emoji-icon">${item.id}</span>` : `<i class="fa-solid ${item.id}"></i>`;
       card.innerHTML = `${iconHtml}<span class="name">${item.name}</span>`;
-      
       card.onclick = () => {
         document.querySelectorAll('.icon-card').forEach(c => c.classList.remove('selected'));
         card.classList.add('selected');
@@ -1441,35 +1523,26 @@
     });
 
     function selectColor(colorHex, el) {
-      document.querySelectorAll('.color-opt').forEach(c => {
-        c.classList.remove('selected');
-        c.innerHTML = '';
-      });
-      if(el) {
-        el.classList.add('selected');
-        el.innerHTML = colorHex === '#f8fafc' ? '<i class="fa-solid fa-check" style="color:#0f172a"></i>' : '<i class="fa-solid fa-check"></i>';
-      }
+      document.querySelectorAll('.color-opt').forEach(c => { c.classList.remove('selected'); c.innerHTML = ''; });
+      if(el) { el.classList.add('selected'); el.innerHTML = colorHex === '#f8fafc' ? '<i class="fa-solid fa-check" style="color:#0f172a"></i>' : '<i class="fa-solid fa-check"></i>'; }
       selectedColor = colorHex;
     }
 
-    // --- SPOT RAPIDO AL VOLO 1-TAP (PUNTO 1) ---
     function quickDropSpot() {
       if (!navigator.geolocation) { alert("GPS non disponibile."); return; }
-      
       navigator.geolocation.getCurrentPosition((pos) => {
         const { latitude: lat, longitude: lng } = pos.coords;
         const now = new Date();
         const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        
         const newSpot = {
           id: Date.now().toString(),
           name: `Spot Rapido (${timeStr})`,
           zone: 'In fase di rilevamento...',
           technique: '',
-          target: '',
+          targets: [],
           photo: '',
           radius: null,
-          notes: `Salvato al volo alle ${timeStr} del ${now.toLocaleDateString()}`,
+          notes: `Salvato al volo alle ${timeStr}`,
           color: '#eab308',
           icon: '📍',
           lat, lng,
@@ -1493,80 +1566,53 @@
         localStorage.setItem('cescospot_data', JSON.stringify(spots));
         renderMapSpots();
         map.flyTo([lat, lng], 16);
-        alert(`⚡ Spot salvato al volo nella tua posizione!`);
-      }, (err) => {
-        alert("Attiva il GPS per salvare lo spot al volo!");
-      }, { enableHighAccuracy: true });
+        alert(`⚡ Spot salvato al volo!`);
+      }, () => { alert("Attiva il GPS."); }, { enableHighAccuracy: true });
     }
 
-    // --- CONDIVISIONE SPOT ---
     function shareSpot(name, lat, lng) {
       const shareUrl = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
       if (navigator.share) {
-        navigator.share({
-          title: 'CescoSpot PRO',
-          text: `Guarda questo spot di pesca: ${name}! 🎣`,
-          url: shareUrl
-        }).catch(err => console.log('Condivisione annullata', err));
-      } else {
-        prompt("Copia questo link per condividere lo spot:", shareUrl);
-      }
+        navigator.share({ title: 'CescoSpot PRO', text: `Spot di pesca: ${name}! 🎣`, url: shareUrl }).catch(() => {});
+      } else { prompt("Copia questo link:", shareUrl); }
     }
 
-    // --- ESPORTAZIONE GPX (PUNTO 4) ---
     function exportGPX() {
-      if (spots.length === 0) { alert("Nessuno spot da esportare in GPX."); return; }
-      
+      if (spots.length === 0) { alert("Nessuno spot da esportare."); return; }
       let gpx = `<?xml version="1.0" encoding="UTF-8"?>\n<gpx version="1.1" creator="CescoSpot PRO" xmlns="http://www.topografix.com/GPX/1/1">\n`;
       spots.forEach(s => {
         gpx += `  <wpt lat="${s.lat}" lon="${s.lng}">\n`;
         gpx += `    <name>${escapeXml(s.name)}</name>\n`;
-        gpx += `    <desc>${escapeXml((s.technique ? 'Tecnica: ' + s.technique + ' | ' : '') + (s.target ? 'Target: ' + s.target + ' | ' : '') + (s.notes || ''))}</desc>\n`;
-        gpx += `    <sym>Fishing Hot Spot</sym>\n`;
+        gpx += `    <desc>${escapeXml((s.technique ? 'Tecnica: ' + s.technique + ' | ' : '') + (s.targets ? 'Target: ' + s.targets.join(', ') + ' | ' : '') + (s.notes || ''))}</desc>\n`;
         gpx += `  </wpt>\n`;
       });
       gpx += `</gpx>`;
-
       const blob = new Blob([gpx], { type: "application/gpx+xml" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
-      a.href = url;
-      a.download = `CescoSpot_${new Date().toISOString().slice(0,10)}.gpx`;
-      document.body.appendChild(a);
-      a.click();
+      a.href = url; a.download = `CescoSpot_${new Date().toISOString().slice(0,10)}.gpx`;
+      document.body.appendChild(a); a.click();
       setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 100);
     }
 
     function escapeXml(unsafe) {
       return unsafe.replace(/[<>&'"]/g, function (c) {
-        switch (c) {
-          case '<': return '&lt;';
-          case '>': return '&gt;';
-          case '&': return '&amp;';
-          case '\'': return '&apos;';
-          case '"': return '&quot;';
-        }
+        switch (c) { case '<': return '&lt;'; case '>': return '&gt;'; case '&': return '&amp;'; case '\'': return '&apos;'; case '"': return '&quot;'; }
       });
     }
 
-    // --- BACKUP JSON ---
     function exportSpots() {
       if (spots.length === 0) { alert("Nessuno spot da esportare."); return; }
-      try {
-        const dataStr = JSON.stringify(spots, null, 2);
-        const blob = new Blob([dataStr], { type: "application/json" });
-        const url = URL.createObjectURL(blob);
-        const downloadAnchor = document.createElement('a');
-        downloadAnchor.href = url;
-        const dateStr = new Date().toISOString().slice(0,10);
-        downloadAnchor.download = `CescoSpot_Backup_${dateStr}.json`;
-        document.body.appendChild(downloadAnchor);
-        downloadAnchor.click();
-        setTimeout(() => { document.body.removeChild(downloadAnchor); URL.revokeObjectURL(url); }, 100);
-      } catch (err) { alert("Errore durante l'esportazione."); }
+      const dataStr = JSON.stringify(spots, null, 2);
+      const blob = new Blob([dataStr], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = `CescoSpot_Backup_${new Date().toISOString().slice(0,10)}.json`;
+      document.body.appendChild(a); a.click();
+      setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 100);
     }
 
-    function importSpots(event) {
+    function handleCustomImport(event) {
       const file = event.target.files[0];
       if (!file) return;
       const reader = new FileReader();
@@ -1574,16 +1620,27 @@
         try {
           const importedData = JSON.parse(e.target.result);
           if (Array.isArray(importedData)) {
-            if (confirm(`Trovati ${importedData.length} spot. Vuoi sostituire gli attuali o unirli?\n\n[OK] = Sostituisci\n[Annulla] = Unisci`)) {
-              spots = importedData;
+            const userChoice = confirm(
+              `Trovati ${importedData.length} spot nel file.\n\n` +
+              `👉 Premi [ OK ] per UNIRE i nuovi spot ai tuoi attuali.\n` +
+              `👉 Premi [ ANNULLA ] per SOSTITUIRE TUTTO.`
+            );
+            if (userChoice) {
+              let addedCount = 0;
+              importedData.forEach(imp => { 
+                if (!spots.some(s => s.id === imp.id)) { spots.push(imp); addedCount++; }
+              });
+              alert(`Importazione completata! Aggiunti ${addedCount} nuovi spot.`);
             } else {
-              importedData.forEach(imp => { if (!spots.some(s => s.id === imp.id)) spots.push(imp); });
+              if (confirm("Confermi di voler SOSTITUIRE tutti i tuoi spot attuali?")) {
+                spots = importedData;
+                alert("Backup sostituito con successo.");
+              }
             }
             localStorage.setItem('cescospot_data', JSON.stringify(spots));
             renderMapSpots();
-            alert("Backup importato con successo!");
           } else { alert("File non compatibile."); }
-        } catch (err) { alert("File JSON danneggiato."); }
+        } catch (err) { alert("File JSON non valido."); }
         event.target.value = ''; 
       };
       reader.readAsText(file);
@@ -1601,7 +1658,6 @@
       window.open(`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`, '_blank');
     }
 
-    // --- MODAL & CRUD SPOT ---
     function openAddSpotModal(lat, lng) {
       editingSpotId = null;
       document.getElementById('modalTitle').innerText = "Salva Posizione";
@@ -1614,21 +1670,26 @@
       document.getElementById('spotZone').value = 'Ricerca zona in corso...';
       document.getElementById('spotTechnique').value = '';
       document.getElementById('spotRadius').value = '';
-      document.getElementById('spotTarget').value = '';
       document.getElementById('spotNotes').value = '';
       removePhoto('spotPhotoData', 'spotPhotoBox');
+      renderSpeciesSelector([]);
 
       fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${center.lat}&lon=${center.lng}&zoom=14`)
         .then(res => res.json())
         .then(data => {
+          let zoneStr = 'Generale';
           if(data && data.address) {
             let city = data.address.city || data.address.town || data.address.village || data.address.county || '';
             let state = data.address.state || '';
-            let zoneStr = [city, state].filter(Boolean).join(', ');
-            document.getElementById('spotZone').value = zoneStr || 'Zona Non Definita';
-          } else { document.getElementById('spotZone').value = ''; }
+            zoneStr = [city, state].filter(Boolean).join(', ') || 'Zona Non Definita';
+          }
+          document.getElementById('spotZone').value = zoneStr;
+          detectWaterEnvironment(center.lat, center.lng, zoneStr);
         })
-        .catch(() => { document.getElementById('spotZone').value = ''; });
+        .catch(() => { 
+          document.getElementById('spotZone').value = 'Generale';
+          detectWaterEnvironment(center.lat, center.lng, '');
+        });
       
       document.getElementById('modalAddSpot').classList.add('open');
     }
@@ -1644,7 +1705,7 @@
       const zone = document.getElementById('spotZone').value.trim() || 'Generale';
       const technique = document.getElementById('spotTechnique').value || '';
       const radius = parseFloat(document.getElementById('spotRadius').value) || null;
-      const target = document.getElementById('spotTarget').value || '';
+      const targets = Array.from(selectedSpeciesSet);
       const photo = document.getElementById('spotPhotoData').value || '';
       const notes = document.getElementById('spotNotes').value || '';
       const lat = parseFloat(document.getElementById('tempLat').value);
@@ -1653,21 +1714,10 @@
       if (editingSpotId) {
         const idx = spots.findIndex(s => s.id === editingSpotId);
         if (idx !== -1) {
-          spots[idx] = { 
-            ...spots[idx], 
-            name, zone, technique, radius, target, photo, notes, 
-            color: selectedColor, icon: selectedIcon 
-          };
+          spots[idx] = { ...spots[idx], name, zone, technique, radius, targets, photo, notes, color: selectedColor, icon: selectedIcon };
         }
       } else {
-        spots.push({ 
-          id: Date.now().toString(), 
-          name, zone, technique, radius, target, photo, notes, 
-          color: selectedColor, icon: selectedIcon, 
-          lat, lng, 
-          catches: [], 
-          date: new Date().toLocaleDateString() 
-        });
+        spots.push({ id: Date.now().toString(), name, zone, technique, radius, targets, photo, notes, color: selectedColor, icon: selectedIcon, lat, lng, catches: [], date: new Date().toLocaleDateString() });
       }
       
       localStorage.setItem('cescospot_data', JSON.stringify(spots));
@@ -1688,18 +1738,16 @@
       document.getElementById('spotZone').value = spot.zone || 'Generale';
       document.getElementById('spotTechnique').value = spot.technique || '';
       document.getElementById('spotRadius').value = spot.radius || '';
-      document.getElementById('spotTarget').value = spot.target || '';
       document.getElementById('spotNotes').value = spot.notes || '';
       document.getElementById('tempLat').value = spot.lat;
       document.getElementById('tempLng').value = spot.lng;
+
+      detectWaterEnvironment(spot.lat, spot.lng, spot.zone || '');
+      renderSpeciesSelector(spot.targets || (spot.target ? [spot.target] : []));
       
       if (spot.photo) {
         document.getElementById('spotPhotoData').value = spot.photo;
-        const box = document.getElementById('spotPhotoBox');
-        box.innerHTML = `
-          <img src="${spot.photo}">
-          <button type="button" class="btn-remove-photo" onclick="event.stopPropagation(); removePhoto('spotPhotoData', 'spotPhotoBox')"><i class="fa-solid fa-trash"></i></button>
-        `;
+        document.getElementById('spotPhotoBox').innerHTML = `<img src="${spot.photo}"><button type="button" class="btn-remove-photo" onclick="event.stopPropagation(); removePhoto('spotPhotoData', 'spotPhotoBox')"><i class="fa-solid fa-trash"></i></button>`;
       } else {
         removePhoto('spotPhotoData', 'spotPhotoBox');
       }
@@ -1710,7 +1758,6 @@
         if(c.dataset.icon === spot.icon) {
           c.classList.add('selected');
           selectedIcon = spot.icon;
-          selectedIconType = spot.icon.startsWith('fa-') ? 'fa' : 'emoji';
           document.getElementById('selectedIconLabel').innerText = iconList.find(i => i.id === spot.icon)?.name || '';
         }
       });
@@ -1718,18 +1765,16 @@
     }
 
     function deleteSpot(id) {
-      if(confirm("Sei sicuro di voler eliminare questo spot?")) {
+      if(confirm("Eliminare definitivamente questo spot?")) {
         spots = spots.filter(s => s.id !== id);
         localStorage.setItem('cescospot_data', JSON.stringify(spots));
         renderMapSpots();
       }
     }
 
-    // --- DIARIO CATTURE (LOGBOOK) ---
     function openLogbook(spotId) {
       const spot = spots.find(s => s.id === spotId);
       if (!spot) return;
-
       document.getElementById('catchSpotId').value = spotId;
       document.getElementById('logbookTitle').innerText = `Catture: ${spot.name}`;
       document.getElementById('catchSpecies').value = '';
@@ -1737,14 +1782,11 @@
       document.getElementById('catchLength').value = '';
       document.getElementById('catchLure').value = '';
       removePhoto('catchPhotoData', 'catchPhotoBox');
-
       renderCatchesList(spot);
       document.getElementById('modalLogbook').classList.add('open');
     }
 
-    function closeLogbookModal() {
-      document.getElementById('modalLogbook').classList.remove('open');
-    }
+    function closeLogbookModal() { document.getElementById('modalLogbook').classList.remove('open'); }
 
     function saveCatch() {
       const spotId = document.getElementById('catchSpotId').value;
@@ -1752,7 +1794,7 @@
       if (!spot) return;
 
       const species = document.getElementById('catchSpecies').value.trim();
-      if (!species) { alert("Inserisci la specie della cattura!"); return; }
+      if (!species) { alert("Inserisci la specie!"); return; }
 
       const weight = document.getElementById('catchWeight').value;
       const length = document.getElementById('catchLength').value;
@@ -1760,7 +1802,6 @@
       const photo = document.getElementById('catchPhotoData').value;
 
       if (!spot.catches) spot.catches = [];
-
       spot.catches.unshift({
         id: Date.now().toString(),
         species,
@@ -1775,7 +1816,6 @@
       localStorage.setItem('cescospot_data', JSON.stringify(spots));
       renderCatchesList(spot);
       renderSavedSpotsUI();
-
       document.getElementById('catchSpecies').value = '';
       document.getElementById('catchWeight').value = '';
       document.getElementById('catchLength').value = '';
@@ -1786,7 +1826,7 @@
     function deleteCatch(spotId, catchId) {
       const spot = spots.find(s => s.id === spotId);
       if (!spot || !spot.catches) return;
-      if (confirm("Vuoi eliminare questa cattura dal diario?")) {
+      if (confirm("Eliminare questa cattura?")) {
         spot.catches = spot.catches.filter(c => c.id !== catchId);
         localStorage.setItem('cescospot_data', JSON.stringify(spots));
         renderCatchesList(spot);
@@ -1797,29 +1837,23 @@
     function renderCatchesList(spot) {
       const container = document.getElementById('catchesListContainer');
       if (!spot.catches || spot.catches.length === 0) {
-        container.innerHTML = `<p style="text-align:center; color:var(--text-muted); font-size:0.9rem; padding:10px;">Nessuna cattura registrata per questo spot. Registrane una qui sotto!</p>`;
+        container.innerHTML = `<p style="text-align:center; color:var(--text-muted); font-size:0.9rem; padding:10px;">Nessuna cattura registrata.</p>`;
         return;
       }
-
       container.innerHTML = spot.catches.map(c => `
         <div class="catch-item">
-          <div class="catch-thumb">
-            ${c.photo ? `<img src="${c.photo}">` : `<i class="fa-solid fa-fish" style="font-size:1.6rem; color:var(--text-muted);"></i>`}
-          </div>
+          <div class="catch-thumb">${c.photo ? `<img src="${c.photo}">` : `<i class="fa-solid fa-fish" style="font-size:1.6rem; color:var(--text-muted);"></i>`}</div>
           <div style="flex:1; overflow:hidden;">
             <b style="color:#fff; font-size:1rem;">${c.species}</b>
-            <div style="font-size:0.8rem; color:var(--accent-orange); font-weight:700;">
-              ${c.weight ? `${c.weight} kg` : ''} ${c.length ? `• ${c.length} cm` : ''}
-            </div>
+            <div style="font-size:0.8rem; color:var(--accent-orange); font-weight:700;">${c.weight ? `${c.weight} kg` : ''} ${c.length ? `• ${c.length} cm` : ''}</div>
             ${c.lure ? `<div style="font-size:0.75rem; color:var(--text-muted);">Esca: ${c.lure}</div>` : ''}
-            <div style="font-size:0.7rem; color:var(--text-muted); margin-top:2px;">${c.date} alle ${c.time}</div>
+            <div style="font-size:0.7rem; color:var(--text-muted); margin-top:2px;">${c.date} ${c.time}</div>
           </div>
           <button type="button" style="background:none; border:none; color:var(--accent-red); font-size:1.1rem; padding:8px; cursor:pointer;" onclick="deleteCatch('${spot.id}', '${c.id}')"><i class="fa-solid fa-trash"></i></button>
         </div>
       `).join('');
     }
 
-    // --- RENDER MAPPA & ARCHIVIO ---
     function renderMapSpots() {
       Object.values(mapMarkers).forEach(m => map.removeLayer(m));
       Object.values(mapCircles).forEach(c => map.removeLayer(c));
@@ -1833,40 +1867,24 @@
 
         const customIcon = L.divIcon({
           className: '',
-          html: `
-            <div class="custom-map-icon" style="background-color: ${s.color}; border-color: ${markerBorder};">
-                ${iconHtml}
-                <div style="position: absolute; bottom: -14px; left: 50%; transform: translateX(-50%); border-left: 8px solid transparent; border-right: 8px solid transparent; border-top: 14px solid ${s.color}; filter: drop-shadow(0px 3px 2px rgba(0,0,0,0.5));"></div>
-            </div>`,
-          iconSize: [42, 56],
-          iconAnchor: [21, 54],
-          popupAnchor: [0, -45]
+          html: `<div class="custom-map-icon" style="background-color: ${s.color}; border-color: ${markerBorder};">${iconHtml}<div style="position: absolute; bottom: -14px; left: 50%; transform: translateX(-50%); border-left: 8px solid transparent; border-right: 8px solid transparent; border-top: 14px solid ${s.color};"></div></div>`,
+          iconSize: [42, 56], iconAnchor: [21, 54], popupAnchor: [0, -45]
         });
 
+        const targetsList = s.targets && s.targets.length > 0 ? s.targets.join(', ') : (s.target || '');
         let popup = `<b style="font-size:1.1rem;">${s.name}</b><br><small>Zona: ${s.zone || 'Generale'}</small>`;
         if(s.technique) popup += `<br><small style="color:#f97316;">Tecnica: ${s.technique}</small>`;
-        if(s.radius) popup += `<br><small style="color:#38bdf8;">Raggio lancio/pastura: ${s.radius}m</small>`;
-        if(s.target) popup += `<br><small>Target: ${s.target}</small>`;
-        if(s.catches && s.catches.length > 0) popup += `<br><small style="color:#22c55e;"><b>Catture nel diario: ${s.catches.length}</b></small>`;
+        if(s.radius) popup += `<br><small style="color:#38bdf8;">Raggio lancio: ${s.radius}m</small>`;
+        if(targetsList) popup += `<br><small>Target: ${targetsList}</small>`;
+        if(s.catches && s.catches.length > 0) popup += `<br><small style="color:#22c55e;"><b>Catture: ${s.catches.length}</b></small>`;
         if(s.notes) popup += `<br><small><i>${s.notes}</i></small>`;
 
-        const m = L.marker([s.lat, s.lng], { icon: customIcon }).addTo(map).bindPopup(popup);
-        mapMarkers[s.id] = m;
+        mapMarkers[s.id] = L.marker([s.lat, s.lng], { icon: customIcon }).addTo(map).bindPopup(popup);
 
-        // Cerchio Raggio di Lancio / Pastura (Punto 4)
         if (s.radius && s.radius > 0) {
-          const circle = L.circle([s.lat, s.lng], {
-            radius: s.radius,
-            color: s.color || '#38bdf8',
-            fillColor: s.color || '#38bdf8',
-            fillOpacity: 0.15,
-            weight: 1.5,
-            dashArray: '4, 6'
-          }).addTo(map);
-          mapCircles[s.id] = circle;
+          mapCircles[s.id] = L.circle([s.lat, s.lng], { radius: s.radius, color: s.color || '#38bdf8', fillColor: s.color || '#38bdf8', fillOpacity: 0.15, weight: 1.5, dashArray: '4, 6' }).addTo(map);
         }
       });
-
       renderSavedSpotsUI();
     }
 
@@ -1894,7 +1912,7 @@
       if(!container) return;
       
       if(spots.length === 0) {
-        container.innerHTML = '<p style="color:var(--text-muted); text-align:center; margin-top:30px; font-weight:600;">Nessun spot salvato. Aggiungine uno dalla Mappa!</p>';
+        container.innerHTML = '<p style="color:var(--text-muted); text-align:center; margin-top:30px; font-weight:600;">Nessun spot salvato.</p>';
         return;
       }
 
@@ -1906,7 +1924,6 @@
       });
 
       container.innerHTML = '';
-      
       Object.keys(grouped).sort().forEach((zone, index) => {
         const safeZoneId = 'zone_' + index; 
         let htmlSec = `
@@ -1923,14 +1940,15 @@
           const iconHtml = isEmoji ? `<span style="font-size:1.4rem;">${s.icon}</span>` : `<i class="fa-solid ${s.icon}"></i>`;
           const markerBorder = s.color === '#f8fafc' ? '#0f172a' : 'white';
           const catchCount = s.catches ? s.catches.length : 0;
+          const targetsList = s.targets && s.targets.length > 0 ? s.targets.join(', ') : (s.target || '');
+          const targetsSearch = s.targets ? s.targets.join(' ') : (s.target || '');
 
           htmlSec += `
             <div class="widget-card spot-item" 
                  data-technique="${s.technique || ''}"
-                 data-search-text="${(s.name + ' ' + s.target + ' ' + s.technique + ' ' + s.notes).toLowerCase()}" 
+                 data-search-text="${(s.name + ' ' + targetsSearch + ' ' + s.technique + ' ' + s.notes).toLowerCase()}" 
                  style="display:flex; justify-content:space-between; align-items:center; gap:12px; padding:16px; margin-bottom:12px; background:rgba(15,23,42,0.8); border-radius:16px; border:1px solid rgba(255,255,255,0.05);">
               
-              <!-- Sezione Info Spot Espansa -->
               <div onclick="focusSpot('${s.id}')" style="display:flex; align-items:flex-start; gap:12px; flex:1; min-width:0; cursor:pointer;">
                 <div class="custom-map-icon" style="background-color: ${s.color}; border-color: ${markerBorder}; position:static; width:44px; height:44px; font-size:1.2rem; flex-shrink:0; margin-top:2px;">${iconHtml}</div>
                 <div style="flex:1; min-width:0; overflow:hidden;">
@@ -1940,11 +1958,10 @@
                     ${s.radius ? `<span style="background:rgba(56,189,248,0.2); color:var(--accent-light-blue); font-size:0.7rem; font-weight:800; padding:2px 8px; border-radius:10px;"><i class="fa-solid fa-bullseye"></i> ${s.radius}m</span>` : ''}
                     ${catchCount > 0 ? `<span style="background:rgba(34,197,94,0.2); color:var(--accent-green); font-size:0.7rem; font-weight:800; padding:2px 8px; border-radius:10px;"><i class="fa-solid fa-fish"></i> ${catchCount}</span>` : ''}
                   </div>
-                  ${s.target ? `<div style="color:var(--accent-light-blue); font-size:0.8rem; font-weight:700; line-height:1.2;">Target: ${s.target}</div>` : ''}
+                  ${targetsList ? `<div style="color:var(--accent-light-blue); font-size:0.8rem; font-weight:700; line-height:1.2;">Target: ${targetsList}</div>` : ''}
                 </div>
               </div>
 
-              <!-- Disposizione Pulsanti Azione: 3 Sopra, 2 Sotto -->
               <div class="spot-actions-compact">
                 <div class="spot-actions-row">
                   <button class="btn-nav" onclick="openInMaps(${s.lat}, ${s.lng})" title="Naviga"><i class="fa-solid fa-route"></i></button>
@@ -1966,33 +1983,17 @@
 
     function filterSpots() {
       const q = document.getElementById('searchSpotInput').value.toLowerCase();
-      const sections = document.querySelectorAll('.zone-section');
-      
-      sections.forEach(section => {
+      document.querySelectorAll('.zone-section').forEach(section => {
         let visibleCount = 0;
-        const items = section.querySelectorAll('.spot-item');
-        items.forEach(item => {
+        section.querySelectorAll('.spot-item').forEach(item => {
           const matchesText = item.getAttribute('data-search-text').includes(q) || section.getAttribute('data-zone-name').includes(q);
           const matchesTech = selectedTechFilter === 'all' || item.getAttribute('data-technique') === selectedTechFilter;
-
-          if (matchesText && matchesTech) {
-            item.style.display = 'flex';
-            visibleCount++;
-          } else { item.style.display = 'none'; }
+          if (matchesText && matchesTech) { item.style.display = 'flex'; visibleCount++; } else { item.style.display = 'none'; }
         });
-
-        if (visibleCount === 0) { section.style.display = 'none'; } 
-        else {
-          section.style.display = 'block';
-          if (q !== '' || selectedTechFilter !== 'all') {
-             section.querySelector('.zone-content').style.display = 'block';
-             section.querySelector('.fa-chevron-right')?.classList.replace('fa-chevron-right', 'fa-chevron-down');
-          }
-        }
+        section.style.display = visibleCount === 0 ? 'none' : 'block';
       });
     }
 
-    // --- RIGHELLO ---
     let rulerActive = false;
     let rulerPoints = [];
     let rulerLine = null;
@@ -2002,19 +2003,12 @@
       rulerActive = !rulerActive;
       const btn = document.getElementById('rulerBtn');
       const box = document.getElementById('measureBox');
-      
       if (rulerActive) {
-        btn.classList.add('active');
-        box.style.display = 'block';
-        box.innerText = 'Tocca la mappa per misurare';
-        rulerPoints = [];
-        rulerMarkers.clearLayers();
-        if (rulerLine) map.removeLayer(rulerLine);
+        btn.classList.add('active'); box.style.display = 'block'; box.innerText = 'Tocca per misurare';
+        rulerPoints = []; rulerMarkers.clearLayers(); if (rulerLine) map.removeLayer(rulerLine);
       } else {
-        btn.classList.remove('active');
-        box.style.display = 'none';
-        if (rulerLine) map.removeLayer(rulerLine);
-        rulerMarkers.clearLayers();
+        btn.classList.remove('active'); box.style.display = 'none';
+        if (rulerLine) map.removeLayer(rulerLine); rulerMarkers.clearLayers();
       }
     }
 
@@ -2026,102 +2020,62 @@
           if (rulerLine) map.removeLayer(rulerLine);
           rulerLine = L.polyline(rulerPoints, { color: '#38bdf8', weight: 5, dashArray: '8, 8' }).addTo(map);
           let dist = 0;
-          for (let i = 0; i < rulerPoints.length - 1; i++) {
-            dist += L.latLng(rulerPoints[i]).distanceTo(L.latLng(rulerPoints[i+1]));
-          }
+          for (let i = 0; i < rulerPoints.length - 1; i++) dist += L.latLng(rulerPoints[i]).distanceTo(L.latLng(rulerPoints[i+1]));
           document.getElementById('measureBox').innerText = dist > 1000 ? `Distanza: ${(dist/1000).toFixed(2)} km` : `Distanza: ${Math.round(dist)} m`;
         }
       } else {
         if(tempMarker) map.removeLayer(tempMarker);
-        const tempIcon = L.divIcon({
-          className: '',
-          html: `<div style="width:24px; height:24px; background:var(--accent-blue); border:3px solid #fff; border-radius:50%; box-shadow:0 0 15px rgba(2,132,199,1); animation: pulse 1s infinite alternate;"></div>`,
-          iconSize: [24, 24], iconAnchor: [12, 12]
-        });
-        tempMarker = L.marker(e.latlng, {icon: tempIcon}).addTo(map);
+        tempMarker = L.marker(e.latlng, {icon: L.divIcon({className: '', html: `<div style="width:24px; height:24px; background:var(--accent-blue); border:3px solid #fff; border-radius:50%; animation: pulse 1s infinite alternate;"></div>`, iconSize: [24, 24], iconAnchor: [12, 12]})}).addTo(map);
         openAddSpotModal(e.latlng.lat, e.latlng.lng);
       }
     });
 
-    // --- AGGIORNAMENTO DATI METEO, ORARIE 24H, FIUMI, ONDE, TENDENZA & MAREE ---
     function updateForecastData(btnElement) {
       let originalHtml = '';
-      if(btnElement) {
-        originalHtml = btnElement.innerHTML;
-        btnElement.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sincronizzazione...';
-        btnElement.disabled = true;
-      }
+      if(btnElement) { originalHtml = btnElement.innerHTML; btnElement.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sincronizzazione...'; btnElement.disabled = true; }
 
       const center = map.getCenter();
       const now = new Date();
 
-      // Solunare & Fasi Lunari
       const lp = 2551443; 
       const newMoon = new Date(1970, 0, 7, 20, 35, 0).getTime();
       const phase = ((now.getTime() - newMoon) / 1000) % lp;
       const phaseIndex = Math.floor((phase / lp) * 8); 
-      
       const phases = ['Luna Nuova', 'Crescente', 'Primo Quarto', 'Crescente Gibbosa', 'Luna Piena', 'Calante Gibbosa', 'Ultimo Quarto', 'Calante'];
       document.getElementById('moonPhaseText').innerText = 'Fase Lunare: ' + (phases[phaseIndex] || 'Stabile');
       
       let activityScore = 50; 
-      if (phaseIndex === 0 || phaseIndex === 4) activityScore += 40; 
-      else if (phaseIndex === 2 || phaseIndex === 6) activityScore += 20; 
-      else activityScore += 10; 
-
+      if (phaseIndex === 0 || phaseIndex === 4) activityScore += 40; else if (phaseIndex === 2 || phaseIndex === 6) activityScore += 20; else activityScore += 10; 
       const activityTextEl = document.getElementById('fishActivityText');
-      if (activityScore >= 80) {
-        activityTextEl.innerText = `${activityScore}% - Eccellente`;
-        activityTextEl.style.color = '#22c55e';
-      } else if (activityScore >= 60) {
-        activityTextEl.innerText = `${activityScore}% - Buona`;
-        activityTextEl.style.color = '#38bdf8';
-      } else {
-        activityTextEl.innerText = `${activityScore}% - Moderata`;
-        activityTextEl.style.color = '#eab308';
-      }
+      if (activityScore >= 80) { activityTextEl.innerText = `${activityScore}% - Eccellente`; activityTextEl.style.color = '#22c55e'; }
+      else if (activityScore >= 60) { activityTextEl.innerText = `${activityScore}% - Buona`; activityTextEl.style.color = '#38bdf8'; }
+      else { activityTextEl.innerText = `${activityScore}% - Moderata`; activityTextEl.style.color = '#eab308'; }
 
       let h1 = (now.getDate() * 50) % 1440; 
       let hMajor1 = new Date(); hMajor1.setHours(Math.floor(h1/60), h1%60);
       let hMajor2 = new Date(); hMajor2.setHours(Math.floor(h1/60) + 12, h1%60);
-      
-      function formatTimeSpan(d) {
-        let m = new Date(d.getTime() + 120 * 60000); 
-        return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')} - ${String(m.getHours()).padStart(2,'0')}:${String(m.getMinutes()).padStart(2,'0')}`;
-      }
-
+      function formatTimeSpan(d) { let m = new Date(d.getTime() + 120 * 60000); return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')} - ${String(m.getHours()).padStart(2,'0')}:${String(m.getMinutes()).padStart(2,'0')}`; }
       document.getElementById('major1').innerText = formatTimeSpan(hMajor1);
       document.getElementById('major2').innerText = formatTimeSpan(hMajor2);
       
       let hMinor1 = new Date(hMajor1.getTime() + 5.5 * 3600000);
       let hMinor2 = new Date(hMajor2.getTime() + 5.5 * 3600000);
-      function formatTimeSpanMin(d) {
-        let m = new Date(d.getTime() + 60 * 60000); 
-        return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')} - ${String(m.getHours()).padStart(2,'0')}:${String(m.getMinutes()).padStart(2,'0')}`;
-      }
+      function formatTimeSpanMin(d) { let m = new Date(d.getTime() + 60 * 60000); return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')} - ${String(m.getHours()).padStart(2,'0')}:${String(m.getMinutes()).padStart(2,'0')}`; }
       document.getElementById('minor1').innerText = formatTimeSpanMin(hMinor1);
       document.getElementById('minor2').innerText = formatTimeSpanMin(hMinor2);
 
-      // Stima Maree da Riva
       const tideHours = ((now.getHours() * 60 + now.getMinutes()) / 60) % 12.4;
-      if (tideHours < 3.1) {
-        document.getElementById('wTideState').innerText = "In Salita";
-      } else if (tideHours < 6.2) {
-        document.getElementById('wTideState').innerText = "Alta Marea";
-      } else if (tideHours < 9.3) {
-        document.getElementById('wTideState').innerText = "In Discesa";
-      } else {
-        document.getElementById('wTideState').innerText = "Bassa Marea";
-      }
+      if (tideHours < 3.1) document.getElementById('wTideState').innerText = "In Salita";
+      else if (tideHours < 6.2) document.getElementById('wTideState').innerText = "Alta Marea";
+      else if (tideHours < 9.3) document.getElementById('wTideState').innerText = "In Discesa";
+      else document.getElementById('wTideState').innerText = "Bassa Marea";
 
-      // Fetch Meteo Generale & Orarie 24h (Punto 2)
       fetch(`https://api.open-meteo.com/v1/forecast?latitude=${center.lat}&longitude=${center.lng}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m,wind_direction_10m,surface_pressure,cloud_cover&hourly=temperature_2m,weather_code,precipitation,wind_speed_10m,surface_pressure&daily=sunrise,sunset&timezone=auto`)
         .then(res => res.json())
         .then(data => {
             const code = data.current.weather_code || 0;
             let weatherIconStr = '<i class="fa-solid fa-sun" style="color:#eab308;"></i>';
             let descText = "Sereno";
-            
             if(code >= 1 && code <= 3) { weatherIconStr = '<i class="fa-solid fa-cloud-sun"></i>'; descText = "Poco Nuvoloso"; }
             else if(code === 45 || code === 48) { weatherIconStr = '<i class="fa-solid fa-smog"></i>'; descText = "Nebbia"; }
             else if(code >= 51 && code <= 67) { weatherIconStr = '<i class="fa-solid fa-cloud-rain" style="color:#38bdf8;"></i>'; descText = "Pioggia"; }
@@ -2132,23 +2086,19 @@
             document.getElementById('wIconLarge').innerHTML = weatherIconStr;
             document.getElementById('wTempLarge').innerText = `${Math.round(data.current.temperature_2m)}°`;
             document.getElementById('wDesc').innerText = descText;
-
             document.getElementById('wFeelsLike').innerText = `${Math.round(data.current.apparent_temperature)}°C`;
             document.getElementById('wHumidity').innerText = `${data.current.relative_humidity_2m}%`;
             
             const windDir = data.current.wind_direction_10m;
             document.getElementById('wWind').innerHTML = `${Math.round(data.current.wind_speed_10m)} <i class="fa-solid fa-arrow-up" style="transform: rotate(${windDir}deg); font-size:1rem; color:var(--accent-light-blue);"></i>`;
-            
             document.getElementById('wPressure').innerText = `${Math.round(data.current.surface_pressure)} hPa`;
             document.getElementById('wRain').innerText = `${data.current.precipitation} mm`;
             document.getElementById('wClouds').innerText = `${data.current.cloud_cover}%`;
 
-            // Render Slider Previsioni Orarie 24h
             if (data.hourly && data.hourly.time) {
               const curH = now.getHours();
               const track = document.getElementById('hourlyForecastTrack');
               let htmlH = '';
-
               for (let i = curH; i < curH + 24 && i < data.hourly.time.length; i++) {
                 const hTime = data.hourly.time[i].slice(-5);
                 const hCode = data.hourly.weather_code[i] || 0;
@@ -2158,69 +2108,35 @@
                 else if(hCode >= 80) hIcon = 'fa-cloud-showers-heavy" style="color:#38bdf8;';
                 else if(hCode >= 95) hIcon = 'fa-bolt" style="color:#eab308;';
 
-                htmlH += `
-                  <div class="hourly-box">
-                    <div class="hourly-time">${hTime}</div>
-                    <div class="hourly-icon"><i class="fa-solid ${hIcon}"></i></div>
-                    <div class="hourly-temp">${Math.round(data.hourly.temperature_2m[i])}°</div>
-                    <div class="hourly-wind">${Math.round(data.hourly.wind_speed_10m[i])}k/h</div>
-                  </div>`;
+                htmlH += `<div class="hourly-box"><div class="hourly-time">${hTime}</div><div class="hourly-icon"><i class="fa-solid ${hIcon}"></i></div><div class="hourly-temp">${Math.round(data.hourly.temperature_2m[i])}°</div><div class="hourly-wind">${Math.round(data.hourly.wind_speed_10m[i])}k/h</div></div>`;
               }
               track.innerHTML = htmlH;
             }
 
-            // Tendenza Pressione Ultime 6 ore
             if (data.hourly && data.hourly.surface_pressure) {
               const currentHour = now.getHours();
               const pNow = data.current.surface_pressure;
               const p6hAgo = data.hourly.surface_pressure[Math.max(0, currentHour - 6)] || pNow;
               const diff = pNow - p6hAgo;
-
               const trendText = document.getElementById('pTrendText');
               const trendIcon = document.getElementById('pTrendIcon');
-
-              if (diff <= -1.5) {
-                trendText.innerText = `In rapido calo (${diff.toFixed(1)} hPa)`;
-                trendText.style.color = 'var(--accent-red)';
-                trendIcon.innerHTML = `<i class="fa-solid fa-arrow-trend-down" style="color:var(--accent-red);"></i>`;
-              } else if (diff >= 1.5) {
-                trendText.innerText = `In salita (+${diff.toFixed(1)} hPa)`;
-                trendText.style.color = 'var(--accent-green)';
-                trendIcon.innerHTML = `<i class="fa-solid fa-arrow-trend-up" style="color:var(--accent-green);"></i>`;
-              } else {
-                trendText.innerText = `Stabile (${diff >= 0 ? '+' : ''}${diff.toFixed(1)} hPa)`;
-                trendText.style.color = 'var(--accent-light-blue)';
-                trendIcon.innerHTML = `<i class="fa-solid fa-arrows-left-right" style="color:var(--accent-light-blue);"></i>`;
-              }
+              if (diff <= -1.5) { trendText.innerText = `In calo (${diff.toFixed(1)} hPa)`; trendText.style.color = 'var(--accent-red)'; trendIcon.innerHTML = `<i class="fa-solid fa-arrow-trend-down" style="color:var(--accent-red);"></i>`; }
+              else if (diff >= 1.5) { trendText.innerText = `In salita (+${diff.toFixed(1)} hPa)`; trendText.style.color = 'var(--accent-green)'; trendIcon.innerHTML = `<i class="fa-solid fa-arrow-trend-up" style="color:var(--accent-green);"></i>`; }
+              else { trendText.innerText = `Stabile`; trendText.style.color = 'var(--accent-light-blue)'; trendIcon.innerHTML = `<i class="fa-solid fa-arrows-left-right" style="color:var(--accent-light-blue);"></i>`; }
             }
 
-            // Orari Solari e Golden Hour
             if (data.daily && data.daily.sunrise && data.daily.sunset) {
               const sr = new Date(data.daily.sunrise[0]);
               const ss = new Date(data.daily.sunset[0]);
-
               document.getElementById('wSunrise').innerText = sr.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
               document.getElementById('wSunset').innerText = ss.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-              const gmMornStart = new Date(sr.getTime() - 20 * 60000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-              const gmMornEnd = new Date(sr.getTime() + 45 * 60000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-              document.getElementById('wGoldenMorn').innerText = `${gmMornStart} - ${gmMornEnd}`;
-
-              const gmEveStart = new Date(ss.getTime() - 45 * 60000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-              const gmEveEnd = new Date(ss.getTime() + 20 * 60000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-              document.getElementById('wGoldenEve').innerText = `${gmEveStart} - ${gmEveEnd}`;
+              document.getElementById('wGoldenMorn').innerText = `${new Date(sr.getTime() - 20*60000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - ${new Date(sr.getTime() + 45*60000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+              document.getElementById('wGoldenEve').innerText = `${new Date(ss.getTime() - 45*60000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - ${new Date(ss.getTime() + 20*60000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
             }
 
-            if(btnElement) {
-              btnElement.innerHTML = '<i class="fa-solid fa-check"></i> Condizioni Aggiornate';
-              setTimeout(() => { btnElement.innerHTML = originalHtml; btnElement.disabled = false; }, 2000);
-            }
-        })
-        .catch(e => {
-            document.getElementById('wDesc').innerText = 'Errore di Rete';
-        });
+            if(btnElement) { btnElement.innerHTML = '<i class="fa-solid fa-check"></i> Aggiornato'; setTimeout(() => { btnElement.innerHTML = originalHtml; btnElement.disabled = false; }, 2000); }
+        }).catch(() => { document.getElementById('wDesc').innerText = 'Errore di Rete'; });
 
-      // Fetch Idrologico Fiumi (Flood & River Discharge)
       fetch(`https://flood-api.open-meteo.com/v1/flood?latitude=${center.lat}&longitude=${center.lng}&daily=river_discharge&past_days=2&forecast_days=3`)
         .then(res => res.json())
         .then(fdata => {
@@ -2230,74 +2146,36 @@
               const todayVal = discharges[2] !== undefined ? discharges[2] : discharges[discharges.length - 1];
               const pastVal = discharges[0] !== undefined ? discharges[0] : todayVal;
               const diff = todayVal - pastVal;
-
               document.getElementById('riverDischarge').innerText = `${todayVal.toFixed(1)} m³/s`;
-              
               const statusEl = document.getElementById('riverStatusText');
               const iconEl = document.getElementById('riverTrendIcon');
               const trendEl = document.getElementById('riverTrend');
 
-              if (todayVal > 150 || diff > 40) {
-                statusEl.innerText = "Portata Alta / Possibile Piena";
-                statusEl.style.color = "var(--accent-red)";
-                iconEl.innerHTML = `<i class="fa-solid fa-triangle-exclamation" style="color:var(--accent-red);"></i>`;
-                trendEl.innerText = "In Salita / Torbido";
-                trendEl.style.color = "var(--accent-red)";
-              } else if (diff > 5) {
-                statusEl.innerText = "Livello in Aumento";
-                statusEl.style.color = "var(--accent-amber)";
-                iconEl.innerHTML = `<i class="fa-solid fa-arrow-trend-up" style="color:var(--accent-amber);"></i>`;
-                trendEl.innerText = "In Aumento";
-                trendEl.style.color = "var(--accent-amber)";
-              } else if (diff < -5) {
-                statusEl.innerText = "Livello in Calo (Acqua Schiarisce)";
-                statusEl.style.color = "var(--accent-green)";
-                iconEl.innerHTML = `<i class="fa-solid fa-arrow-trend-down" style="color:var(--accent-green);"></i>`;
-                trendEl.innerText = "In Discesa";
-                trendEl.style.color = "var(--accent-green)";
-              } else {
-                statusEl.innerText = "Fiume Pescabile / Regolare";
-                statusEl.style.color = "var(--accent-green)";
-                iconEl.innerHTML = `<i class="fa-solid fa-water" style="color:var(--accent-green);"></i>`;
-                trendEl.innerText = "Stabile";
-                trendEl.style.color = "var(--accent-light-blue)";
-              }
+              if (todayVal > 150 || diff > 40) { statusEl.innerText = "Portata Alta / Piena"; statusEl.style.color = "var(--accent-red)"; iconEl.innerHTML = `<i class="fa-solid fa-triangle-exclamation" style="color:var(--accent-red);"></i>`; trendEl.innerText = "In Salita"; trendEl.style.color = "var(--accent-red)"; }
+              else if (diff > 5) { statusEl.innerText = "Livello in Aumento"; statusEl.style.color = "var(--accent-amber)"; iconEl.innerHTML = `<i class="fa-solid fa-arrow-trend-up" style="color:var(--accent-amber);"></i>`; trendEl.innerText = "In Aumento"; trendEl.style.color = "var(--accent-amber)"; }
+              else if (diff < -5) { statusEl.innerText = "Livello in Calo"; statusEl.style.color = "var(--accent-green)"; iconEl.innerHTML = `<i class="fa-solid fa-arrow-trend-down" style="color:var(--accent-green);"></i>`; trendEl.innerText = "In Discesa"; trendEl.style.color = "var(--accent-green)"; }
+              else { statusEl.innerText = "Regolare / Pescabile"; statusEl.style.color = "var(--accent-green)"; iconEl.innerHTML = `<i class="fa-solid fa-water" style="color:var(--accent-green);"></i>`; trendEl.innerText = "Stabile"; trendEl.style.color = "var(--accent-light-blue)"; }
             } else {
-              document.getElementById('riverDischarge').innerText = "Fiume Minore / Lago";
-              document.getElementById('riverStatusText').innerText = "Regolare / Bacino Chiuso";
+              document.getElementById('riverDischarge').innerText = "Bacino Chiuso";
+              document.getElementById('riverStatusText').innerText = "Regolare";
               document.getElementById('riverTrend').innerText = "Stabile";
             }
           }
-        })
-        .catch(() => {
-          document.getElementById('riverDischarge').innerText = "Non Rilevato";
-          document.getElementById('riverStatusText').innerText = "Dato Non Disponibile";
-          document.getElementById('riverTrend').innerText = "--";
-        });
+        }).catch(() => {});
 
-      // Fetch Dati Marini (Onde + Temperatura Acqua Mare - Punto 2)
       fetch(`https://marine-api.open-meteo.com/v1/marine?latitude=${center.lat}&longitude=${center.lng}&current=wave_height,wave_period,sea_surface_temperature`)
         .then(res => res.json())
         .then(mdata => {
           if (mdata && mdata.current && mdata.current.wave_height !== null) {
             document.getElementById('wWaveHeight').innerText = `${mdata.current.wave_height.toFixed(1)} m`;
             document.getElementById('wWavePeriod').innerText = `${Math.round(mdata.current.wave_period || 0)} s`;
-            if (mdata.current.sea_surface_temperature !== null && mdata.current.sea_surface_temperature !== undefined) {
-              document.getElementById('wSeaTemp').innerText = `${Math.round(mdata.current.sea_surface_temperature)}°C`;
-            } else {
-              document.getElementById('wSeaTemp').innerText = `--°C`;
-            }
+            document.getElementById('wSeaTemp').innerText = mdata.current.sea_surface_temperature !== null ? `${Math.round(mdata.current.sea_surface_temperature)}°C` : `--°C`;
           } else {
-            document.getElementById('wWaveHeight').innerText = "Calmo / Interno";
+            document.getElementById('wWaveHeight').innerText = "Acque Interne";
             document.getElementById('wWavePeriod').innerText = "--";
-            document.getElementById('wSeaTemp').innerText = "Acque Interne";
+            document.getElementById('wSeaTemp').innerText = "Interno";
           }
-        })
-        .catch(() => {
-          document.getElementById('wWaveHeight').innerText = "Acque Interne";
-          document.getElementById('wWavePeriod').innerText = "--";
-          document.getElementById('wSeaTemp').innerText = "--";
-        });
+        }).catch(() => {});
     }
 
     function switchTab(tabId, btn) {
@@ -2305,8 +2183,8 @@
       document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
       document.getElementById(tabId).classList.add('active');
       btn.classList.add('active');
-      if(tabId === 'tabMap') { setTimeout(() => map.invalidateSize(), 300); }
-      if(tabId === 'tabForecasts') { updateForecastData(); }
+      if(tabId === 'tabMap') setTimeout(() => map.invalidateSize(), 300);
+      if(tabId === 'tabForecasts') updateForecastData();
     }
 
     let watchId = null;
@@ -2323,9 +2201,7 @@
         if(userAccuracyCircle) { map.removeLayer(userAccuracyCircle); userAccuracyCircle = null; }
         return;
       }
-      
       btn.classList.add('active');
-      
       if ("geolocation" in navigator) {
         watchId = navigator.geolocation.watchPosition((pos) => {
           const { latitude: lat, longitude: lng, accuracy } = pos.coords;
@@ -2338,14 +2214,7 @@
             userAccuracyCircle.setLatLng([lat, lng]);
             userAccuracyCircle.setRadius(accuracy);
           }
-        }, (err) => { 
-          alert("Errore GPS: Assicurati di aver dato i permessi."); 
-          btn.classList.remove('active'); 
-          watchId = null;
-        }, { enableHighAccuracy: true, maximumAge: 0 });
-      } else {
-        alert("Geolocalizzazione non supportata.");
-        btn.classList.remove('active');
+        }, () => { alert("Errore GPS."); btn.classList.remove('active'); watchId = null; }, { enableHighAccuracy: true, maximumAge: 0 });
       }
     }
 
@@ -2356,14 +2225,12 @@
         DeviceOrientationEvent.requestPermission().then(response => {
           if (response === 'granted') {
             window.addEventListener('deviceorientation', handleOrientation, true);
-            btn.classList.add('active');
-            btn.innerHTML = '<i class="fa-solid fa-compass"></i> Attiva';
+            btn.classList.add('active'); btn.innerHTML = '<i class="fa-solid fa-compass"></i> Attiva';
           } else { alert("Permesso negato."); }
         }).catch(console.error);
       } else if (window.DeviceOrientationEvent) {
         window.addEventListener('deviceorientation', handleOrientation, true);
-        btn.classList.add('active');
-        btn.innerHTML = '<i class="fa-solid fa-compass"></i> Attiva';
+        btn.classList.add('active'); btn.innerHTML = '<i class="fa-solid fa-compass"></i> Attiva';
       } else { alert("Sensore non supportato."); }
     }
 
@@ -2371,29 +2238,17 @@
       let heading = event.webkitCompassHeading || (event.alpha !== null ? 360 - event.alpha : null);
       if (heading !== null && !isNaN(heading)) {
         document.getElementById('hdgVal').innerHTML = `<i class="fa-regular fa-compass" style="font-size: 1.4rem; color: var(--text-muted);"></i> ${Math.round(heading)}° <small>HDG</small>`;
-        
         const pointer = document.getElementById('compassPointer');
         if(pointer) {
-          if (Math.abs(heading - lastHeading) > 180) { pointer.style.transition = 'none'; } 
-          else { pointer.style.transition = 'left 0.3s cubic-bezier(0.25, 0.8, 0.25, 1)'; }
+          if (Math.abs(heading - lastHeading) > 180) pointer.style.transition = 'none'; else pointer.style.transition = 'left 0.3s cubic-bezier(0.25, 0.8, 0.25, 1)';
           pointer.style.left = (heading / 360 * 100) + '%';
           lastHeading = heading;
         }
-
         const normalizedHeading = (Math.round(heading) + 360) % 360;
         const index = Math.round(normalizedHeading / 45) % 8; 
-        const spans = document.querySelectorAll('.compass-ticks span');
-        
-        spans.forEach((span, i) => {
-          if (i === index || (index === 0 && i === 8)) {
-            span.style.color = 'var(--accent-light-blue)';
-            span.style.transform = 'scale(1.4)';
-            span.style.fontWeight = '900';
-          } else {
-            span.style.color = 'var(--text-muted)';
-            span.style.transform = 'scale(1)';
-            span.style.fontWeight = '800';
-          }
+        document.querySelectorAll('.compass-ticks span').forEach((span, i) => {
+          if (i === index || (index === 0 && i === 8)) { span.style.color = 'var(--accent-light-blue)'; span.style.transform = 'scale(1.4)'; span.style.fontWeight = '900'; }
+          else { span.style.color = 'var(--text-muted)'; span.style.transform = 'scale(1)'; span.style.fontWeight = '800'; }
         });
       }
     }
@@ -2404,7 +2259,7 @@
 
     renderMapSpots();
     if(spots.length > 0) map.setView([spots[spots.length-1].lat, spots[spots.length-1].lng], 13);
-    setTimeout(() => { updateForecastData(null); }, 1000);
+    setTimeout(() => updateForecastData(null), 1000);
   </script>
 </body>
 </html>
