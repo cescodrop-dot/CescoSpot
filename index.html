@@ -778,7 +778,7 @@
     }
     .custom-map-icon::after {
       content: ''; position: absolute; bottom: -12px; left: 50%; transform: translateX(-50%);
-      border-left: 8px solid transparent; border-right: 8px solid transparent; border-top: 12px solid inherit;
+      border-left: 8px solid transparent; border-right: 8px solid transparent; border-top: 14px solid inherit;
       filter: drop-shadow(0px 4px 3px rgba(0,0,0,0.5));
     }
     
@@ -789,24 +789,52 @@
     }
     .btn-refresh-weather:active { transform: scale(0.96); }
 
-    /* Prontuario Nodi & Guide Visive */
+    /* Prontuario Nodi & Guide Grafiche Step-by-Step */
     .knot-card {
       background: rgba(15, 23, 42, 0.7);
       border: 1px solid rgba(255,255,255,0.08);
       border-radius: 16px;
-      padding: 14px;
-      margin-bottom: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
     }
-    .knot-title { color: var(--accent-light-blue); font-size: 1.05rem; font-weight: 800; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between; }
-    .step-box {
-      background: rgba(0,0,0,0.3);
-      border-left: 3px solid var(--accent-light-blue);
-      padding: 8px 12px;
-      margin-top: 8px;
-      border-radius: 0 8px 8px 0;
-      font-size: 0.78rem;
+    .knot-title { color: var(--accent-light-blue); font-size: 1.1rem; font-weight: 800; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; }
+    
+    /* Schema Grafico a Step Numerati (stile immagine) */
+    .knot-steps-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-top: 12px;
+    }
+    @media(max-width: 480px) {
+      .knot-steps-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    .knot-step-box {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(56, 189, 248, 0.2);
+      border-radius: 12px;
+      padding: 10px 8px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .knot-step-num {
+      width: 26px; height: 26px;
+      background: var(--accent-blue);
+      color: #fff;
+      border-radius: 50%;
+      font-size: 0.85rem;
+      font-weight: 900;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 6px;
+      box-shadow: 0 2px 8px rgba(2, 132, 199, 0.5);
+    }
+    .knot-step-text {
+      font-size: 0.72rem;
       color: var(--text-light);
-      line-height: 1.4;
+      line-height: 1.25;
+      font-weight: 600;
     }
 
     .leaflet-control-scale { margin-bottom: 24px !important; margin-left: 16px !important; border-color: rgba(255,255,255,0.5) !important; color: #fff !important; }
@@ -1212,7 +1240,7 @@
     </div>
   </div>
 
-  <!-- MODAL PRONTUARIO NODI, FILI & NORMATIVA MIGLIORATO -->
+  <!-- MODAL PRONTUARIO NODI, FILI & NORMATIVA CON GUIDE GRAFICHE A STEP -->
   <div class="modal" id="modalKnots">
     <div class="modal-drag-handle"></div>
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
@@ -1225,7 +1253,7 @@
     <div class="knot-card" style="border-color:var(--accent-green);">
       <div class="knot-title"><span style="color:var(--accent-green);"><i class="fa-solid fa-hand-holding-heart"></i> Etica di Riva & Catch & Release</span></div>
       <p style="font-size:0.8rem; color:var(--text-muted); line-height:1.4;">
-        Il <b>Catch & Release</b> (C&R) è fondamentale per la tutela degli spot. Bagnati sempre le mani prima di toccare il pesce, slamalo delicatamente in acqua quando possibile e non abbandonare mai lenze o esche sul bagnasciuga o tra i rami della riva.
+        Il <b>Catch & Release</b> è fondamentale per la tutela degli spot. Bagnati sempre le mani prima di toccare il pesce, slamalo delicatamente in acqua quando possibile e non abbandonare mai lenze o esche sul bagnasciuga o tra i rami della riva.
       </p>
     </div>
 
@@ -1273,31 +1301,74 @@
       </table>
     </div>
 
-    <!-- Guide Nodi Step-by-Step con Passaggi Visivi -->
+    <!-- Guide Nodi con Schema Grafico a Step Numerati -->
     <div class="knot-card">
-      <div class="knot-title"><span>1. Nodo Palomar</span><span style="font-size:0.75rem; color:var(--accent-green);">Ami & Moschettoni</span></div>
-      <p style="font-size:0.8rem; color:var(--text-muted);">Il più robusto e facile da eseguire anche con scarsa luce.</p>
-      <div class="step-box"><b>Step 1:</b> Piegare il filo a metà formando un'asola e passarla attraverso l'occhiello dell'amo.</div>
-      <div class="step-box"><b>Step 2:</b> Fare un nodo semplice con il capo doppio senza stringere troppo.</div>
-      <div class="step-box"><b>Step 3:</b> Far passare l'intero amo all'interno dell'asola appena creata.</div>
-      <div class="step-box"><b>Step 4:</b> Inumidire con acqua, tirare i capi progressivamente e tagliare l'eccedenza.</div>
+      <div class="knot-title"><span>1. Nodo Palomar</span><span style="font-size:0.75rem; color:var(--accent-green);">Ami con Occhiello & Moschettoni</span></div>
+      <p style="font-size:0.80rem; color:var(--text-muted);">Il più robusto per ami senza asola e moschettoni.</p>
+      <div class="knot-steps-grid">
+        <div class="knot-step-box">
+          <div class="knot-step-num">1</div>
+          <div class="knot-step-text">Raddoppia il filo e passa l'asola nell'occhiello dell'amo.</div>
+        </div>
+        <div class="knot-step-box">
+          <div class="knot-step-num">2</div>
+          <div class="knot-step-text">Fai un nodo semplice col doppio filo senza stringere.</div>
+        </div>
+        <div class="knot-step-box">
+          <div class="knot-step-num">3</div>
+          <div class="knot-step-text">Passa l'intero amo attraverso l'asola creata.</div>
+        </div>
+        <div class="knot-step-box">
+          <div class="knot-step-num">4</div>
+          <div class="knot-step-text">Bagna, stringi progressivamente e taglia il capo.</div>
+        </div>
+      </div>
     </div>
 
     <div class="knot-card">
       <div class="knot-title"><span>2. Nodo Clinch Rinforzato</span><span style="font-size:0.75rem; color:var(--accent-amber);">Rapido in Pesca</span></div>
-      <p style="font-size:0.8rem; color:var(--text-muted);">Ideale per cambi rapidi di esche artificiali.</p>
-      <div class="step-box"><b>Step 1:</b> Infilare il filo nell'occhiello e avvolgere il capo libero sul trave per 5-7 volte.</div>
-      <div class="step-box"><b>Step 2:</b> Infilare l'estremità del filo nell'asola vicina all'occhiello.</div>
-      <div class="step-box"><b>Step 3:</b> Ripassare il capo nell'anello grande appena formato.</div>
-      <div class="step-box"><b>Step 4:</b> Inumidire, serrare con decisione e tagliare il filo in eccesso.</div>
+      <p style="font-size:0.80rem; color:var(--text-muted);">Ideale per cambi rapidi su ami con occhiello.</p>
+      <div class="knot-steps-grid">
+        <div class="knot-step-box">
+          <div class="knot-step-num">1</div>
+          <div class="knot-step-text">Infila il filo nell'occhiello e avvolgi sul trave 5-7 volte.</div>
+        </div>
+        <div class="knot-step-box">
+          <div class="knot-step-num">2</div>
+          <div class="knot-step-text">Infila l'estremità nell'asola vicina all'occhiello.</div>
+        </div>
+        <div class="knot-step-box">
+          <div class="knot-step-num">3</div>
+          <div class="knot-step-text">Ripassare il capo nell'anello grande formatosi.</div>
+        </div>
+        <div class="knot-step-box">
+          <div class="knot-step-num">4</div>
+          <div class="knot-step-text">Inumidisci, serra con decisione e taglia l'eccesso.</div>
+        </div>
+      </div>
     </div>
 
     <div class="knot-card">
       <div class="knot-title"><span>3. Nodo FG</span><span style="font-size:0.75rem; color:var(--accent-orange);">Treccia ⇄ Fluorocarbon</span></div>
-      <p style="font-size:0.8rem; color:var(--text-muted);">Il re dei nodi di giunzione, scorre perfettamente sugli anelli.</p>
-      <div class="step-box"><b>Step 1:</b> Tenere in tensione la treccia e incrociare il fluorocarbon creando spire alterne (16-20 passaggi).</div>
-      <div class="step-box"><b>Step 2:</b> Eseguire un mezzo collo di blocco con la treccia sul fluorocarbon.</div>
-      <div class="step-box"><b>Step 3:</b> Fare 3-4 nodi di chiusura alternati e bruciare leggermente il capo del fluorocarbon per sicurezza.</div>
+      <p style="font-size:0.80rem; color:var(--text-muted);">Il re dei nodi di giunzione per mulinello.</p>
+      <div class="knot-steps-grid">
+        <div class="knot-step-box">
+          <div class="knot-step-num">1</div>
+          <div class="knot-step-text">Tieni in tensione la treccia e incrocia 16-20 spire a croce.</div>
+        </div>
+        <div class="knot-step-box">
+          <div class="knot-step-num">2</div>
+          <div class="knot-step-text">Esegui un mezzo collo di blocco col trecciato.</div>
+        </div>
+        <div class="knot-step-box">
+          <div class="knot-step-num">3</div>
+          <div class="knot-step-text">Fai 3-4 nodi di chiusura alternati di sicurezza.</div>
+        </div>
+        <div class="knot-step-box">
+          <div class="knot-step-num">4</div>
+          <div class="knot-step-text">Brucia leggermente la punta del fluorocarbon.</div>
+        </div>
+      </div>
     </div>
   </div>
 
