@@ -778,7 +778,7 @@
     }
     .custom-map-icon::after {
       content: ''; position: absolute; bottom: -12px; left: 50%; transform: translateX(-50%);
-      border-left: 8px solid transparent; border-right: 8px solid transparent; border-top: 14px solid inherit;
+      border-left: 8px solid transparent; border-right: 8px solid transparent; border-top: 12px solid inherit;
       filter: drop-shadow(0px 4px 3px rgba(0,0,0,0.5));
     }
     
@@ -789,7 +789,7 @@
     }
     .btn-refresh-weather:active { transform: scale(0.96); }
 
-    /* Prontuario Nodi */
+    /* Prontuario Nodi & Guide Visive */
     .knot-card {
       background: rgba(15, 23, 42, 0.7);
       border: 1px solid rgba(255,255,255,0.08);
@@ -798,6 +798,16 @@
       margin-bottom: 12px;
     }
     .knot-title { color: var(--accent-light-blue); font-size: 1.05rem; font-weight: 800; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between; }
+    .step-box {
+      background: rgba(0,0,0,0.3);
+      border-left: 3px solid var(--accent-light-blue);
+      padding: 8px 12px;
+      margin-top: 8px;
+      border-radius: 0 8px 8px 0;
+      font-size: 0.78rem;
+      color: var(--text-light);
+      line-height: 1.4;
+    }
 
     .leaflet-control-scale { margin-bottom: 24px !important; margin-left: 16px !important; border-color: rgba(255,255,255,0.5) !important; color: #fff !important; }
 
@@ -1202,13 +1212,21 @@
     </div>
   </div>
 
-  <!-- MODAL PRONTUARIO NODI & TABELLE -->
+  <!-- MODAL PRONTUARIO NODI, FILI & NORMATIVA MIGLIORATO -->
   <div class="modal" id="modalKnots">
     <div class="modal-drag-handle"></div>
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
       <button type="button" style="background:none; border:none; font-size:1.8rem; color:var(--text-muted); cursor:pointer;" onclick="closeKnotsModal()"><i class="fa-solid fa-xmark"></i></button>
       <h4 style="font-size:1.2rem; color:#fff; font-weight:900;">Nodi, Fili & Normativa</h4>
       <div style="width:30px;"></div>
+    </div>
+
+    <!-- Regole di Comportamento & Catch & Release -->
+    <div class="knot-card" style="border-color:var(--accent-green);">
+      <div class="knot-title"><span style="color:var(--accent-green);"><i class="fa-solid fa-hand-holding-heart"></i> Etica di Riva & Catch & Release</span></div>
+      <p style="font-size:0.8rem; color:var(--text-muted); line-height:1.4;">
+        Il <b>Catch & Release</b> (C&R) è fondamentale per la tutela degli spot. Bagnati sempre le mani prima di toccare il pesce, slamalo delicatamente in acqua quando possibile e non abbandonare mai lenze o esche sul bagnasciuga o tra i rami della riva.
+      </p>
     </div>
 
     <!-- Tabella Conversione Fili -->
@@ -1248,21 +1266,38 @@
         <tbody style="color:var(--text-light); opacity:0.9;">
           <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:6px 0;">Trota Fario</td><td>22-25 cm</td><td>1Ott - 1Feb (variabile)</td></tr>
           <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:6px 0;">Luccio</td><td>50-60 cm</td><td>1Feb - 31Mar</td></tr>
-          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:6px 0;">Black Bass</td><td>30 cm</td><td>1Apr - 31Mag (Catch&Release)</td></tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:6px 0;">Black Bass</td><td>30 cm</td><td>1Apr - 31Mag (Catch & Release)</td></tr>
           <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:6px 0;">Barbo / Cavedano</td><td>N.D. / 20cm</td><td>1Mag - 30Giu</td></tr>
           <tr><td style="padding:6px 0;">Spigola (Mare)</td><td>25 cm</td><td>Nessun divieto fisso</td></tr>
         </tbody>
       </table>
     </div>
 
+    <!-- Guide Nodi Step-by-Step con Passaggi Visivi -->
     <div class="knot-card">
-      <div class="knot-title"><span>1. Nodo Palomar</span><span style="font-size:0.75rem; color:var(--accent-green);">Ami, Moschettoni</span></div>
-      <p style="font-size:0.8rem; color:var(--text-muted); line-height:1.4;">Doppia il filo nell'occhiello, fai un nodo semplice, passa l'amo nell'asola, inumidisci e serra. Resistenza 95%.</p>
+      <div class="knot-title"><span>1. Nodo Palomar</span><span style="font-size:0.75rem; color:var(--accent-green);">Ami & Moschettoni</span></div>
+      <p style="font-size:0.8rem; color:var(--text-muted);">Il più robusto e facile da eseguire anche con scarsa luce.</p>
+      <div class="step-box"><b>Step 1:</b> Piegare il filo a metà formando un'asola e passarla attraverso l'occhiello dell'amo.</div>
+      <div class="step-box"><b>Step 2:</b> Fare un nodo semplice con il capo doppio senza stringere troppo.</div>
+      <div class="step-box"><b>Step 3:</b> Far passare l'intero amo all'interno dell'asola appena creata.</div>
+      <div class="step-box"><b>Step 4:</b> Inumidire con acqua, tirare i capi progressivamente e tagliare l'eccedenza.</div>
     </div>
 
     <div class="knot-card">
-      <div class="knot-title"><span>2. Nodo FG (Treccia ⇄ Fluorocarbon)</span><span style="font-size:0.75rem; color:var(--accent-orange);">Top Spinning</span></div>
-      <p style="font-size:0.8rem; color:var(--text-muted); line-height:1.4;">Treccia tesa con 16-20 spire a croce sul fluorocarbon, blocco con mezzo collo e nodo di chiusura.</p>
+      <div class="knot-title"><span>2. Nodo Clinch Rinforzato</span><span style="font-size:0.75rem; color:var(--accent-amber);">Rapido in Pesca</span></div>
+      <p style="font-size:0.8rem; color:var(--text-muted);">Ideale per cambi rapidi di esche artificiali.</p>
+      <div class="step-box"><b>Step 1:</b> Infilare il filo nell'occhiello e avvolgere il capo libero sul trave per 5-7 volte.</div>
+      <div class="step-box"><b>Step 2:</b> Infilare l'estremità del filo nell'asola vicina all'occhiello.</div>
+      <div class="step-box"><b>Step 3:</b> Ripassare il capo nell'anello grande appena formato.</div>
+      <div class="step-box"><b>Step 4:</b> Inumidire, serrare con decisione e tagliare il filo in eccesso.</div>
+    </div>
+
+    <div class="knot-card">
+      <div class="knot-title"><span>3. Nodo FG</span><span style="font-size:0.75rem; color:var(--accent-orange);">Treccia ⇄ Fluorocarbon</span></div>
+      <p style="font-size:0.8rem; color:var(--text-muted);">Il re dei nodi di giunzione, scorre perfettamente sugli anelli.</p>
+      <div class="step-box"><b>Step 1:</b> Tenere in tensione la treccia e incrociare il fluorocarbon creando spire alterne (16-20 passaggi).</div>
+      <div class="step-box"><b>Step 2:</b> Eseguire un mezzo collo di blocco con la treccia sul fluorocarbon.</div>
+      <div class="step-box"><b>Step 3:</b> Fare 3-4 nodi di chiusura alternati e bruciare leggermente il capo del fluorocarbon per sicurezza.</div>
     </div>
   </div>
 
@@ -1940,7 +1975,6 @@
       if (!spot.catches) spot.catches = [];
 
       if (editId) {
-        // Modifica cattura esistente
         const cIdx = spot.catches.findIndex(c => c.id === editId);
         if (cIdx !== -1) {
           spot.catches[cIdx] = {
@@ -1954,7 +1988,6 @@
           };
         }
       } else {
-        // Nuova cattura
         spot.catches.unshift({
           id: Date.now().toString(),
           species: speciesList.join(', '),
