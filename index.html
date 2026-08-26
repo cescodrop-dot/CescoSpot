@@ -41,25 +41,6 @@
       --border-color: #334155;
     }
 
-    /* MODALITÀ NOTTURNA ROSSA (SALVA-VISTA PER RIVA/BUIO) */
-    body.night-mode {
-      --bg-dark: #000000 !important;
-      --panel-bg: #0a0000 !important;
-      --card-bg: #180303 !important;
-      --accent-blue: #991b1b !important;
-      --accent-light-blue: #f87171 !important;
-      --accent-green: #ef4444 !important;
-      --accent-amber: #b91c1c !important;
-      --accent-orange: #dc2626 !important;
-      --accent-red: #ff0000 !important;
-      --text-light: #fca5a5 !important;
-      --text-muted: #7f1d1d !important;
-      --border-color: #450a0a !important;
-    }
-    body.night-mode #map {
-      filter: invert(100%) hue-rotate(180deg) brightness(85%) contrast(120%) sepia(100%) saturate(600%) hue-rotate(310deg);
-    }
-
     * { 
       box-sizing: border-box; 
       margin: 0; 
@@ -80,7 +61,6 @@
       flex-direction: column;
       overflow: hidden;
       overscroll-behavior: none;
-      transition: background 0.3s, color 0.3s;
     }
 
     .app-container {
@@ -126,7 +106,6 @@
       z-index: 1000;
       box-shadow: 0 4px 30px rgba(0,0,0,0.5);
     }
-    body.night-mode .top-telemetry-bar { background: rgba(15, 0, 0, 0.95); }
     
     .compass-track {
       position: relative;
@@ -185,7 +164,6 @@
       max-width: 380px;
     }
     
-    /* HDG Ridotto e Compatto */
     .telemetry-val {
       font-size: 1.15rem;
       font-weight: 800;
@@ -203,7 +181,6 @@
       text-transform: uppercase;
     }
 
-    /* Logo Centrale */
     .app-brand-logo {
       font-size: 0.9rem;
       font-weight: 900;
@@ -220,7 +197,6 @@
     }
     .app-brand-logo span { color: var(--accent-light-blue); }
     
-    /* Tasto Attiva ridotto alla sola Icona Circolare */
     .btn-compass-perm {
       background: rgba(255,255,255,0.1);
       color: var(--text-light);
@@ -290,7 +266,6 @@
       cursor: pointer;
       transition: all 0.2s;
     }
-    body.night-mode .map-btn { background: rgba(20, 0, 0, 0.9); }
     .map-btn:hover { background: var(--panel-bg); }
     .map-btn:active { transform: scale(0.9); }
     .map-btn.active { background: var(--accent-blue); border-color: var(--accent-light-blue); color: #fff; }
@@ -306,7 +281,6 @@
       box-shadow: 0 4px 15px rgba(0,0,0,0.5);
       overflow: hidden;
     }
-    body.night-mode .map-btn-group { background: rgba(20, 0, 0, 0.9); }
     .map-btn-group .map-btn { border-radius: 0; border: none; box-shadow: none; background: transparent; }
     .map-btn-group .map-btn:first-child { border-bottom: 1px solid rgba(255,255,255,0.1); }
 
@@ -421,7 +395,6 @@
       box-shadow: 0 -4px 30px rgba(0,0,0,0.6);
       width: 100%;
     }
-    body.night-mode nav.bottom-nav { background: #0a0000; }
     .nav-item {
       display: flex;
       flex-direction: column;
@@ -455,7 +428,6 @@
       position: relative;
       overflow: hidden;
     }
-    body.night-mode .weather-hero-card { background: linear-gradient(145deg, rgba(153, 27, 27, 0.3) 0%, rgba(20, 0, 0, 0.8) 100%); }
     .weather-hero-card::before {
       content:''; position:absolute; top:0; left:0; right:0; height:1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
     }
@@ -481,19 +453,16 @@
       min-width: 78px;
       flex-shrink: 0;
     }
-    body.night-mode .hourly-box { background: rgba(20, 0, 0, 0.7); }
     .hourly-time { font-size: 0.75rem; color: var(--text-muted); font-weight: 700; margin-bottom: 6px; }
     .hourly-icon { font-size: 1.4rem; margin-bottom: 6px; }
     .hourly-temp { font-size: 1rem; font-weight: 900; color: var(--text-light); }
     .hourly-wind { font-size: 0.7rem; color: var(--accent-light-blue); margin-top: 4px; font-weight: 700; }
 
     .widget-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); border-radius: 20px; padding: 18px; margin-bottom: 18px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-    body.night-mode .widget-card { background: rgba(30, 5, 5, 0.7); }
     .widget-title { font-size: 1.05rem; color: #fff; font-weight: 800; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
     
     .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; }
     .metric-box { background: rgba(15, 23, 42, 0.6); padding: 14px 10px; border-radius: 16px; text-align: center; border: 1px solid rgba(255,255,255,0.05); transition: transform 0.2s; }
-    body.night-mode .metric-box { background: rgba(20, 0, 0, 0.6); }
     .metric-box:active { transform: scale(0.95); }
     .metric-val { font-size: 1.25rem; font-weight: 800; color: var(--text-light); display:flex; align-items:center; justify-content:center; gap:8px; }
     .metric-lbl { font-size: 0.75rem; color: var(--accent-light-blue); margin-top: 6px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;}
@@ -508,7 +477,6 @@
       border: 1px solid rgba(255,255,255,0.1);
       margin-bottom: 12px;
     }
-    body.night-mode .search-bar-container { background: rgba(20, 0, 0, 0.8); }
     .search-bar-container i { color: var(--text-muted); margin-right: 14px; font-size: 1.2rem; }
     .search-bar-container input {
       border: none;
@@ -569,7 +537,6 @@
 
     /* Gestione Zone (Collapsable) */
     .zone-section { margin-bottom: 16px; background: rgba(30, 41, 59, 0.6); border-radius: 18px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); }
-    body.night-mode .zone-section { background: rgba(25, 5, 5, 0.6); }
     .zone-header {
       font-size: 1rem;
       font-weight: 800;
@@ -662,7 +629,6 @@
       margin-top: 8px;
       transition: border-color 0.2s;
     }
-    body.night-mode .form-control { background: rgba(20, 0, 0, 0.6); }
     .form-control:focus { border-color: var(--accent-light-blue); background: var(--bg-dark); }
 
     .color-picker-grid { display: flex; gap: 14px; overflow-x: auto; padding: 10px 0; margin-bottom: 16px; }
@@ -856,7 +822,7 @@
     </div>
   </div>
 
-  <!-- Barra Bussola con HDG Compatto, Logo Centrale e Tasto Attiva a Icona -->
+  <!-- Barra Bussola Super Compatta (Senza Modalità Rossa) -->
   <div class="top-telemetry-bar">
     <div class="compass-track">
       <div class="compass-ticks" id="compassTicks">
@@ -897,7 +863,6 @@
 
       <div class="left-controls">
         <button class="map-btn" onclick="toggleMapSearch()" title="Cerca un luogo"><i class="fa-solid fa-magnifying-glass"></i></button>
-        <button class="map-btn" id="nightModeBtn" onclick="toggleNightMode()" title="Modalità Notturna Rossa"><i class="fa-solid fa-moon"></i></button>
         <button class="map-btn" onclick="openKnotsModal()" title="Prontuario Nodi & Fili"><i class="fa-solid fa-circle-nodes"></i></button>
         <div class="map-btn-group">
           <button class="map-btn" onclick="map.zoomIn()" title="Zoom In"><i class="fa-solid fa-plus"></i></button>
@@ -1303,19 +1268,6 @@
     function closeInstallBanner() {
       installBanner.classList.remove('show');
       setTimeout(() => installBanner.style.display = 'none', 400);
-    }
-
-    // --- MODALITÀ NOTTURNA ROSSA ---
-    function toggleNightMode() {
-      document.body.classList.toggle('night-mode');
-      const isNight = document.body.classList.contains('night-mode');
-      const btn = document.getElementById('nightModeBtn');
-      btn.innerHTML = isNight ? '<i class="fa-solid fa-sun"></i>' : '<i class="fa-solid fa-moon"></i>';
-      localStorage.setItem('cescospot_night_mode', isNight ? 'true' : 'false');
-    }
-    if (localStorage.getItem('cescospot_night_mode') === 'true') {
-      document.body.classList.add('night-mode');
-      document.getElementById('nightModeBtn').innerHTML = '<i class="fa-solid fa-sun"></i>';
     }
 
     function openKnotsModal() { document.getElementById('modalKnots').classList.add('open'); }
