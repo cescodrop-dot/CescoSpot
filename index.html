@@ -226,7 +226,7 @@
       box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     }
     .btn-compass-perm:active { transform: scale(0.9); }
-    .btn-compass-perm.active { background: rgba(34, 197, 94, 0.2); color: var(--accent-green); border-color: var(--accent-green); }
+    .btn-compass-perm.active { background: rgba(34, 197, 94, 0.2); color: var(--accent-green); border-color: var(--accent-green); box-shadow: 0 0 12px rgba(34, 197, 94, 0.4); }
 
     .app-body { flex: 1; position: relative; overflow: hidden; width: 100%; }
 
@@ -789,7 +789,7 @@
     }
     .btn-refresh-weather:active { transform: scale(0.96); }
 
-    /* ENCICLOPEDIA STILE CATEGORIE & SCHEMI FOTO */
+    /* ENCICLOPEDIA STILE CATEGORIE */
     .wiki-cat-bar {
       display: flex;
       gap: 8px;
@@ -945,8 +945,9 @@
         <i class="fa-solid fa-fish" style="color:var(--accent-light-blue);"></i> CescoSpot <span>PRO</span>
       </div>
 
+      <!-- PULSANTE BUSSOLA CON ATTIVAZIONE/DISATTIVAZIONE TOGGLE -->
       <div id="compassControlContainer">
-        <button class="btn-compass-perm" onclick="initCompass()" title="Attiva Bussola"><i class="fa-solid fa-location-arrow"></i></button>
+        <button class="btn-compass-perm" onclick="toggleCompass()" title="Attiva/Disattiva Bussola"><i class="fa-solid fa-location-arrow"></i></button>
       </div>
     </div>
   </div>
@@ -1106,7 +1107,6 @@
           
           <div class="diagram-container">
             <svg viewBox="0 0 440 180" xmlns="http://www.w3.org/2000/svg">
-              <!-- 1 -->
               <g transform="translate(10, 10)">
                 <text x="35" y="25" font-size="20" font-weight="900" fill="#ef4444">1.</text>
                 <path d="M 45 10 L 45 90 C 45 140, 25 140, 25 100 L 35 40" fill="none" stroke="#2563eb" stroke-width="3.5" stroke-linecap="round"/>
@@ -1114,7 +1114,6 @@
                 <rect x="32" y="146" width="6" height="12" rx="2" fill="#0f172a"/>
                 <circle cx="35" cy="164" r="5" fill="none" stroke="#0f172a" stroke-width="3"/>
               </g>
-              <!-- 2 -->
               <g transform="translate(115, 10)">
                 <text x="35" y="25" font-size="20" font-weight="900" fill="#ef4444">2.</text>
                 <path d="M 45 10 L 45 60 C 45 90, 20 90, 20 65 C 20 40, 60 40, 60 85 C 60 120, 25 120, 25 105" fill="none" stroke="#2563eb" stroke-width="3.5" stroke-linecap="round"/>
@@ -1122,7 +1121,6 @@
                 <rect x="37" y="146" width="6" height="12" rx="2" fill="#0f172a"/>
                 <circle cx="40" cy="164" r="5" fill="none" stroke="#0f172a" stroke-width="3"/>
               </g>
-              <!-- 3 -->
               <g transform="translate(225, 10)">
                 <text x="35" y="25" font-size="20" font-weight="900" fill="#ef4444">3.</text>
                 <path d="M 45 10 L 45 60 C 45 80, 20 80, 20 60 C 20 35, 60 35, 60 100 C 60 160, 40 170, 40 170 C 20 170, 15 110, 20 70" fill="none" stroke="#2563eb" stroke-width="3.5" stroke-linecap="round"/>
@@ -1130,7 +1128,6 @@
                 <rect x="37" y="136" width="6" height="12" rx="2" fill="#0f172a"/>
                 <circle cx="40" cy="154" r="5" fill="none" stroke="#0f172a" stroke-width="3"/>
               </g>
-              <!-- 4 -->
               <g transform="translate(335, 10)">
                 <text x="35" y="25" font-size="20" font-weight="900" fill="#ef4444">4.</text>
                 <path d="M 45 10 L 35 125 L 40 85" fill="none" stroke="#2563eb" stroke-width="3.5" stroke-linecap="round"/>
@@ -1515,7 +1512,7 @@
     <button class="nav-item" onclick="switchTab('tabMe', this)"><i class="fa-solid fa-bookmark"></i>Archivio</button>
   </nav>
 
-  <!-- Modal Aggiungi/Modifica Spot con TUTTI i campi unificati (Comunicanti) -->
+  <!-- Modal Aggiungi/Modifica Spot -->
   <div class="modal" id="modalAddSpot">
     <div class="modal-drag-handle"></div>
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
@@ -2925,23 +2922,45 @@
       }
     }
 
+    // --- GESTIONE BUSSOLA ON / OFF ---
+    let compassActive = false;
     let lastHeading = 0;
-    function initCompass() {
+
+    function toggleCompass() {
       const btn = document.querySelector('.btn-compass-perm');
-      if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
-        DeviceOrientationEvent.requestPermission().then(response => {
-          if (response === 'granted') {
-            window.addEventListener('deviceorientation', handleOrientation, true);
-            btn.classList.add('active');
-          } else { alert("Permesso negato."); }
-        }).catch(console.error);
-      } else if (window.DeviceOrientationEvent) {
-        window.addEventListener('deviceorientation', handleOrientation, true);
-        btn.classList.add('active');
-      } else { alert("Sensore non supportato."); }
+      
+      if (compassActive) {
+        // Disattivazione
+        window.removeEventListener('deviceorientation', handleOrientation, true);
+        btn.classList.remove('active');
+        document.getElementById('hdgVal').innerHTML = `<i class="fa-regular fa-compass" style="font-size: 1rem; color: var(--text-muted);"></i> --° <small>HDG</small>`;
+        const pointer = document.getElementById('compassPointer');
+        if (pointer) pointer.style.left = '50%';
+        document.querySelectorAll('.compass-ticks span').forEach(span => {
+          span.style.color = 'var(--text-muted)';
+          span.style.transform = 'scale(1)';
+        });
+        compassActive = false;
+      } else {
+        // Attivazione
+        if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+          DeviceOrientationEvent.requestPermission().then(response => {
+            if (response === 'granted') {
+              window.addEventListener('deviceorientation', handleOrientation, true);
+              btn.classList.add('active');
+              compassActive = true;
+            } else { alert("Permesso bussola negato."); }
+          }).catch(console.error);
+        } else if (window.DeviceOrientationEvent) {
+          window.addEventListener('deviceorientation', handleOrientation, true);
+          btn.classList.add('active');
+          compassActive = true;
+        } else { alert("Sensore bussola non supportato su questo dispositivo."); }
+      }
     }
 
     function handleOrientation(event) {
+      if (!compassActive) return;
       let heading = event.webkitCompassHeading || (event.alpha !== null ? 360 - event.alpha : null);
       if (heading !== null && !isNaN(heading)) {
         document.getElementById('hdgVal').innerHTML = `<i class="fa-regular fa-compass" style="font-size: 1rem; color: var(--text-muted);"></i> ${Math.round(heading)}° <small>HDG</small>`;
