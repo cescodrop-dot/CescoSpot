@@ -445,6 +445,7 @@
       navigator.geolocation.getCurrentPosition(async (pos) => {
         const { latitude: lat, longitude: lng } = pos.coords;
         const now = new Date();
+      document.getElementById('weatherLocationText').innerHTML = `<i class="fa-solid fa-location-dot"></i> Posizione analizzata: ${center.lat.toFixed(4)}, ${center.lng.toFixed(4)}`;
         const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         
         let existingSpot = spots.find(s => L.latLng(s.lat, s.lng).distanceTo(L.latLng(lat, lng)) < 20);
@@ -1197,6 +1198,18 @@
             document.getElementById('wSeaTemp').innerText = "Interno";
           }
         }).catch(() => {});
+    }
+
+    function useCurrentLocationForForecast(button) {
+      if (!navigator.geolocation) { document.getElementById('weatherLocationText').innerText = 'GPS non supportato da questo dispositivo'; return; }
+      const original = button.innerHTML;
+      button.disabled = true;
+      button.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Localizzo';
+      navigator.geolocation.getCurrentPosition(
+        ({ coords }) => { map.setView([coords.latitude, coords.longitude], Math.max(map.getZoom(), 13)); updateForecastData(); button.innerHTML = original; button.disabled = false; },
+        () => { document.getElementById('weatherLocationText').innerText = 'Posizione non disponibile: usa il centro della mappa'; button.innerHTML = original; button.disabled = false; },
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
+      );
     }
 
     function switchTab(tabId, btn) {
