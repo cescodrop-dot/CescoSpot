@@ -38,7 +38,7 @@
     html, body {
       position: fixed;
       inset: 0;
-      width: 100vw;
+      width: 100%;
       height: 100dvh;
       background: var(--bg-dark);
       color: var(--text-light);
@@ -1204,5 +1204,16 @@
     #tabRigLab .bp-icon.weight { border-color: #94a3b8; color: #94a3b8; border-radius: 6px; }
     #tabRigLab .bp-icon.swivel { border-color: var(--accent-amber); color: var(--accent-amber); width: 24px; height: 24px; border-radius: 2px; }
     #tabRigLab .bp-icon.hook { border-color: var(--accent-green); color: var(--accent-green); background: transparent; border: none; font-size: 1.5rem; box-shadow: none;}
+
+    @media (max-width: 480px) {
+      .top-telemetry-bar { padding-left: 12px; padding-right: 12px; }
+      .telemetry-val, #compassControlContainer { width: 72px; }
+      .app-brand-logo { margin: 0 4px; max-width: 150px; }
+      .tab-inner { padding-left: 12px; padding-right: 12px; }
+      .nav-item { font-size: 0.7rem; gap: 3px; }
+      .nav-item i { width: 24px; min-width: 24px; height: 24px; font-size: 1.2rem; }
+      #tabRigLab .riglab-root { padding: 16px 12px; }
+      #tabRigLab .form-card { padding: 18px 16px; }
+    }
 
     @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
