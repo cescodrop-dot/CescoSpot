@@ -1,9 +1,109 @@
 (function exposeCescoStorage(globalScope) {
   'use strict';
 
-  function persistSpots() {
+  const DATABASE_NAME = 'CescoSpotDB';
+  const DATABASE_VERSION = 1;
+  const STATE_STORE = 'appState';
+  const SPOTS_RECORD = 'spots';
+
+  function requestToPromise(request) {
+    return new Promise((resolve, reject) => {
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error || new Error('Operazione IndexedDB non riuscita.'));
+    });
+  }
+
+  function openDatabase() {
+    if (!globalScope.indexedDB) return Promise.resolve(null);
+
+    return new Promise((resolve, reject) => {
+      const request = globalScope.indexedDB.open(DATABASE_NAME, DATABASE_VERSION);
+      request.onupgradeneeded = () => {
+        const database = request.result;
+        if (!database.objectStoreNames.contains(STATE_STORE)) database.createObjectStore(STATE_STORE);
+      };
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error || new Error('Impossibile aprire IndexedDB.'));
+      request.onblocked = () => reject(new Error('Aggiornamento dell’archivio bloccato da un’altra scheda aperta.'));
+    });
+  }
+
+  async function openDatabaseOrFallback() {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(spots));
+      return await openDatabase();
+    } catch (error) {
+      console.warn('IndexedDB non disponibile, uso temporaneamente l’archivio precedente:', error);
+      return null;
+    }
+  }
+
+  async function readDatabaseRecord(database, key) {
+    const transaction = database.transaction(STATE_STORE, 'readonly');
+    return requestToPromise(transaction.objectStore(STATE_STORE).get(key));
+  }
+
+  async function writeDatabaseRecord(database, key, value) {
+    const transaction = database.transaction(STATE_STORE, 'readwrite');
+    const completion = new Promise((resolve, reject) => {
+      transaction.oncomplete = resolve;
+      transaction.onerror = () => reject(transaction.error || new Error('Salvataggio IndexedDB non riuscito.'));
+      transaction.onabort = () => reject(transaction.error || new Error('Salvataggio IndexedDB annullato.'));
+    });
+    await requestToPromise(transaction.objectStore(STATE_STORE).put(value, key));
+    await completion;
+  }
+
+  function readLegacySpots() {
+    try {
+      const savedData = globalScope.localStorage?.getItem(STORAGE_KEY);
+      return savedData ? normalizeBackupPayload(JSON.parse(savedData)) : [];
+    } catch (error) {
+      throw new Error(`Archivio precedente non leggibile: ${error.message}`);
+    }
+  }
+
+  async function loadStoredSpots() {
+    const database = await openDatabaseOrFallback();
+    if (!database) return readLegacySpots();
+
+    try {
+      const storedSpots = await readDatabaseRecord(database, SPOTS_RECORD);
+      if (storedSpots !== undefined) return normalizeBackupPayload(storedSpots);
+
+      const legacySpots = readLegacySpots();
+      if (legacySpots.length > 0) {
+        await writeDatabaseRecord(database, SPOTS_RECORD, {
+          format: BACKUP_FORMAT,
+          version: BACKUP_VERSION,
+          updatedAt: new Date().toISOString(),
+          spots: legacySpots,
+        });
+      }
+      return legacySpots;
+    } finally {
+      database.close();
+    }
+  }
+
+  async function persistSpots() {
+    try {
+      const safeSpots = normalizeBackupPayload(spots);
+      const database = await openDatabaseOrFallback();
+      if (!database) {
+        globalScope.localStorage.setItem(STORAGE_KEY, JSON.stringify(safeSpots));
+        return true;
+      }
+
+      try {
+        await writeDatabaseRecord(database, SPOTS_RECORD, {
+          format: BACKUP_FORMAT,
+          version: BACKUP_VERSION,
+          updatedAt: new Date().toISOString(),
+          spots: safeSpots,
+        });
+      } finally {
+        database.close();
+      }
       return true;
     } catch (error) {
       console.error('Salvataggio CescoSpot non riuscito:', error);
@@ -91,7 +191,7 @@
     reader.readAsText(file);
   }
 
-  function confirmImportAction(action) {
+  async function confirmImportAction(action) {
     document.getElementById('importDialogOverlay').classList.remove('open');
     if (!pendingImportData || action === 'cancel') {
       pendingImportData = null;
@@ -119,7 +219,7 @@
       return;
     }
 
-    if (!persistSpots()) {
+    if (!await persistSpots()) {
       spots = previousSpots;
       pendingImportData = null;
       return;
@@ -130,6 +230,7 @@
   }
 
   Object.assign(globalScope, {
+    loadStoredSpots,
     persistSpots,
     escapeXml,
     exportGPX,
