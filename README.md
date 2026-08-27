@@ -54,3 +54,21 @@
 - **API Meteo & Idrologia:** [Open-Meteo API](https://open-meteo.com/).
 - **Geocoding:** Nominatim (OpenStreetMap).
 - **Icone:** Font Awesome 6.
+
+---
+
+## Sicurezza dei dati
+
+- I backup JSON includono formato, versione e data di esportazione.
+- Restano importabili anche i backup storici costituiti dal solo elenco degli spot.
+- Prima dell'importazione vengono controllati coordinate, identificativi, campi, fotografie e catture.
+- Un backup non valido viene rifiutato senza modificare l'archivio esistente.
+- In caso di spazio locale esaurito, l'app mostra un avviso e consiglia di esportare subito un backup.
+
+## Verifiche automatiche
+
+I controlli sulla validazione dei dati possono essere eseguiti con:
+
+```bash
+node --test tests/data-safety.test.mjs
+```
