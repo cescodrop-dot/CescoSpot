@@ -468,6 +468,8 @@
     .w-icon-huge { font-size: 4rem; color: var(--accent-amber); filter: drop-shadow(0 4px 10px rgba(234, 179, 8, 0.4)); margin-bottom: 8px; }
     .w-temp-huge { font-size: 3.6rem; font-weight: 900; letter-spacing: -2px; margin-bottom: 4px; line-height: 1; }
     .w-desc-text { font-size: 1.1rem; color: var(--accent-light-blue); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+    .weather-data-status { text-align: center; color: var(--text-muted); font-size: 0.75rem; font-weight: 700; margin: -8px 0 18px; }
+    .weather-data-status i { color: var(--accent-light-blue); margin-right: 4px; }
 
     /* Slider Meteo Orario 24h */
     .hourly-forecast-track {
