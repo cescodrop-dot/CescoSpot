@@ -416,14 +416,6 @@
     let editingSpotId = null;
     let tempMarker = null;
     let pendingImportData = null; 
-    
-    try {
-      const savedData = localStorage.getItem(STORAGE_KEY);
-      if (savedData) spots = normalizeBackupPayload(JSON.parse(savedData));
-    } catch(e) {
-      console.warn("Archivio locale non leggibile:", e);
-      alert('I dati locali non sono leggibili. Non verranno sovrascritti: prova a ripristinare un backup valido.');
-    }
 
     const iconPickerEl = document.getElementById('iconPicker');
     iconList.forEach((item, index) => {
@@ -450,7 +442,7 @@
 
     function quickDropSpot() {
       if (!navigator.geolocation) { alert("GPS non disponibile."); return; }
-      navigator.geolocation.getCurrentPosition((pos) => {
+      navigator.geolocation.getCurrentPosition(async (pos) => {
         const { latitude: lat, longitude: lng } = pos.coords;
         const now = new Date();
         const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -459,7 +451,7 @@
 
         if (existingSpot) {
           existingSpot.notes += ` | Aggiornato al volo alle ${timeStr}`;
-          persistSpots();
+          await persistSpots();
           renderMapSpots();
           map.flyTo([lat, lng], 16);
           alert(`⚡ Spot esistente aggiornato nelle vicinanze!`);
@@ -485,18 +477,18 @@
 
         fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=14`)
           .then(res => res.json())
-          .then(data => {
+          .then(async data => {
             if(data && data.address) {
               let city = data.address.city || data.address.town || data.address.village || data.address.county || '';
               let state = data.address.state || '';
               newSpot.zone = [city, state].filter(Boolean).join(', ') || 'Generale';
-              persistSpots();
+              await persistSpots();
               renderSavedSpotsUI();
             }
           }).catch(()=>{});
 
         spots.push(newSpot);
-        persistSpots();
+        await persistSpots();
         renderMapSpots();
         map.flyTo([lat, lng], 16);
         alert(`⚡ Spot salvato al volo!`);
@@ -595,7 +587,7 @@
       editingSpotId = null;
     }
 
-    function saveSpotFromModal() {
+    async function saveSpotFromModal() {
       const name = normalizeText(document.getElementById('spotName').value, 120) || 'Nuovo Spot';
       const zone = normalizeText(document.getElementById('spotZone').value, 160) || 'Generale';
       const techniques = normalizeTextArray(Array.from(selectedTechniquesSet));
@@ -632,7 +624,7 @@
         }
       }
       
-      if (!persistSpots()) return;
+      if (!await persistSpots()) return;
       renderMapSpots();
       closeModals();
       
@@ -677,10 +669,10 @@
       document.getElementById('modalAddSpot').classList.add('open');
     }
 
-    function deleteSpot(id) {
+    async function deleteSpot(id) {
       if(confirm("Eliminare definitivamente questo spot?")) {
         spots = spots.filter(s => s.id !== id);
-        persistSpots();
+        if (!await persistSpots()) return;
         renderMapSpots();
       }
     }
@@ -711,7 +703,7 @@
       removePhoto('catchPhotoData', 'catchPhotoBox');
     }
 
-    function saveCatch() {
+    async function saveCatch() {
       const spotId = document.getElementById('catchSpotId').value;
       const editId = document.getElementById('catchEditId').value;
       const spot = spots.find(s => s.id === spotId);
@@ -754,7 +746,7 @@
         });
       }
 
-      if (!persistSpots()) return;
+      if (!await persistSpots()) return;
       renderCatchesList(spot);
       renderSavedSpotsUI();
       resetCatchForm();
@@ -784,12 +776,12 @@
       }
     }
 
-    function deleteCatch(spotId, catchId) {
+    async function deleteCatch(spotId, catchId) {
       const spot = spots.find(s => s.id === spotId);
       if (!spot || !spot.catches) return;
       if (confirm("Eliminare questa cattura?")) {
         spot.catches = spot.catches.filter(c => c.id !== catchId);
-        persistSpots();
+        if (!await persistSpots()) return;
         renderCatchesList(spot);
         renderSavedSpotsUI();
       }
@@ -1294,8 +1286,18 @@
     style.innerHTML = `@keyframes pulse { from { transform: scale(1); opacity: 1; } to { transform: scale(1.3); opacity: 0.7; } }`;
     document.head.appendChild(style);
 
-    renderMapSpots();
-    if(spots.length > 0) map.setView([spots[spots.length-1].lat, spots[spots.length-1].lng], 13);
+    async function initializeStoredData() {
+      try {
+        spots = await loadStoredSpots();
+      } catch (error) {
+        console.warn('Archivio locale non leggibile:', error);
+        alert('I dati locali non sono leggibili. Non verranno sovrascritti: prova a ripristinare un backup valido.');
+      }
+      renderMapSpots();
+      if (spots.length > 0) map.setView([spots[spots.length - 1].lat, spots[spots.length - 1].lng], 13);
+    }
+
+    initializeStoredData();
     setTimeout(() => updateForecastData(null), 1000);
   
 
