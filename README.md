@@ -57,6 +57,18 @@
 
 ---
 
+## 🧩 Struttura del progetto
+
+- `index.html`: struttura dell'interfaccia.
+- `styles/app.css`: stile completo dell'app.
+- `js/manifest.js`: generazione del manifest PWA.
+- `js/data-safety.js`: validazione e normalizzazione dei dati.
+- `js/storage.js`: salvataggio, backup e ripristino.
+- `js/app.js`: logica principale e funzionalità dell'app.
+- `tests/`: controlli automatici su sicurezza e struttura.
+
+---
+
 ## Sicurezza dei dati
 
 - I backup JSON includono formato, versione e data di esportazione.
