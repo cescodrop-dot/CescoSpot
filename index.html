@@ -890,6 +890,11 @@
       max-height: 250px;
       object-fit: contain;
       border-radius: 8px;
+      cursor: zoom-in;
+      transition: transform 0.2s;
+    }
+    .wiki-img-container img:active {
+      transform: scale(0.95);
     }
 
     .step-list {
@@ -989,6 +994,51 @@
       100% { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0); }
     }
     .spot-highlight { animation: spotPulse 1.5s ease-out 2; border-color: var(--accent-light-blue) !important; }
+
+    /* LIGHTBOX OVERLAY FOTO FULLSCREEN */
+    .lightbox-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.95);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 99999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      padding: 10px;
+    }
+    .lightbox-overlay.show {
+      display: flex;
+      opacity: 1;
+    }
+    .lightbox-overlay img {
+      max-width: 95vw;
+      max-height: 90vh;
+      object-fit: contain;
+      border-radius: 12px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+      transform: scale(0.95);
+      transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .lightbox-overlay.show img {
+      transform: scale(1);
+    }
+    .btn-lightbox-close {
+      position: absolute;
+      top: calc(20px + env(safe-area-inset-top));
+      right: 20px;
+      background: rgba(30, 41, 59, 0.8);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.2);
+      width: 44px; height: 44px; border-radius: 50%;
+      font-size: 1.5rem; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 100000; transition: background 0.2s;
+    }
+    .btn-lightbox-close:active { background: var(--accent-red); }
 
     .leaflet-control-scale { margin-bottom: 24px !important; margin-left: 16px !important; border-color: rgba(255,255,255,0.5) !important; color: #fff !important; }
 
@@ -1211,7 +1261,7 @@
             <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:6px;">Il più robusto per ami con occhiello e moschettoni. Mantiene oltre il 95% del carico.</p>
             <div class="encyclopedia-photo-box">
               <div class="wiki-img-container">
-                <img src="palomar.jpg" alt="Schema Nodo Palomar">
+                <img src="palomar.jpg" alt="Schema Nodo Palomar" onclick="openLightbox(this.src)">
               </div>
             </div>
             <div class="step-list">
@@ -1231,7 +1281,7 @@
             <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:6px;">Molto resistente e facile da realizzare anche con fili capillari su ami senza occhiello.</p>
             <div class="encyclopedia-photo-box">
               <div class="wiki-img-container">
-                <img src="uni_paletta.jpg" alt="Schema Nodo Uni Paletta">
+                <img src="uni_paletta.jpg" alt="Schema Nodo Uni Paletta" onclick="openLightbox(this.src)">
               </div>
             </div>
             <div class="step-list">
@@ -1251,7 +1301,7 @@
             <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:6px;">Ideale per legature veloci su occhielli, moschettoni ed esche artificiali.</p>
             <div class="encyclopedia-photo-box">
               <div class="wiki-img-container">
-                <img src="clinch.jpg" alt="Schema Nodo Clinch">
+                <img src="clinch.jpg" alt="Schema Nodo Clinch" onclick="openLightbox(this.src)">
               </div>
             </div>
             <div class="step-list">
@@ -1270,7 +1320,7 @@
             <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:6px;">Zero spessore, perfetto per passare negli anelli della canna da spinning o feeder.</p>
             <div class="encyclopedia-photo-box">
               <div class="wiki-img-container">
-                <img src="fg_knot.jpg" alt="Schema Nodo FG">
+                <img src="fg_knot.jpg" alt="Schema Nodo FG" onclick="openLightbox(this.src)">
               </div>
             </div>
             <div class="step-list">
@@ -1289,7 +1339,7 @@
             <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:6px;">Ottima alternativa rapida all'FG quando si è in pesca e c'è poco tempo.</p>
             <div class="encyclopedia-photo-box">
               <div class="wiki-img-container">
-                <img src="albright.jpg" alt="Schema Nodo Albright">
+                <img src="albright.jpg" alt="Schema Nodo Albright" onclick="openLightbox(this.src)">
               </div>
             </div>
             <div class="step-list">
@@ -1308,7 +1358,7 @@
             <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:6px;">Asola non scorrevole che lascia l'artificiale (minnow) libero di muoversi.</p>
             <div class="encyclopedia-photo-box">
               <div class="wiki-img-container">
-                <img src="rapala.jpg" alt="Schema Nodo Rapala">
+                <img src="rapala.jpg" alt="Schema Nodo Rapala" onclick="openLightbox(this.src)">
               </div>
             </div>
             <div class="step-list">
@@ -1332,7 +1382,7 @@
             <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:8px;">Piombi decrescenti dal grande (in alto) al piccolo (in basso), distanziati.</p>
             <div class="encyclopedia-photo-box">
               <div class="wiki-img-container">
-                <img src="spallinata_aperta.jpg" alt="Schema Spallinata Aperta">
+                <img src="spallinata_aperta.jpg" alt="Schema Spallinata Aperta" onclick="openLightbox(this.src)">
               </div>
             </div>
             <div class="step-list">
@@ -1349,7 +1399,7 @@
             <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:8px;">Piombi raggruppati a formare un "bulk", seguiti da 2-3 piombini piccoli di segnalazione.</p>
             <div class="encyclopedia-photo-box">
               <div class="wiki-img-container">
-                <img src="spallinata_chiusa.jpg" alt="Schema Spallinata Chiusa">
+                <img src="spallinata_chiusa.jpg" alt="Schema Spallinata Chiusa" onclick="openLightbox(this.src)">
               </div>
             </div>
             <div class="step-list">
@@ -1366,7 +1416,7 @@
             <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:8px;">Serie di 25-35 piombini sferici spaccati concentrati in 40-60 cm.</p>
             <div class="encyclopedia-photo-box">
               <div class="wiki-img-container">
-                <img src="corona_tocco.jpg" alt="Schema Corona al Tocco">
+                <img src="corona_tocco.jpg" alt="Schema Corona al Tocco" onclick="openLightbox(this.src)">
               </div>
             </div>
             <div class="step-list">
@@ -1383,7 +1433,7 @@
             <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:8px;">Indispensabile quando la profondità dell'acqua supera la lunghezza della canna.</p>
             <div class="encyclopedia-photo-box">
               <div class="wiki-img-container">
-                <img src="galleggiante_scorr.jpg" alt="Schema Galleggiante Scorrevole">
+                <img src="galleggiante_scorr.jpg" alt="Schema Galleggiante Scorrevole" onclick="openLightbox(this.src)">
               </div>
             </div>
             <div class="step-list">
@@ -1406,7 +1456,7 @@
             <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:8px;">Il pesce mangia senza percepire la resistenza del pasturatore.</p>
             <div class="encyclopedia-photo-box">
               <div class="wiki-img-container">
-                <img src="running_rig.jpg" alt="Schema Running Rig">
+                <img src="running_rig.jpg" alt="Schema Running Rig" onclick="openLightbox(this.src)">
               </div>
             </div>
             <div class="step-list">
@@ -1424,7 +1474,7 @@
             <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:8px;">Pasturatore posizionato su un bracciolo laterale a perdere, terminale in asse.</p>
             <div class="encyclopedia-photo-box">
               <div class="wiki-img-container">
-                <img src="paternoster.jpg" alt="Schema Paternoster">
+                <img src="paternoster.jpg" alt="Schema Paternoster" onclick="openLightbox(this.src)">
               </div>
             </div>
             <div class="step-list">
@@ -1441,7 +1491,7 @@
             <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:8px;">Pasturatore piatto con terminale cortissimo (8-10 cm) annegato nella pastura.</p>
             <div class="encyclopedia-photo-box">
               <div class="wiki-img-container">
-                <img src="method_feeder.jpg" alt="Schema Method Feeder">
+                <img src="method_feeder.jpg" alt="Schema Method Feeder" onclick="openLightbox(this.src)">
               </div>
             </div>
             <div class="step-list">
@@ -1463,7 +1513,7 @@
             <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:8px;">L'innesco fondamentale: amo piombato dritto sulla schiena del silicone.</p>
             <div class="encyclopedia-photo-box">
               <div class="wiki-img-container">
-                <img src="jig_head.jpg" alt="Schema Jig Head">
+                <img src="jig_head.jpg" alt="Schema Jig Head" onclick="openLightbox(this.src)">
               </div>
             </div>
             <div class="step-list">
@@ -1480,7 +1530,7 @@
             <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:8px;">Piombo a proiettile scorrevole e amo offset nascosto nell'esca.</p>
             <div class="encyclopedia-photo-box">
               <div class="wiki-img-container">
-                <img src="texas_rig.jpg" alt="Schema Texas Rig">
+                <img src="texas_rig.jpg" alt="Schema Texas Rig" onclick="openLightbox(this.src)">
               </div>
             </div>
             <div class="step-list">
@@ -1497,7 +1547,7 @@
             <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:8px;">Amo a 90° sul trave con nodo Palomar e piombo finale a sgancio rapido.</p>
             <div class="encyclopedia-photo-box">
               <div class="wiki-img-container">
-                <img src="drop_shot.jpg" alt="Schema Drop Shot">
+                <img src="drop_shot.jpg" alt="Schema Drop Shot" onclick="openLightbox(this.src)">
               </div>
             </div>
             <div class="step-list">
@@ -1819,6 +1869,12 @@
     </div>
   </div>
 
+  <!-- LIGHTBOX FOTO FULLSCREEN -->
+  <div class="lightbox-overlay" id="lightboxOverlay" onclick="closeLightbox()">
+    <button class="btn-lightbox-close" onclick="closeLightbox()"><i class="fa-solid fa-xmark"></i></button>
+    <img id="lightboxImg" src="" alt="Zoom Immagine" onclick="event.stopPropagation()">
+  </div>
+
 </div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -1867,6 +1923,25 @@
       document.querySelectorAll('.wiki-chip').forEach(ch => ch.classList.remove('active'));
       document.getElementById(catId).classList.add('active');
       chipEl.classList.add('active');
+    }
+
+    // --- GESTIONE LIGHTBOX FOTO ---
+    function openLightbox(src) {
+      const overlay = document.getElementById('lightboxOverlay');
+      const img = document.getElementById('lightboxImg');
+      img.src = src;
+      overlay.style.display = 'flex';
+      void overlay.offsetWidth; 
+      overlay.classList.add('show');
+    }
+
+    function closeLightbox() {
+      const overlay = document.getElementById('lightboxOverlay');
+      overlay.classList.remove('show');
+      setTimeout(() => {
+        overlay.style.display = 'none';
+        document.getElementById('lightboxImg').src = '';
+      }, 300);
     }
 
     // --- MAPPE (GOOGLE SATELLITE + OPENCYCLEMAP) ---
@@ -2679,7 +2754,7 @@
       }
       container.innerHTML = spot.catches.map(c => `
         <div class="catch-item">
-          <div class="catch-thumb">${c.photo ? `<img src="${c.photo}">` : `<i class="fa-solid fa-fish" style="font-size:1.6rem; color:var(--text-muted);"></i>`}</div>
+          <div class="catch-thumb">${c.photo ? `<img src="${c.photo}" onclick="openLightbox(this.src)" style="cursor:zoom-in; pointer-events:auto;">` : `<i class="fa-solid fa-fish" style="font-size:1.6rem; color:var(--text-muted);"></i>`}</div>
           <div style="flex:1; overflow:hidden;">
             <b style="color:#fff; font-size:1rem;">${c.species}</b>
             <div style="font-size:0.8rem; color:var(--accent-orange); font-weight:700;">${c.weight ? `${c.weight} kg` : ''} ${c.length ? `• ${c.length} cm` : ''}</div>
@@ -2805,10 +2880,11 @@
         grouped[zone].forEach(s => {
           let iconInnerHtml = '';
           if (s.photo) {
-            iconInnerHtml = `<img src="${s.photo}">`;
+            // FOTO CLICKABILE (Lightbox) NELL'ARCHIVIO
+            iconInnerHtml = `<img src="${s.photo}" onclick="event.stopPropagation(); openLightbox(this.src)" style="cursor:zoom-in; pointer-events:auto;">`;
           } else {
             const isEmoji = s.icon && !s.icon.startsWith('fa-');
-            iconInnerHtml = isEmoji ? `<span style="font-size:1.4rem;">${s.icon}</span>` : `<i class="fa-solid ${s.icon}"></i>`;
+            iconInnerHtml = isEmoji ? `<span style="font-size:1.4rem; pointer-events:none;">${s.icon}</span>` : `<i class="fa-solid ${s.icon}" style="pointer-events:none;"></i>`;
           }
 
           const markerBorder = s.color === '#f8fafc' ? '#0f172a' : 'white';
