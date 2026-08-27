@@ -22,6 +22,19 @@
       -webkit-appearance: none; 
     }
 
+    i[class^="fa-"],
+    i[class*=" fa-"] {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 1.25em;
+      min-width: 1.25em;
+      line-height: 1;
+      vertical-align: -0.125em;
+      text-align: center;
+      pointer-events: none;
+    }
+
     html, body {
       position: fixed;
       inset: 0;
@@ -46,10 +59,10 @@
 
     /* CONTENITORE CENTRALE PER DESKTOP/TABLET (EVITA LO STRETCHING ECCESSIVO) */
     .tab-inner {
-      max-width: 900px;
+      max-width: 1120px;
       margin: 0 auto;
       width: 100%;
-      padding-bottom: 20px;
+      padding: 0 clamp(16px, 3vw, 32px) 20px;
     }
 
     /* PWA Install Banner */
@@ -182,6 +195,12 @@
       margin: 0 8px;
     }
     .app-brand-logo span { color: var(--accent-light-blue); }
+    .app-brand-logo i {
+      width: 1.1rem;
+      min-width: 1.1rem;
+      height: 1.1rem;
+      font-size: 0.95rem;
+    }
     
     #compassControlContainer {
       width: 85px;
@@ -217,8 +236,17 @@
       overflow-y: auto; 
       -webkit-overflow-scrolling: touch;
       padding-bottom: calc(20px + env(safe-area-inset-bottom));
+      background:
+        radial-gradient(circle at 50% 0%, rgba(2, 132, 199, 0.08), transparent 46%),
+        var(--bg-dark);
     }
     .tab-content.active { display: block; }
+
+    #tabMap {
+      padding-bottom: 0;
+      overflow: hidden;
+      background: #0f172a;
+    }
 
     #map { height: 100%; width: 100%; z-index: 1; background: #0f172a; }
 
@@ -405,8 +433,16 @@
       border: none;
       flex: 1;
       transition: color 0.3s;
+      min-height: 44px;
+      justify-content: center;
     }
-    .nav-item i { font-size: 1.4rem; transition: transform 0.2s; }
+    .nav-item i {
+      width: 26px;
+      min-width: 26px;
+      height: 26px;
+      font-size: 1.3rem;
+      transition: transform 0.2s;
+    }
     .nav-item.active { color: var(--accent-light-blue); font-weight: bold; }
     .nav-item.active i { transform: scale(1.15); }
 
@@ -1033,7 +1069,8 @@
       --text-muted: #94a3b8;
     }
 
-    #tabRigLab * { box-sizing: border-box; font-family: -apple-system, sans-serif; }
+    #tabRigLab { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    #tabRigLab * { box-sizing: border-box; }
     #tabRigLab .riglab-root { background: var(--bg-dark); color: var(--text-light); margin: 0; padding: 20px; display: flex; justify-content: center;}
     
     #tabRigLab .container { max-width: 800px; width: 100%; padding-bottom: 40px; }
@@ -1048,7 +1085,8 @@
       box-shadow: 0 4px 15px rgba(0,0,0,0.3);
     }
     #tabRigLab .app-brand-logo i { color: var(--accent-light-blue); }
-    #tabRigLab h1 { margin: 0; text-align: center; color: var(--accent-blue); font-weight: 900; font-size: 1.9rem; letter-spacing: 1px;}
+    #tabRigLab h1 { margin: 0; text-align: center; color: var(--accent-blue); font-weight: 900; font-size: 1.9rem; letter-spacing: 1px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+    #tabRigLab h1 i { width: 1.1em; min-width: 1.1em; height: 1.1em; }
     #tabRigLab h1 span { color: var(--text-light); opacity: 0.9; font-weight: 300; }
 
     /* FORM INPUT CLASSICI */
