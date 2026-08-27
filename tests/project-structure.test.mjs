@@ -12,6 +12,8 @@ test('carica gli asset locali estratti dal file principale', async () => {
   const html = await read('index.html');
 
   assert.match(html, /href="styles\/app\.css"/);
+  assert.match(html, /href="vendor\/fontawesome\/css\/all\.min\.css"/);
+  assert.doesNotMatch(html, /cdnjs\.cloudflare\.com\/ajax\/libs\/font-awesome/);
   assert.match(html, /src="js\/manifest\.js"/);
   assert.match(html, /src="js\/data-safety\.js"/);
   assert.match(html, /src="js\/storage\.js"/);
@@ -23,6 +25,9 @@ test('carica gli asset locali estratti dal file principale', async () => {
     read('js/data-safety.js'),
     read('js/storage.js'),
     read('js/app.js'),
+    read('vendor/fontawesome/css/all.min.css'),
+    read('vendor/fontawesome/webfonts/fa-solid-900.woff2'),
+    read('vendor/fontawesome/webfonts/fa-regular-400.woff2'),
   ]);
 });
 
