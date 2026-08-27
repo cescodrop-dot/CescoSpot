@@ -71,6 +71,9 @@
 
 ## Sicurezza dei dati
 
+- Spot, catture e fotografie vengono salvati in IndexedDB, più adatto ad archivi strutturati e immagini.
+- Al primo avvio dopo l'aggiornamento, i dati esistenti vengono copiati automaticamente da `localStorage`.
+- La vecchia copia non viene cancellata durante la migrazione e resta disponibile come sicurezza.
 - I backup JSON includono formato, versione e data di esportazione.
 - Restano importabili anche i backup storici costituiti dal solo elenco degli spot.
 - Prima dell'importazione vengono controllati coordinate, identificativi, campi, fotografie e catture.
@@ -82,5 +85,5 @@
 I controlli sulla validazione dei dati possono essere eseguiti con:
 
 ```bash
-node --test tests/data-safety.test.mjs
+node --test tests/*.test.mjs
 ```
