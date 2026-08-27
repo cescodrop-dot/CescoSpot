@@ -1046,20 +1046,45 @@
       const center = map.getCenter();
       const now = new Date();
 
-      const lp = 2551443; 
-      const newMoon = new Date(1970, 0, 7, 20, 35, 0).getTime();
-      const phase = ((now.getTime() - newMoon) / 1000) % lp;
-      const phaseIndex = Math.floor((phase / lp) * 8); 
-      const phases = ['Luna Nuova', 'Crescente', 'Primo Quarto', 'Crescente Gibbosa', 'Luna Piena', 'Calante Gibbosa', 'Ultimo Quarto', 'Calante'];
-      document.getElementById('moonPhaseText').innerText = 'Fase lunare stimata: ' + (phases[phaseIndex] || 'Non disponibile');
+      const formatClock = (date) => date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const formatWindow = (date, minutes) => {
+        const start = new Date(date.getTime() - minutes * 60000);
+        const end = new Date(date.getTime() + minutes * 60000);
+        return `${formatClock(start)} - ${formatClock(end)}`;
+      };
 
-      // Marea e finestre solunari richiedono stazioni e dati astronomici legati
-      // alle coordinate: non presentiamo più calcoli arbitrari come dati reali.
-      document.getElementById('fishActivityText').innerText = 'Dati reali non configurati';
-      document.getElementById('fishActivityText').style.color = 'var(--text-muted)';
-      ['major1', 'major2', 'minor1', 'minor2'].forEach((id) => {
-        document.getElementById(id).innerText = '--:--';
-      });
+      if (window.SunCalc) {
+        const illumination = SunCalc.getMoonIllumination(now);
+        const phase = illumination.phase;
+        const phaseName = phase < 0.03 || phase >= 0.97 ? 'Luna Nuova'
+          : phase < 0.22 ? 'Luna Crescente' : phase < 0.28 ? 'Primo Quarto'
+          : phase < 0.47 ? 'Gibbosa Crescente' : phase < 0.53 ? 'Luna Piena'
+          : phase < 0.72 ? 'Gibbosa Calante' : phase < 0.78 ? 'Ultimo Quarto' : 'Luna Calante';
+        document.getElementById('moonPhaseText').innerText = `Luna: ${phaseName} · ${Math.round(illumination.fraction * 100)}% illuminata`;
+
+        const startOfDay = new Date(now);
+        startOfDay.setHours(0, 0, 0, 0);
+        let highest = { time: startOfDay, altitude: -Infinity };
+        let lowest = { time: startOfDay, altitude: Infinity };
+        for (let minute = 0; minute < 24 * 60; minute += 5) {
+          const time = new Date(startOfDay.getTime() + minute * 60000);
+          const altitude = SunCalc.getMoonPosition(time, center.lat, center.lng).altitude;
+          if (altitude > highest.altitude) highest = { time, altitude };
+          if (altitude < lowest.altitude) lowest = { time, altitude };
+        }
+        const chronological = [highest.time, lowest.time].sort((a, b) => a - b);
+        const minorOne = new Date((chronological[0].getTime() + chronological[1].getTime()) / 2);
+        const minorTwo = new Date(minorOne.getTime() + 12 * 60 * 60000);
+        document.getElementById('major1').innerText = formatWindow(highest.time, 60);
+        document.getElementById('major2').innerText = formatWindow(lowest.time, 60);
+        document.getElementById('minor1').innerText = formatWindow(minorOne, 30);
+        document.getElementById('minor2').innerText = formatWindow(minorTwo, 30);
+        document.getElementById('fishActivityText').innerText = 'Finestre astronomiche locali';
+        document.getElementById('fishActivityText').style.color = 'var(--accent-green)';
+      } else {
+        document.getElementById('moonPhaseText').innerText = 'Calcolo lunare non disponibile';
+        document.getElementById('fishActivityText').innerText = 'Dati astronomici non disponibili';
+      }
       document.getElementById('wTideState').innerText = 'Non disponibile';
 
       fetch(`https://api.open-meteo.com/v1/forecast?latitude=${center.lat}&longitude=${center.lng}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m,wind_direction_10m,surface_pressure,cloud_cover&hourly=temperature_2m,weather_code,precipitation,wind_speed_10m,surface_pressure&daily=sunrise,sunset&timezone=auto`)
@@ -1086,6 +1111,7 @@
             document.getElementById('wPressure').innerText = `${Math.round(data.current.surface_pressure)} hPa`;
             document.getElementById('wRain').innerText = `${data.current.precipitation} mm`;
             document.getElementById('wClouds').innerText = `${data.current.cloud_cover}%`;
+            document.getElementById('weatherDataStatus').innerHTML = `<i class="fa-solid fa-cloud-sun"></i> Open-Meteo · aggiornato alle ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
 
             if (data.hourly && data.hourly.time) {
               const curH = now.getHours();
@@ -1127,7 +1153,10 @@
             }
 
             if(btnElement) { btnElement.innerHTML = '<i class="fa-solid fa-check"></i> Aggiornato'; setTimeout(() => { btnElement.innerHTML = originalHtml; btnElement.disabled = false; }, 2000); }
-        }).catch(() => { document.getElementById('wDesc').innerText = 'Errore di Rete'; });
+        }).catch(() => {
+          document.getElementById('wDesc').innerText = 'Errore di Rete';
+          document.getElementById('weatherDataStatus').innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Impossibile aggiornare i dati meteo';
+        });
 
       fetch(`https://flood-api.open-meteo.com/v1/flood?latitude=${center.lat}&longitude=${center.lng}&daily=river_discharge&past_days=2&forecast_days=3`)
         .then(res => res.json())
