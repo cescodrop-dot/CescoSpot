@@ -82,7 +82,7 @@ function sunCoords(d) {
 }
 
 // calculates sun position for a given date and latitude/longitude
-export function getPosition(date, lat, lng) {
+function getPosition(date, lat, lng) {
     const lw = rad * -lng;
     const phi = rad * lat;
     const d = toDays(date);
@@ -99,7 +99,7 @@ export function getPosition(date, lat, lng) {
 }
 
 // sun times configuration (angle, morning name, evening name)
-export const times = [
+const times = [
     [-0.833, 'sunrise', 'sunset'],
     [-0.3, 'sunriseEnd', 'sunsetStart'],
     [-6, 'dawn', 'dusk'],
@@ -109,7 +109,7 @@ export const times = [
 ];
 
 // adds a custom time to the times config
-export function addTime(angle, riseName, setName) {
+function addTime(angle, riseName, setName) {
     times.push([angle, riseName, setName]);
 }
 
@@ -159,7 +159,7 @@ function getSetJ(h0, dt, sign, lw, phi, decT) {
 // calculates sun times for a given date, latitude/longitude, and, optionally,
 // the observer height (in meters) relative to the horizon
 
-export function getTimes(date, lat, lng, height = 0) {
+function getTimes(date, lat, lng, height = 0) {
 
     const lw = rad * -lng;
     const phi = rad * lat;
@@ -390,7 +390,7 @@ function moonCoords(d) {
     };
 }
 
-export function getMoonPosition(date, lat, lng) {
+function getMoonPosition(date, lat, lng) {
     const lw = rad * -lng;
     const phi = rad * lat;
     const d = toDays(date);
@@ -415,7 +415,7 @@ export function getMoonPosition(date, lat, lng) {
 }
 
 // moon illumination parameters, Meeus ch. 48 (and idlastro's mphase.pro)
-export function getMoonIllumination(date = new Date()) {
+function getMoonIllumination(date = new Date()) {
     const d = toDaysTT(toDays(date));
     const s = sunCoords(d);
     const m = moonCoords(d);
@@ -465,7 +465,7 @@ function refineMoonCross(tMs, lat, lng) {
     return tMs;
 }
 
-export function getMoonTimes(date, lat, lng) {
+function getMoonTimes(date, lat, lng) {
     // scan the UTC calendar day of the given date; the date is treated as a UTC instant like
     // everywhere else in the API. For a local-civil-day window, pass a date at local midnight.
     const t = new Date(date);
@@ -525,3 +525,5 @@ export function getMoonTimes(date, lat, lng) {
 
     return result;
 }
+
+window.SunCalc = { getPosition, getTimes, getMoonPosition, getMoonIllumination, getMoonTimes, addTime, times };
