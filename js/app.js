@@ -1051,33 +1051,16 @@
       const phase = ((now.getTime() - newMoon) / 1000) % lp;
       const phaseIndex = Math.floor((phase / lp) * 8); 
       const phases = ['Luna Nuova', 'Crescente', 'Primo Quarto', 'Crescente Gibbosa', 'Luna Piena', 'Calante Gibbosa', 'Ultimo Quarto', 'Calante'];
-      document.getElementById('moonPhaseText').innerText = 'Fase Lunare: ' + (phases[phaseIndex] || 'Stabile');
-      
-      let activityScore = 50; 
-      if (phaseIndex === 0 || phaseIndex === 4) activityScore += 40; else if (phaseIndex === 2 || phaseIndex === 6) activityScore += 20; else activityScore += 10; 
-      const activityTextEl = document.getElementById('fishActivityText');
-      if (activityScore >= 80) { activityTextEl.innerText = `${activityScore}% - Eccellente`; activityTextEl.style.color = '#22c55e'; }
-      else if (activityScore >= 60) { activityTextEl.innerText = `${activityScore}% - Buona`; activityTextEl.style.color = '#38bdf8'; }
-      else { activityTextEl.innerText = `${activityScore}% - Moderata`; activityTextEl.style.color = '#eab308'; }
+      document.getElementById('moonPhaseText').innerText = 'Fase lunare stimata: ' + (phases[phaseIndex] || 'Non disponibile');
 
-      let h1 = (now.getDate() * 50) % 1440; 
-      let hMajor1 = new Date(); hMajor1.setHours(Math.floor(h1/60), h1%60);
-      let hMajor2 = new Date(); hMajor2.setHours(Math.floor(h1/60) + 12, h1%60);
-      function formatTimeSpan(d) { let m = new Date(d.getTime() + 120 * 60000); return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')} - ${String(m.getHours()).padStart(2,'0')}:${String(m.getMinutes()).padStart(2,'0')}`; }
-      document.getElementById('major1').innerText = formatTimeSpan(hMajor1);
-      document.getElementById('major2').innerText = formatTimeSpan(hMajor2);
-      
-      let hMinor1 = new Date(hMajor1.getTime() + 5.5 * 3600000);
-      let hMinor2 = new Date(hMajor2.getTime() + 5.5 * 3600000);
-      function formatTimeSpanMin(d) { let m = new Date(d.getTime() + 60 * 60000); return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')} - ${String(m.getHours()).padStart(2,'0')}:${String(m.getMinutes()).padStart(2,'0')}`; }
-      document.getElementById('minor1').innerText = formatTimeSpanMin(hMinor1);
-      document.getElementById('minor2').innerText = formatTimeSpanMin(hMinor2);
-
-      const tideHours = ((now.getHours() * 60 + now.getMinutes()) / 60) % 12.4;
-      if (tideHours < 3.1) document.getElementById('wTideState').innerText = "In Salita";
-      else if (tideHours < 6.2) document.getElementById('wTideState').innerText = "Alta Marea";
-      else if (tideHours < 9.3) document.getElementById('wTideState').innerText = "In Discesa";
-      else document.getElementById('wTideState').innerText = "Bassa Marea";
+      // Marea e finestre solunari richiedono stazioni e dati astronomici legati
+      // alle coordinate: non presentiamo più calcoli arbitrari come dati reali.
+      document.getElementById('fishActivityText').innerText = 'Dati reali non configurati';
+      document.getElementById('fishActivityText').style.color = 'var(--text-muted)';
+      ['major1', 'major2', 'minor1', 'minor2'].forEach((id) => {
+        document.getElementById(id).innerText = '--:--';
+      });
+      document.getElementById('wTideState').innerText = 'Non disponibile';
 
       fetch(`https://api.open-meteo.com/v1/forecast?latitude=${center.lat}&longitude=${center.lng}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m,wind_direction_10m,surface_pressure,cloud_cover&hourly=temperature_2m,weather_code,precipitation,wind_speed_10m,surface_pressure&daily=sunrise,sunset&timezone=auto`)
         .then(res => res.json())
