@@ -724,7 +724,7 @@
     }
     .multi-badge i:hover { opacity: 1; }
 
-    /* Anteprima Foto */
+    /* Anteprima Foto Spot/Logbook */
     .photo-preview-box {
       width: 100%;
       height: 160px;
@@ -860,32 +860,31 @@
       white-space: nowrap;
     }
     
-    /* Box Upload Foto Enciclopedia Ripristinati */
+    /* Box Foto Enciclopedia Statici */
     .encyclopedia-photo-box {
       width: 100%;
-      height: 200px;
-      background: rgba(15, 23, 42, 0.6);
-      border: 2px dashed rgba(56, 189, 248, 0.4);
-      border-radius: 12px;
+      height: auto;
+      min-height: 180px;
+      background: transparent;
+      border: none;
       display: flex;
       align-items: center;
       justify-content: center;
-      overflow: hidden;
       margin: 12px 0;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .encyclopedia-photo-box:hover {
-      border-color: var(--accent-light-blue);
-      background: rgba(15, 23, 42, 0.9);
+      cursor: default;
     }
     .wiki-img-container {
-      width: 100%; height: 100%; 
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      width: 100%;
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      justify-content: center;
     }
     .wiki-img-container img {
-      width: 100%; height: 100%; 
+      width: 100%; 
+      max-height: 250px;
       object-fit: contain;
+      border-radius: 8px;
     }
 
     .step-list {
@@ -1205,11 +1204,9 @@
               <span style="font-size:0.75rem; color:var(--accent-green);">Ami con occhiello</span>
             </div>
             <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:6px;">Il più robusto per ami con occhiello e moschettoni. Mantiene oltre il 95% del carico.</p>
-            <input type="file" id="wikiUpload_palomar" accept="image/*" style="display:none;" onchange="handleWikiPhoto(event, 'wikiImg_palomar', 'palomar')">
-            <div class="encyclopedia-photo-box" onclick="document.getElementById('wikiUpload_palomar').click()">
-              <div id="wikiImg_palomar" class="wiki-img-container">
-                <i class="fa-solid fa-image" style="font-size:2.5rem; color:var(--accent-light-blue);"></i>
-                <span style="font-size:0.85rem; font-weight:700; margin-top:8px;">Tocca per caricare foto schema</span>
+            <div class="encyclopedia-photo-box">
+              <div class="wiki-img-container">
+                <img src="palomar.jpg" alt="Schema Nodo Palomar">
               </div>
             </div>
             <div class="step-list">
@@ -1227,11 +1224,9 @@
               <span style="font-size:0.75rem; color:var(--accent-orange);">Classico da Riva</span>
             </div>
             <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:6px;">La legatura d'elezione per ami a paletta (Bolognese, Feeder, Fondo).</p>
-            <input type="file" id="wikiUpload_snell" accept="image/*" style="display:none;" onchange="handleWikiPhoto(event, 'wikiImg_snell', 'snell')">
-            <div class="encyclopedia-photo-box" onclick="document.getElementById('wikiUpload_snell').click()">
-              <div id="wikiImg_snell" class="wiki-img-container">
-                <i class="fa-solid fa-image" style="font-size:2.5rem; color:var(--accent-light-blue);"></i>
-                <span style="font-size:0.85rem; font-weight:700; margin-top:8px;">Tocca per caricare foto schema</span>
+            <div class="encyclopedia-photo-box">
+              <div class="wiki-img-container">
+                <img src="snell.jpg" alt="Schema Nodo Snell">
               </div>
             </div>
             <div class="step-list">
@@ -1241,18 +1236,36 @@
             </div>
           </div>
 
+          <!-- Uni Knot (Amo a Paletta) -->
+          <div class="encyclopedia-card">
+            <div class="encyclopedia-card-title">
+              <span>3. Nodo Uni (Amo a Paletta)</span>
+              <span style="font-size:0.75rem; color:var(--accent-light-blue);">Fili Sottili</span>
+            </div>
+            <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:6px;">Ottima alternativa allo Snell, molto resistente e facile da realizzare anche con fili capillari.</p>
+            <div class="encyclopedia-photo-box">
+              <div class="wiki-img-container">
+                <img src="uni_paletta.jpg" alt="Schema Nodo Uni Paletta">
+              </div>
+            </div>
+            <div class="step-list">
+              <div class="step-item"><div class="step-badge">1</div><span>Fai un'asola parallela al gambo dell'amo.</span></div>
+              <div class="step-item"><div class="step-badge">2</div><span>Passa il capo libero all'interno dell'asola e attorno al gambo per 5-6 volte.</span></div>
+              <div class="step-item"><div class="step-badge">3</div><span>Tira il capo libero per serrare le spire senza stringere del tutto.</span></div>
+              <div class="step-item"><div class="step-badge">4</div><span>Fai scivolare il nodo fin sotto la paletta e stringi definitivamente.</span></div>
+            </div>
+          </div>
+
           <!-- Clinch -->
           <div class="encyclopedia-card">
             <div class="encyclopedia-card-title">
-              <span>3. Clinch Rinforzato</span>
+              <span>4. Clinch Rinforzato</span>
               <span style="font-size:0.75rem; color:var(--accent-amber);">Per Moschettoni</span>
             </div>
             <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:6px;">Ideale per legature veloci su occhielli, moschettoni ed esche artificiali.</p>
-            <input type="file" id="wikiUpload_clinch" accept="image/*" style="display:none;" onchange="handleWikiPhoto(event, 'wikiImg_clinch', 'clinch')">
-            <div class="encyclopedia-photo-box" onclick="document.getElementById('wikiUpload_clinch').click()">
-              <div id="wikiImg_clinch" class="wiki-img-container">
-                <i class="fa-solid fa-image" style="font-size:2.5rem; color:var(--accent-light-blue);"></i>
-                <span style="font-size:0.85rem; font-weight:700; margin-top:8px;">Tocca per caricare foto schema</span>
+            <div class="encyclopedia-photo-box">
+              <div class="wiki-img-container">
+                <img src="clinch.jpg" alt="Schema Nodo Clinch">
               </div>
             </div>
             <div class="step-list">
@@ -1265,15 +1278,13 @@
           <!-- FG Knot -->
           <div class="encyclopedia-card">
             <div class="encyclopedia-card-title">
-              <span>4. Nodo FG (Treccia ⇄ Fluoro)</span>
+              <span>5. Nodo FG (Treccia ⇄ Fluoro)</span>
               <span style="font-size:0.75rem; color:var(--accent-light-blue);">Top Tenuta</span>
             </div>
             <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:6px;">Zero spessore, perfetto per passare negli anelli della canna da spinning o feeder.</p>
-            <input type="file" id="wikiUpload_fg" accept="image/*" style="display:none;" onchange="handleWikiPhoto(event, 'wikiImg_fg', 'fg')">
-            <div class="encyclopedia-photo-box" onclick="document.getElementById('wikiUpload_fg').click()">
-              <div id="wikiImg_fg" class="wiki-img-container">
-                <i class="fa-solid fa-image" style="font-size:2.5rem; color:var(--accent-light-blue);"></i>
-                <span style="font-size:0.85rem; font-weight:700; margin-top:8px;">Tocca per caricare foto schema</span>
+            <div class="encyclopedia-photo-box">
+              <div class="wiki-img-container">
+                <img src="fg_knot.jpg" alt="Schema Nodo FG">
               </div>
             </div>
             <div class="step-list">
@@ -1286,15 +1297,13 @@
           <!-- Albright -->
           <div class="encyclopedia-card">
             <div class="encyclopedia-card-title">
-              <span>5. Nodo Albright Special</span>
+              <span>6. Nodo Albright Special</span>
               <span style="font-size:0.75rem; color:var(--accent-green);">Giunzione Veloce</span>
             </div>
             <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:6px;">Ottima alternativa rapida all'FG quando si è in pesca e c'è poco tempo.</p>
-            <input type="file" id="wikiUpload_albright" accept="image/*" style="display:none;" onchange="handleWikiPhoto(event, 'wikiImg_albright', 'albright')">
-            <div class="encyclopedia-photo-box" onclick="document.getElementById('wikiUpload_albright').click()">
-              <div id="wikiImg_albright" class="wiki-img-container">
-                <i class="fa-solid fa-image" style="font-size:2.5rem; color:var(--accent-light-blue);"></i>
-                <span style="font-size:0.85rem; font-weight:700; margin-top:8px;">Tocca per caricare foto schema</span>
+            <div class="encyclopedia-photo-box">
+              <div class="wiki-img-container">
+                <img src="albright.jpg" alt="Schema Nodo Albright">
               </div>
             </div>
             <div class="step-list">
@@ -1307,15 +1316,13 @@
           <!-- Rapala -->
           <div class="encyclopedia-card">
             <div class="encyclopedia-card-title">
-              <span>6. Nodo Rapala (Loop Knot)</span>
+              <span>7. Nodo Rapala (Loop Knot)</span>
               <span style="font-size:0.75rem; color:var(--accent-orange);">Asola Artificiali</span>
             </div>
             <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:6px;">Asola non scorrevole che lascia l'artificiale (minnow) libero di muoversi.</p>
-            <input type="file" id="wikiUpload_rapala" accept="image/*" style="display:none;" onchange="handleWikiPhoto(event, 'wikiImg_rapala', 'rapala')">
-            <div class="encyclopedia-photo-box" onclick="document.getElementById('wikiUpload_rapala').click()">
-              <div id="wikiImg_rapala" class="wiki-img-container">
-                <i class="fa-solid fa-image" style="font-size:2.5rem; color:var(--accent-light-blue);"></i>
-                <span style="font-size:0.85rem; font-weight:700; margin-top:8px;">Tocca per caricare foto schema</span>
+            <div class="encyclopedia-photo-box">
+              <div class="wiki-img-container">
+                <img src="rapala.jpg" alt="Schema Nodo Rapala">
               </div>
             </div>
             <div class="step-list">
@@ -1337,11 +1344,9 @@
               <span style="font-size:0.75rem; color:var(--accent-light-blue);">Acque Lente</span>
             </div>
             <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:8px;">Piombi decrescenti dal grande (in alto) al piccolo (in basso), distanziati.</p>
-            <input type="file" id="wikiUpload_spallinata_aperta" accept="image/*" style="display:none;" onchange="handleWikiPhoto(event, 'wikiImg_spallinata_aperta', 'spallinata_aperta')">
-            <div class="encyclopedia-photo-box" onclick="document.getElementById('wikiUpload_spallinata_aperta').click()">
-              <div id="wikiImg_spallinata_aperta" class="wiki-img-container">
-                <i class="fa-solid fa-image" style="font-size:2.5rem; color:var(--accent-light-blue);"></i>
-                <span style="font-size:0.85rem; font-weight:700; margin-top:8px;">Tocca per caricare foto schema</span>
+            <div class="encyclopedia-photo-box">
+              <div class="wiki-img-container">
+                <img src="spallinata_aperta.jpg" alt="Schema Spallinata Aperta">
               </div>
             </div>
             <div class="step-list">
@@ -1356,11 +1361,9 @@
               <span style="font-size:0.75rem; color:var(--accent-orange);">Corrente Media/Veloce</span>
             </div>
             <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:8px;">Piombi raggruppati a formare un "bulk", seguiti da 2-3 piombini piccoli di segnalazione.</p>
-            <input type="file" id="wikiUpload_spallinata_chiusa" accept="image/*" style="display:none;" onchange="handleWikiPhoto(event, 'wikiImg_spallinata_chiusa', 'spallinata_chiusa')">
-            <div class="encyclopedia-photo-box" onclick="document.getElementById('wikiUpload_spallinata_chiusa').click()">
-              <div id="wikiImg_spallinata_chiusa" class="wiki-img-container">
-                <i class="fa-solid fa-image" style="font-size:2.5rem; color:var(--accent-light-blue);"></i>
-                <span style="font-size:0.85rem; font-weight:700; margin-top:8px;">Tocca per caricare foto schema</span>
+            <div class="encyclopedia-photo-box">
+              <div class="wiki-img-container">
+                <img src="spallinata_chiusa.jpg" alt="Schema Spallinata Chiusa">
               </div>
             </div>
             <div class="step-list">
@@ -1375,11 +1378,9 @@
               <span style="font-size:0.75rem; color:var(--accent-green);">Buche & Torrenti</span>
             </div>
             <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:8px;">Serie di 25-35 piombini sferici spaccati concentrati in 40-60 cm.</p>
-            <input type="file" id="wikiUpload_corona_tocco" accept="image/*" style="display:none;" onchange="handleWikiPhoto(event, 'wikiImg_corona_tocco', 'corona_tocco')">
-            <div class="encyclopedia-photo-box" onclick="document.getElementById('wikiUpload_corona_tocco').click()">
-              <div id="wikiImg_corona_tocco" class="wiki-img-container">
-                <i class="fa-solid fa-image" style="font-size:2.5rem; color:var(--accent-light-blue);"></i>
-                <span style="font-size:0.85rem; font-weight:700; margin-top:8px;">Tocca per caricare foto schema</span>
+            <div class="encyclopedia-photo-box">
+              <div class="wiki-img-container">
+                <img src="corona_tocco.jpg" alt="Schema Corona al Tocco">
               </div>
             </div>
             <div class="step-list">
@@ -1394,11 +1395,9 @@
               <span style="font-size:0.75rem; color:var(--accent-amber);">Fondali Alti (Dighe)</span>
             </div>
             <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:8px;">Indispensabile quando la profondità dell'acqua supera la lunghezza della canna.</p>
-            <input type="file" id="wikiUpload_galleggiante_scorr" accept="image/*" style="display:none;" onchange="handleWikiPhoto(event, 'wikiImg_galleggiante_scorr', 'galleggiante_scorr')">
-            <div class="encyclopedia-photo-box" onclick="document.getElementById('wikiUpload_galleggiante_scorr').click()">
-              <div id="wikiImg_galleggiante_scorr" class="wiki-img-container">
-                <i class="fa-solid fa-image" style="font-size:2.5rem; color:var(--accent-light-blue);"></i>
-                <span style="font-size:0.85rem; font-weight:700; margin-top:8px;">Tocca per caricare foto schema</span>
+            <div class="encyclopedia-photo-box">
+              <div class="wiki-img-container">
+                <img src="galleggiante_scorr.jpg" alt="Schema Galleggiante Scorrevole">
               </div>
             </div>
             <div class="step-list">
@@ -1419,11 +1418,9 @@
               <span style="font-size:0.75rem; color:var(--accent-green);">Top Sensibilità</span>
             </div>
             <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:8px;">Il pesce mangia senza percepire la resistenza del pasturatore.</p>
-            <input type="file" id="wikiUpload_running_rig" accept="image/*" style="display:none;" onchange="handleWikiPhoto(event, 'wikiImg_running_rig', 'running_rig')">
-            <div class="encyclopedia-photo-box" onclick="document.getElementById('wikiUpload_running_rig').click()">
-              <div id="wikiImg_running_rig" class="wiki-img-container">
-                <i class="fa-solid fa-image" style="font-size:2.5rem; color:var(--accent-light-blue);"></i>
-                <span style="font-size:0.85rem; font-weight:700; margin-top:8px;">Tocca per caricare foto schema</span>
+            <div class="encyclopedia-photo-box">
+              <div class="wiki-img-container">
+                <img src="running_rig.jpg" alt="Schema Running Rig">
               </div>
             </div>
             <div class="step-list">
@@ -1439,11 +1436,9 @@
               <span style="font-size:0.75rem; color:var(--accent-amber);">Acque Correnti</span>
             </div>
             <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:8px;">Pasturatore posizionato su un bracciolo laterale a perdere, terminale in asse.</p>
-            <input type="file" id="wikiUpload_paternoster" accept="image/*" style="display:none;" onchange="handleWikiPhoto(event, 'wikiImg_paternoster', 'paternoster')">
-            <div class="encyclopedia-photo-box" onclick="document.getElementById('wikiUpload_paternoster').click()">
-              <div id="wikiImg_paternoster" class="wiki-img-container">
-                <i class="fa-solid fa-image" style="font-size:2.5rem; color:var(--accent-light-blue);"></i>
-                <span style="font-size:0.85rem; font-weight:700; margin-top:8px;">Tocca per caricare foto schema</span>
+            <div class="encyclopedia-photo-box">
+              <div class="wiki-img-container">
+                <img src="paternoster.jpg" alt="Schema Paternoster">
               </div>
             </div>
             <div class="step-list">
@@ -1458,11 +1453,9 @@
               <span style="font-size:0.75rem; color:var(--accent-orange);">Carpe & Laghetto</span>
             </div>
             <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:8px;">Pasturatore piatto con terminale cortissimo (8-10 cm) annegato nella pastura.</p>
-            <input type="file" id="wikiUpload_method" accept="image/*" style="display:none;" onchange="handleWikiPhoto(event, 'wikiImg_method', 'method')">
-            <div class="encyclopedia-photo-box" onclick="document.getElementById('wikiUpload_method').click()">
-              <div id="wikiImg_method" class="wiki-img-container">
-                <i class="fa-solid fa-image" style="font-size:2.5rem; color:var(--accent-light-blue);"></i>
-                <span style="font-size:0.85rem; font-weight:700; margin-top:8px;">Tocca per caricare foto schema</span>
+            <div class="encyclopedia-photo-box">
+              <div class="wiki-img-container">
+                <img src="method_feeder.jpg" alt="Schema Method Feeder">
               </div>
             </div>
             <div class="step-list">
@@ -1482,11 +1475,9 @@
               <span style="font-size:0.75rem; color:var(--accent-light-blue);">Spinning Classico</span>
             </div>
             <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:8px;">L'innesco fondamentale: amo piombato dritto sulla schiena del silicone.</p>
-            <input type="file" id="wikiUpload_jig_head" accept="image/*" style="display:none;" onchange="handleWikiPhoto(event, 'wikiImg_jig_head', 'jig_head')">
-            <div class="encyclopedia-photo-box" onclick="document.getElementById('wikiUpload_jig_head').click()">
-              <div id="wikiImg_jig_head" class="wiki-img-container">
-                <i class="fa-solid fa-image" style="font-size:2.5rem; color:var(--accent-light-blue);"></i>
-                <span style="font-size:0.85rem; font-weight:700; margin-top:8px;">Tocca per caricare foto schema</span>
+            <div class="encyclopedia-photo-box">
+              <div class="wiki-img-container">
+                <img src="jig_head.jpg" alt="Schema Jig Head">
               </div>
             </div>
             <div class="step-list">
@@ -1501,11 +1492,9 @@
               <span style="font-size:0.75rem; color:var(--accent-green);">Rifiuti & Erbai</span>
             </div>
             <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:8px;">Piombo a proiettile scorrevole e amo offset nascosto nell'esca.</p>
-            <input type="file" id="wikiUpload_texas_rig" accept="image/*" style="display:none;" onchange="handleWikiPhoto(event, 'wikiImg_texas_rig', 'texas_rig')">
-            <div class="encyclopedia-photo-box" onclick="document.getElementById('wikiUpload_texas_rig').click()">
-              <div id="wikiImg_texas_rig" class="wiki-img-container">
-                <i class="fa-solid fa-image" style="font-size:2.5rem; color:var(--accent-light-blue);"></i>
-                <span style="font-size:0.85rem; font-weight:700; margin-top:8px;">Tocca per caricare foto schema</span>
+            <div class="encyclopedia-photo-box">
+              <div class="wiki-img-container">
+                <img src="texas_rig.jpg" alt="Schema Texas Rig">
               </div>
             </div>
             <div class="step-list">
@@ -1520,11 +1509,9 @@
               <span style="font-size:0.75rem; color:var(--accent-orange);">Persico & Vista</span>
             </div>
             <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:8px;">Amo a 90° sul trave con nodo Palomar e piombo finale a sgancio rapido.</p>
-            <input type="file" id="wikiUpload_drop_shot" accept="image/*" style="display:none;" onchange="handleWikiPhoto(event, 'wikiImg_drop_shot', 'drop_shot')">
-            <div class="encyclopedia-photo-box" onclick="document.getElementById('wikiUpload_drop_shot').click()">
-              <div id="wikiImg_drop_shot" class="wiki-img-container">
-                <i class="fa-solid fa-image" style="font-size:2.5rem; color:var(--accent-light-blue);"></i>
-                <span style="font-size:0.85rem; font-weight:700; margin-top:8px;">Tocca per caricare foto schema</span>
+            <div class="encyclopedia-photo-box">
+              <div class="wiki-img-container">
+                <img src="drop_shot.jpg" alt="Schema Drop Shot">
               </div>
             </div>
             <div class="step-list">
@@ -1832,7 +1819,7 @@
     </div>
   </div>
 
-  <!-- MODALE CUSTOM IMPORT DIALOG CON TASTO ANNULLA -->
+  <!-- MODALE CUSTOM IMPORT DIALOG -->
   <div class="import-dialog-overlay" id="importDialogOverlay">
     <div class="import-dialog-card">
       <div style="font-size: 2.2rem; color: var(--accent-light-blue); margin-bottom: 8px;"><i class="fa-solid fa-file-import"></i></div>
@@ -1894,58 +1881,6 @@
       document.querySelectorAll('.wiki-chip').forEach(ch => ch.classList.remove('active'));
       document.getElementById(catId).classList.add('active');
       chipEl.classList.add('active');
-    }
-
-    // --- GESTIONE FOTO WIKI MEMORIZZATE IN LOCALSTORAGE ---
-    function handleWikiPhoto(event, targetContainerId, wikiKey) {
-      const file = event.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const img = new Image();
-        img.onload = function() {
-          const canvas = document.createElement('canvas');
-          const maxDim = 800; 
-          let width = img.width;
-          let height = img.height;
-          if (width > height && width > maxDim) {
-            height = Math.round((height * maxDim) / width);
-            width = maxDim;
-          } else if (height > maxDim) {
-            width = Math.round((width * maxDim) / height);
-            height = maxDim;
-          }
-          canvas.width = width;
-          canvas.height = height;
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0, width, height);
-          const compressed = canvas.toDataURL('image/jpeg', 0.8);
-
-          localStorage.setItem('cescospot_wiki_' + wikiKey, compressed);
-          const container = document.getElementById(targetContainerId);
-          if (container) {
-            container.innerHTML = `<img src="${compressed}">`;
-          }
-        };
-        img.src = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    }
-
-    function loadWikiPhotos() {
-      const keys = [
-        'palomar', 'snell', 'clinch', 'fg', 'albright', 'rapala',
-        'spallinata_aperta', 'spallinata_chiusa', 'corona_tocco', 'galleggiante_scorr',
-        'running_rig', 'paternoster', 'method',
-        'jig_head', 'texas_rig', 'drop_shot'
-      ];
-      keys.forEach(k => {
-        const saved = localStorage.getItem('cescospot_wiki_' + k);
-        if (saved) {
-          const container = document.getElementById('wikiImg_' + k);
-          if (container) container.innerHTML = `<img src="${saved}">`;
-        }
-      });
     }
 
     // --- MAPPE (GOOGLE SATELLITE + OPENCYCLEMAP) ---
@@ -2210,7 +2145,7 @@
       renderSpeciesSelector(Array.from(selectedSpeciesSet));
     }
 
-    // --- COMPRESSIONE FOTO LOCALI ---
+    // --- COMPRESSIONE FOTO LOCALI (PER SPOT E CATTURE) ---
     function handlePhotoUpload(event, hiddenInputId, previewBoxId) {
       const file = event.target.files[0];
       if (!file) return;
@@ -2301,7 +2236,7 @@
     let mapCircles = {};
     let editingSpotId = null;
     let tempMarker = null;
-    let pendingImportData = null; // Memorizza temporaneamente il file caricato
+    let pendingImportData = null; 
     
     try {
       const savedData = localStorage.getItem('cescospot_data');
@@ -2456,7 +2391,7 @@
 
       if (!pendingImportData || action === 'cancel') {
         pendingImportData = null;
-        return; // Annullato senza toccare nulla
+        return; 
       }
 
       if (action === 'merge') {
@@ -3144,7 +3079,6 @@
       btn.classList.add('active');
       if(tabId === 'tabMap') setTimeout(() => map.invalidateSize(), 300);
       if(tabId === 'tabForecasts') updateForecastData();
-      if(tabId === 'tabWiki') loadWikiPhotos();
     }
 
     let watchId = null;
