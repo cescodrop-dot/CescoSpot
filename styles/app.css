@@ -1222,4 +1222,24 @@
       #tabRigLab .form-card { padding: 18px 16px; }
     }
 
+
+    /* Meteo: priorità visiva per lettura rapida sul posto */
+    #tabForecasts .tab-inner { max-width: 760px; }
+    #tabForecasts .weather-hero-card { margin-bottom: 10px; padding: 22px 20px 18px; }
+    #tabForecasts .w-temp-huge { font-size: clamp(3.3rem, 13vw, 4.6rem); }
+    #tabForecasts .weather-location-context { margin-bottom: 14px; }
+    #tabForecasts .widget-card { padding: 16px; margin-bottom: 14px; }
+    #tabForecasts .widget-title { margin-bottom: 12px; }
+    #tabForecasts .metric-grid { gap: 9px; }
+    #tabForecasts .metric-box { min-height: 82px; padding: 12px 8px; display: flex; flex-direction: column; justify-content: center; }
+    #tabForecasts .metric-val { font-size: 1.15rem; }
+    #tabForecasts .metric-lbl { font-size: 0.68rem; line-height: 1.25; }
+    #tabForecasts .hourly-forecast-track { margin: 0 -4px; padding: 2px 4px 10px; }
+    #tabForecasts .hourly-box { min-width: 74px; padding: 10px 8px; }
+
+    @media (min-width: 700px) {
+      #tabForecasts .metric-grid { grid-template-columns: repeat(3, 1fr); }
+      #tabForecasts .weather-hero-card { padding: 30px 24px 24px; }
+    }
+
     @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
