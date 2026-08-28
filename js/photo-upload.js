@@ -111,13 +111,14 @@
     return true;
   }
 
-  if (!install()) {
-    let attempts = 0;
-    const timer = setInterval(() => {
-      attempts += 1;
-      if (install() || attempts >= 200) clearInterval(timer);
-    }, 50);
+  function installWhenReady() {
+    if (install()) return;
+    if (typeof document !== 'undefined' && document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', install, { once: true });
+    }
   }
+
+  installWhenReady();
 
   globalScope.CescoPhotoUpload = Object.freeze({
     MAX_SOURCE_BYTES,
