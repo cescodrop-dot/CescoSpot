@@ -64,6 +64,14 @@ test('provider mappa non usa tile Google e mostra attribuzioni', async () => {
   assert.match(providers, /OpenTopoMap/);
 });
 
+test('satellite include nomi, confini e viabilità', async () => {
+  const providers = await read('js/map-providers.js');
+
+  assert.match(providers, /World_Boundaries_and_Places\/MapServer\/tile/);
+  assert.match(providers, /World_Transportation\/MapServer\/tile/);
+  assert.match(providers, /L\.layerGroup\(\[imageryBase, transportOverlay, labelsOverlay\]\)/);
+});
+
 test('service worker non precarica tile cartografici esterni', async () => {
   const worker = await read('sw.js');
 
