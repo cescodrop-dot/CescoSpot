@@ -25,6 +25,10 @@
   mapProvidersScript.src = 'js/map-providers.js';
   document.head.appendChild(mapProvidersScript);
 
+  const modalAccessibilityScript = document.createElement('script');
+  modalAccessibilityScript.src = 'js/modal-accessibility.js';
+  document.head.appendChild(modalAccessibilityScript);
+
   if ('serviceWorker' in navigator && location.protocol !== 'file:') {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('./sw.js').catch(error => {

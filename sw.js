@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'cescospot-v5';
+const CACHE_VERSION = 'cescospot-v6';
 const APP_SHELL = [
   './',
   './index.html',
@@ -10,6 +10,7 @@ const APP_SHELL = [
   './js/quick-drop.js',
   './js/river-status.js',
   './js/map-providers.js',
+  './js/modal-accessibility.js',
   './vendor/leaflet/leaflet.js',
   './vendor/leaflet/leaflet.css',
   './vendor/leaflet/images/marker-icon.png',
