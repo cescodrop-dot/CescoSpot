@@ -105,20 +105,7 @@
     reader.readAsDataURL(file);
   }
 
-  function install() {
-    if (typeof globalScope.handlePhotoUpload !== 'function') return false;
-    globalScope.handlePhotoUpload = robustPhotoUpload;
-    return true;
-  }
-
-  function installWhenReady() {
-    if (install()) return;
-    if (typeof document !== 'undefined' && document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', install, { once: true });
-    }
-  }
-
-  installWhenReady();
+  globalScope.handlePhotoUpload = robustPhotoUpload;
 
   globalScope.CescoPhotoUpload = Object.freeze({
     MAX_SOURCE_BYTES,

@@ -17,6 +17,14 @@ test('il caricamento foto limita sorgente e output e gestisce gli errori', async
   assert.match(source, /dataUrl\.length <= MAX_OUTPUT_CHARS/);
 });
 
+test('il modulo foto possiede direttamente handlePhotoUpload', async () => {
+  const source = await read('js/photo-upload.js');
+
+  assert.match(source, /globalScope\.handlePhotoUpload = robustPhotoUpload/);
+  assert.doesNotMatch(source, /typeof globalScope\.handlePhotoUpload !== 'function'/);
+  assert.doesNotMatch(source, /DOMContentLoaded|setInterval/);
+});
+
 test('il gestore foto è caricato e disponibile offline', async () => {
   const manifest = await read('js/manifest.js');
   const worker = await read('sw.js');
