@@ -57,7 +57,7 @@ jobs:
           tests = Path('tests/project-structure.test.mjs')
           text = tests.read_text()
           marker = "test('spot rapido usa le coordinate GPS ricevute'"
-          block = """test('Leaflet è locale e disponibile nell'app shell offline', async () => {\n  const html = await read('index.html');\n  const worker = await read('sw.js');\n\n  assert.match(html, /href=\"vendor\\/leaflet\\/leaflet\\.css\"/);\n  assert.match(html, /src=\"vendor\\/leaflet\\/leaflet\\.js\"/);\n  assert.doesNotMatch(html, /unpkg\\.com\\/leaflet/);\n  assert.match(worker, /vendor\\/leaflet\\/leaflet\\.js/);\n  assert.match(worker, /vendor\\/leaflet\\/leaflet\\.css/);\n  await Promise.all([\n    read('vendor/leaflet/leaflet.js'),\n    read('vendor/leaflet/leaflet.css'),\n    read('vendor/leaflet/LICENSE'),\n  ]);\n});\n\n"""
+          block = """test(\"Leaflet è locale e disponibile nell'app shell offline\", async () => {\n  const html = await read('index.html');\n  const worker = await read('sw.js');\n\n  assert.match(html, /href=\"vendor\\/leaflet\\/leaflet\\.css\"/);\n  assert.match(html, /src=\"vendor\\/leaflet\\/leaflet\\.js\"/);\n  assert.doesNotMatch(html, /unpkg\\.com\\/leaflet/);\n  assert.match(worker, /vendor\\/leaflet\\/leaflet\\.js/);\n  assert.match(worker, /vendor\\/leaflet\\/leaflet\\.css/);\n  await Promise.all([\n    read('vendor/leaflet/leaflet.js'),\n    read('vendor/leaflet/leaflet.css'),\n    read('vendor/leaflet/LICENSE'),\n  ]);\n});\n\n"""
           if "Leaflet è locale" not in text:
               text = text.replace(marker, block + marker)
           tests.write_text(text)
