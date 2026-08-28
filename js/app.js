@@ -44,23 +44,10 @@
     }
 
 
-    // --- MAPPE (GOOGLE SATELLITE + OPENCYCLEMAP) ---
+    // --- MAPPA ---
     const map = L.map('map', { zoomControl: false, attributionControl: false }).setView([41.9028, 12.4964], 6);
 
-    const satLayer = L.layerGroup([
-      L.tileLayer('https://mt1.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', { maxZoom: 20 })
-    ]).addTo(map);
-
-    const topoLayer = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', { maxZoom: 17 });
-    let isSat = true;
-
     L.control.scale({ imperial: false, position: 'bottomleft' }).addTo(map);
-
-    function toggleMapType() {
-      if(isSat) { map.removeLayer(satLayer); topoLayer.addTo(map); }
-      else { map.removeLayer(topoLayer); satLayer.addTo(map); }
-      isSat = !isSat;
-    }
 
     // --- LISTE TECNICHE, SPECIE E ESCHE ---
     const allTechniques = ["Spinning", "Feeder", "Carpfishing", "Mosca", "Galleggiante / Bolognese", "Fondo / Surfcasting", "Trout Area", "Baitcasting", "Spinning UL", "Eging", "Bolentino", "Pesca al tocco", "Esche siliconiche piombate", "Altro"];
