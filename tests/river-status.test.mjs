@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 
 await import('../js/river-status.js');
@@ -26,4 +27,17 @@ test('non inventa uno stato con dati insufficienti', () => {
   const result = classifyRiverStatus([null, null, 12, null, null], 2);
   assert.equal(result.available, false);
   assert.equal(result.status, 'Dati idrologici insufficienti');
+});
+
+
+test('il flusso idrologico passa esplicitamente dal modulo senza override fetch', async () => {
+  const [appSource, moduleSource] = await Promise.all([
+    readFile(new URL('../js/app.js', import.meta.url), 'utf8'),
+    readFile(new URL('../js/river-status.js', import.meta.url), 'utf8')
+  ]);
+  assert.match(appSource, /flood-api\.open-meteo\.com\/v1\/flood/);
+  assert.match(appSource, /CescoRiverStatus\.renderRiverStatus\(fdata\?\.daily\?\.river_discharge\)/);
+  assert.doesNotMatch(appSource, /Regolare \/ Pescabile|Portata Alta \/ Piena/);
+  assert.doesNotMatch(moduleSource, /globalScope\.fetch\s*=|installFloodResponseObserver|setTimeout\(/);
+  assert.match(moduleSource, /globalScope\.CescoRiverStatus\s*=.*renderRiverStatus/s);
 });

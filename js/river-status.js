@@ -79,28 +79,5 @@
     iconEl.innerHTML = `<i class="fa-solid ${result.icon}" style="color:${color};"></i>`;
   }
 
-  function installFloodResponseObserver() {
-    if (typeof document === 'undefined' || typeof globalScope.fetch !== 'function') return;
-    const nativeFetch = globalScope.fetch.bind(globalScope);
-
-    globalScope.fetch = function cescoFetch(...args) {
-      return nativeFetch(...args).then(response => {
-        const request = args[0];
-        const url = typeof request === 'string' ? request : request && request.url;
-        if (typeof url === 'string' && url.includes('flood-api.open-meteo.com')) {
-          response.clone().json()
-            .then(payload => {
-              const values = payload?.daily?.river_discharge;
-              setTimeout(() => renderRiverStatus(values), 0);
-              setTimeout(() => renderRiverStatus(values), 150);
-            })
-            .catch(() => setTimeout(() => renderRiverStatus([]), 0));
-        }
-        return response;
-      });
-    };
-  }
-
   globalScope.CescoRiverStatus = Object.freeze({ classifyRiverStatus, renderRiverStatus });
-  installFloodResponseObserver();
 })(globalThis);

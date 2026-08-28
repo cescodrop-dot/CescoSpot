@@ -1034,28 +1034,9 @@
       fetch(`https://flood-api.open-meteo.com/v1/flood?latitude=${center.lat}&longitude=${center.lng}&daily=river_discharge&past_days=2&forecast_days=3`)
         .then(res => res.json())
         .then(fdata => {
-          if (fdata && fdata.daily && fdata.daily.river_discharge) {
-            const discharges = fdata.daily.river_discharge.filter(v => v !== null);
-            if (discharges.length > 0) {
-              const todayVal = discharges[2] !== undefined ? discharges[2] : discharges[discharges.length - 1];
-              const pastVal = discharges[0] !== undefined ? discharges[0] : todayVal;
-              const diff = todayVal - pastVal;
-              document.getElementById('riverDischarge').innerText = `${todayVal.toFixed(1)} m³/s`;
-              const statusEl = document.getElementById('riverStatusText');
-              const iconEl = document.getElementById('riverTrendIcon');
-              const trendEl = document.getElementById('riverTrend');
-
-              if (todayVal > 150 || diff > 40) { statusEl.innerText = "Portata Alta / Piena"; statusEl.style.color = "var(--accent-red)"; iconEl.innerHTML = `<i class="fa-solid fa-triangle-exclamation" style="color:var(--accent-red);"></i>`; trendEl.innerText = "In Salita"; trendEl.style.color = "var(--accent-red)"; }
-              else if (diff > 5) { statusEl.innerText = "Livello in Aumento"; statusEl.style.color = "var(--accent-amber)"; iconEl.innerHTML = `<i class="fa-solid fa-arrow-trend-up" style="color:var(--accent-amber);"></i>`; trendEl.innerText = "In Aumento"; trendEl.style.color = "var(--accent-amber)"; }
-              else if (diff < -5) { statusEl.innerText = "Livello in Calo"; statusEl.style.color = "var(--accent-green)"; iconEl.innerHTML = `<i class="fa-solid fa-arrow-trend-down" style="color:var(--accent-green);"></i>`; trendEl.innerText = "In Discesa"; trendEl.style.color = "var(--accent-green)"; }
-              else { statusEl.innerText = "Regolare / Pescabile"; statusEl.style.color = "var(--accent-green)"; iconEl.innerHTML = `<i class="fa-solid fa-water" style="color:var(--accent-green);"></i>`; trendEl.innerText = "Stabile"; trendEl.style.color = "var(--accent-light-blue)"; }
-            } else {
-              document.getElementById('riverDischarge').innerText = "Bacino Chiuso";
-              document.getElementById('riverStatusText').innerText = "Regolare";
-              document.getElementById('riverTrend').innerText = "Stabile";
-            }
-          }
-        }).catch(() => {});
+          CescoRiverStatus.renderRiverStatus(fdata?.daily?.river_discharge);
+        })
+        .catch(() => CescoRiverStatus.renderRiverStatus([]));
 
       fetch(`https://marine-api.open-meteo.com/v1/marine?latitude=${center.lat}&longitude=${center.lng}&current=wave_height,wave_period,sea_surface_temperature`)
         .then(res => res.json())
