@@ -13,6 +13,10 @@
   const blob = new Blob([stringManifest], { type: 'application/json' });
   document.getElementById('manifestLink').setAttribute('href', URL.createObjectURL(blob));
 
+  const quickDropScript = document.createElement('script');
+  quickDropScript.src = 'js/quick-drop.js';
+  document.head.appendChild(quickDropScript);
+
   if ('serviceWorker' in navigator && location.protocol !== 'file:') {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('./sw.js').catch(error => {
