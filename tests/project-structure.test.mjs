@@ -38,6 +38,22 @@ test('carica gli asset locali estratti dal file principale', async () => {
   ]);
 });
 
+test("Leaflet è locale e disponibile nell'app shell offline", async () => {
+  const html = await read('index.html');
+  const worker = await read('sw.js');
+
+  assert.match(html, /href="vendor\/leaflet\/leaflet\.css"/);
+  assert.match(html, /src="vendor\/leaflet\/leaflet\.js"/);
+  assert.doesNotMatch(html, /unpkg\.com\/leaflet/);
+  assert.match(worker, /vendor\/leaflet\/leaflet\.js/);
+  assert.match(worker, /vendor\/leaflet\/leaflet\.css/);
+  await Promise.all([
+    read('vendor/leaflet/leaflet.js'),
+    read('vendor/leaflet/leaflet.css'),
+    read('vendor/leaflet/LICENSE'),
+  ]);
+});
+
 test('spot rapido usa le coordinate GPS ricevute', async () => {
   const quickDrop = await read('js/quick-drop.js');
 

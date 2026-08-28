@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'cescospot-v4';
+const CACHE_VERSION = 'cescospot-v5';
 const APP_SHELL = [
   './',
   './index.html',
@@ -10,6 +10,12 @@ const APP_SHELL = [
   './js/quick-drop.js',
   './js/river-status.js',
   './js/map-providers.js',
+  './vendor/leaflet/leaflet.js',
+  './vendor/leaflet/leaflet.css',
+  './vendor/leaflet/images/marker-icon.png',
+  './vendor/leaflet/images/marker-icon-2x.png',
+  './vendor/leaflet/images/marker-shadow.png',
+  './vendor/leaflet/LICENSE',
   './vendor/suncalc.js',
   './vendor/fontawesome/css/all.min.css',
   './vendor/fontawesome/webfonts/fa-solid-900.woff2',
@@ -62,18 +68,5 @@ self.addEventListener('fetch', event => {
       }))
     );
     return;
-  }
-
-  if (requestUrl.hostname === 'unpkg.com') {
-    event.respondWith(
-      caches.match(event.request).then(cached => {
-        const network = fetch(event.request).then(response => {
-          const copy = response.clone();
-          caches.open(CACHE_VERSION).then(cache => cache.put(event.request, copy));
-          return response;
-        });
-        return cached || network;
-      })
-    );
   }
 });
