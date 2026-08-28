@@ -1,0 +1,264 @@
+/* Mobile layout polish: CescoSpot PRO */
+
+@media (max-width: 768px) {
+  .top-telemetry-bar {
+    padding-top: calc(6px + env(safe-area-inset-top));
+    padding-bottom: 6px;
+    background: rgba(7, 13, 29, 0.92);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+  }
+
+  .compass-track {
+    margin-bottom: 2px;
+    padding-bottom: 9px;
+  }
+
+  .compass-ticks {
+    font-size: 0.64rem;
+    opacity: 0.9;
+  }
+
+  .compass-main {
+    min-height: 42px;
+  }
+
+  .telemetry-val {
+    font-size: 0.92rem;
+  }
+
+  .app-brand-logo {
+    background: rgba(255, 255, 255, 0.035);
+    border-color: rgba(255, 255, 255, 0.06);
+    font-size: 0.8rem;
+    padding: 5px 9px;
+  }
+
+  .btn-compass-perm {
+    width: 40px;
+    height: 40px;
+    box-shadow: none;
+  }
+
+  nav.bottom-nav {
+    padding: 7px 8px calc(7px + env(safe-area-inset-bottom));
+    background: rgba(7, 13, 29, 0.96);
+    border-top-color: rgba(255, 255, 255, 0.06);
+    box-shadow: 0 -8px 28px rgba(0, 0, 0, 0.38);
+  }
+
+  .nav-inner {
+    gap: 4px;
+    max-width: 560px;
+  }
+
+  .nav-item {
+    min-height: 50px;
+    border-radius: 16px;
+    gap: 2px;
+    font-size: 0.66rem;
+    font-weight: 700;
+    transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  }
+
+  .nav-item i {
+    width: 22px;
+    min-width: 22px;
+    height: 22px;
+    font-size: 1.08rem;
+  }
+
+  .nav-item.active {
+    background: rgba(56, 189, 248, 0.11);
+    color: var(--accent-light-blue);
+  }
+
+  .nav-item.active i {
+    transform: none;
+  }
+
+  .left-controls,
+  .right-controls {
+    top: 12px;
+    gap: 8px;
+  }
+
+  .left-controls { left: 12px; }
+  .right-controls { right: 12px; }
+
+  .map-btn {
+    width: 46px;
+    height: 46px;
+    border-radius: 15px;
+    background: rgba(7, 13, 29, 0.82);
+    border-color: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+    font-size: 1.12rem;
+  }
+
+  .map-btn-group {
+    border-radius: 17px;
+    background: rgba(7, 13, 29, 0.82);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+  }
+
+  .map-search-overlay {
+    top: 12px;
+    width: calc(100% - 24px);
+    max-width: 420px;
+    border-radius: 18px;
+    background: rgba(7, 13, 29, 0.94);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.38);
+  }
+
+  .bottom-left-gps {
+    bottom: 16px;
+    left: 12px;
+    gap: 8px;
+  }
+
+  .fab-add {
+    right: 12px;
+    bottom: 16px;
+    width: 58px;
+    height: 58px;
+    font-size: 1.65rem;
+    box-shadow: 0 8px 24px rgba(2, 132, 199, 0.5);
+  }
+
+  #tabForecasts {
+    padding: 10px 0 0 !important;
+  }
+
+  #tabForecasts .tab-inner {
+    padding: 0 12px 18px;
+  }
+
+  #tabForecasts .weather-hero-card {
+    min-height: 154px;
+    display: grid;
+    grid-template-columns: 84px 1fr;
+    grid-template-rows: auto auto;
+    column-gap: 12px;
+    align-items: center;
+    text-align: left;
+    padding: 18px;
+    border-radius: 22px;
+    margin-bottom: 10px;
+    background: linear-gradient(145deg, rgba(2, 132, 199, 0.24), rgba(15, 23, 42, 0.9));
+  }
+
+  #tabForecasts .w-icon-huge {
+    grid-row: 1 / span 2;
+    font-size: 3.2rem;
+    margin: 0;
+    justify-self: center;
+  }
+
+  #tabForecasts .w-temp-huge {
+    align-self: end;
+    font-size: clamp(3rem, 14vw, 4rem);
+    margin: 0;
+  }
+
+  #tabForecasts .w-desc-text {
+    align-self: start;
+    font-size: 0.86rem;
+    letter-spacing: 0.7px;
+    line-height: 1.25;
+  }
+
+  #tabForecasts .weather-data-status {
+    margin: 0 0 9px;
+    text-align: left;
+    padding: 0 2px;
+    font-size: 0.7rem;
+  }
+
+  #tabForecasts .weather-location-context {
+    margin: 0 0 12px;
+    padding: 9px 10px;
+    border-radius: 14px;
+    background: rgba(15, 23, 42, 0.62);
+  }
+
+  #tabForecasts .weather-location-context button {
+    min-height: 40px;
+    padding: 7px 10px;
+  }
+
+  #tabForecasts .widget-card {
+    padding: 14px;
+    margin-bottom: 11px;
+    border-radius: 18px;
+    background: rgba(20, 30, 50, 0.72);
+    box-shadow: none;
+    border-color: rgba(255, 255, 255, 0.065);
+  }
+
+  #tabForecasts .widget-title {
+    font-size: 0.96rem;
+    margin-bottom: 10px;
+  }
+
+  #tabForecasts .metric-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  #tabForecasts .metric-box {
+    min-height: 76px;
+    align-items: flex-start;
+    text-align: left;
+    padding: 11px 12px;
+    border-radius: 14px;
+    background: rgba(7, 13, 29, 0.54);
+  }
+
+  #tabForecasts .metric-val {
+    width: 100%;
+    justify-content: flex-start;
+    font-size: 1.08rem;
+  }
+
+  #tabForecasts .metric-lbl {
+    margin-top: 5px;
+    font-size: 0.64rem;
+    letter-spacing: 0.35px;
+    text-align: left;
+  }
+
+  #tabForecasts .hourly-forecast-track {
+    gap: 8px;
+    scroll-snap-type: x proximity;
+    padding-bottom: 6px;
+  }
+
+  #tabForecasts .hourly-box {
+    min-width: 72px;
+    scroll-snap-align: start;
+    border-radius: 14px;
+    padding: 10px 8px;
+  }
+
+  #tabForecasts .btn-refresh-weather {
+    position: sticky;
+    bottom: 6px;
+    z-index: 3;
+    box-shadow: 0 8px 26px rgba(0, 0, 0, 0.34);
+  }
+}
+
+@media (max-width: 390px) {
+  #tabForecasts .weather-location-context {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  #tabForecasts .weather-location-context button {
+    width: 100%;
+  }
+
+  .nav-item {
+    font-size: 0.61rem;
+  }
+}
