@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'cescospot-v16';
+const CACHE_VERSION = 'cescospot-v17';
 const APP_SHELL = [
   './',
   './index.html',

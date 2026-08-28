@@ -45,7 +45,7 @@ test('apertura, chiusura e pulizia differita della lightbox restano corrette', a
 });
 
 test('il modulo lightbox è caricato e disponibile offline', async () => {
-  const [manifest, worker] = await Promise.all([read('js/manifest.js'), read('sw.js')]);
-  assert.match(manifest, /js\/lightbox\.js/);
+  const [html, worker] = await Promise.all([read('index.html'), read('sw.js')]);
+  assert.match(html, /js\/lightbox\.js/);
   assert.match(worker, /\.\/js\/lightbox\.js/);
 });

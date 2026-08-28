@@ -6,8 +6,9 @@ const root = new URL('../', import.meta.url);
 const read = path => readFile(new URL(path, root), 'utf8');
 
 test('riepilogo meteo usa indicatori osservabili e resta offline', async () => {
-  const [source, manifest, worker, css] = await Promise.all([
+  const [source, html, manifest, worker, css] = await Promise.all([
     read('js/weather-insights.js'),
+    read('index.html'),
     read('js/manifest.js'),
     read('sw.js'),
     read('styles/weather-insights.css'),
@@ -20,7 +21,7 @@ test('riepilogo meteo usa indicatori osservabili e resta offline', async () => {
   assert.match(source, /senza punteggi di pescabilità/);
   assert.doesNotMatch(source, /bite score|fishability score/i);
 
-  assert.match(manifest, /js\/weather-insights\.js/);
+  assert.match(html, /js\/weather-insights\.js/);
   assert.match(manifest, /styles\/weather-insights\.css/);
   assert.match(worker, /js\/weather-insights\.js/);
   assert.match(worker, /styles\/weather-insights\.css/);

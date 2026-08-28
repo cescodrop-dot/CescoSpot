@@ -19,9 +19,9 @@ test('carica gli asset locali estratti dal file principale', async () => {
   assert.match(html, /src="js\/data-safety\.js"/);
   assert.match(html, /src="js\/storage\.js"/);
   assert.match(html, /src="js\/app\.js"/);
-  assert.match(manifest, /js\/quick-drop\.js/);
-  assert.match(manifest, /js\/river-status\.js/);
-  assert.match(manifest, /js\/map-providers\.js/);
+  assert.match(html, /js\/quick-drop\.js/);
+  assert.match(html, /js\/river-status\.js/);
+  assert.match(html, /js\/map-providers\.js/);
 
   await Promise.all([
     read('styles/app.css'),

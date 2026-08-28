@@ -461,6 +461,7 @@
     }
 
     async function saveSpotFromModal() {
+      const previousSpots = normalizeBackupPayload(spots);
       const name = normalizeText(document.getElementById('spotName').value, 120) || 'Nuovo Spot';
       const zone = normalizeText(document.getElementById('spotZone').value, 160) || 'Generale';
       const techniques = normalizeTextArray(Array.from(selectedTechniquesSet));
@@ -497,7 +498,10 @@
         }
       }
       
-      if (!await persistSpots()) return;
+      if (!await persistSpots()) {
+        spots = previousSpots;
+        return;
+      }
       renderMapSpots();
       closeModals();
       

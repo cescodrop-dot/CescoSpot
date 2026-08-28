@@ -23,12 +23,11 @@ test('quick-drop.js è il proprietario dello Spot rapido', async () => {
 });
 
 test('l’interfaccia conserva la chiamata allo Spot rapido e il modulo è caricato', async () => {
-  const [html, manifest, worker] = await Promise.all([
+  const [html, worker] = await Promise.all([
     read('index.html'),
-    read('js/manifest.js'),
     read('sw.js')
   ]);
   assert.match(html, /onclick="quickDropSpot\(\)"/);
-  assert.ok(manifest.includes('js/quick-drop.js'));
+  assert.ok(html.includes('js/quick-drop.js'));
   assert.ok(worker.includes('./js/quick-drop.js'));
 });

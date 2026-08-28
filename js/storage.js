@@ -5,6 +5,26 @@
   const DATABASE_VERSION = 1;
   const STATE_STORE = 'appState';
   const SPOTS_RECORD = 'spots';
+  const DATABASE_TIMEOUT_MS = 3000;
+
+  function withTimeout(promise, timeoutMs = DATABASE_TIMEOUT_MS) {
+    return new Promise((resolve, reject) => {
+      const timer = globalScope.setTimeout(
+        () => reject(new Error('IndexedDB non ha risposto in tempo.')),
+        timeoutMs
+      );
+      promise.then(
+        value => {
+          globalScope.clearTimeout(timer);
+          resolve(value);
+        },
+        error => {
+          globalScope.clearTimeout(timer);
+          reject(error);
+        }
+      );
+    });
+  }
 
   function requestToPromise(request) {
     return new Promise((resolve, reject) => {
@@ -30,7 +50,7 @@
 
   async function openDatabaseOrFallback() {
     try {
-      return await openDatabase();
+      return await withTimeout(openDatabase());
     } catch (error) {
       console.warn('IndexedDB non disponibile, uso temporaneamente l’archivio precedente:', error);
       return null;
@@ -62,22 +82,26 @@
     }
   }
 
+  function writeLegacySpots(safeSpots) {
+    globalScope.localStorage?.setItem(STORAGE_KEY, JSON.stringify(safeSpots));
+  }
+
   async function loadStoredSpots() {
     const database = await openDatabaseOrFallback();
     if (!database) return readLegacySpots();
 
     try {
-      const storedSpots = await readDatabaseRecord(database, SPOTS_RECORD);
+      const storedSpots = await withTimeout(readDatabaseRecord(database, SPOTS_RECORD));
       if (storedSpots !== undefined) return normalizeBackupPayload(storedSpots);
 
       const legacySpots = readLegacySpots();
       if (legacySpots.length > 0) {
-        await writeDatabaseRecord(database, SPOTS_RECORD, {
+        await withTimeout(writeDatabaseRecord(database, SPOTS_RECORD, {
           format: BACKUP_FORMAT,
           version: BACKUP_VERSION,
           updatedAt: new Date().toISOString(),
           spots: legacySpots,
-        });
+        }));
       }
       return legacySpots;
     } finally {
@@ -90,17 +114,25 @@
       const safeSpots = normalizeBackupPayload(spots);
       const database = await openDatabaseOrFallback();
       if (!database) {
-        globalScope.localStorage.setItem(STORAGE_KEY, JSON.stringify(safeSpots));
+        writeLegacySpots(safeSpots);
         return true;
       }
 
       try {
-        await writeDatabaseRecord(database, SPOTS_RECORD, {
+        await withTimeout(writeDatabaseRecord(database, SPOTS_RECORD, {
           format: BACKUP_FORMAT,
           version: BACKUP_VERSION,
           updatedAt: new Date().toISOString(),
           spots: safeSpots,
-        });
+        }));
+        try {
+          writeLegacySpots(safeSpots);
+        } catch (legacyError) {
+          console.warn('Copia di compatibilita localStorage non aggiornata:', legacyError);
+        }
+      } catch (databaseError) {
+        console.warn('Salvataggio IndexedDB non disponibile, uso localStorage:', databaseError);
+        writeLegacySpots(safeSpots);
       } finally {
         database.close();
       }

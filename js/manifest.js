@@ -28,38 +28,6 @@
   weatherInsightsStyles.href = 'styles/weather-insights.css';
   document.head.appendChild(weatherInsightsStyles);
 
-  const riverStatusScript = document.createElement('script');
-  riverStatusScript.src = 'js/river-status.js';
-  document.head.appendChild(riverStatusScript);
-
-  const quickDropScript = document.createElement('script');
-  quickDropScript.src = 'js/quick-drop.js';
-  document.head.appendChild(quickDropScript);
-
-  const mapProvidersScript = document.createElement('script');
-  mapProvidersScript.src = 'js/map-providers.js';
-  document.head.appendChild(mapProvidersScript);
-
-  const modalAccessibilityScript = document.createElement('script');
-  modalAccessibilityScript.src = 'js/modal-accessibility.js';
-  document.head.appendChild(modalAccessibilityScript);
-
-  const weatherInsightsScript = document.createElement('script');
-  weatherInsightsScript.src = 'js/weather-insights.js';
-  document.head.appendChild(weatherInsightsScript);
-
-  const wikiImagesScript = document.createElement('script');
-  wikiImagesScript.src = 'js/wiki-images.js';
-  document.head.appendChild(wikiImagesScript);
-
-  const photoUploadScript = document.createElement('script');
-  photoUploadScript.src = 'js/photo-upload.js';
-  document.head.appendChild(photoUploadScript);
-
-  const lightboxScript = document.createElement('script');
-  lightboxScript.src = 'js/lightbox.js';
-  document.head.appendChild(lightboxScript);
-
   if ('serviceWorker' in navigator && location.protocol !== 'file:') {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('./sw.js').catch(error => {

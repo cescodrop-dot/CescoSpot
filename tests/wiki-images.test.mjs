@@ -39,10 +39,10 @@ test('i due riferimenti Wiki mancanti hanno uno schema locale sostitutivo', asyn
 
 test('le immagini Wiki sono disponibili nella cache PWA', async () => {
   const worker = await read('sw.js');
-  const manifest = await read('js/manifest.js');
+  const html = await read('index.html');
 
   assert.match(worker, /const CACHE_VERSION = 'cescospot-v\d+';/);
-  assert.match(manifest, /js\/wiki-images\.js/);
+  assert.match(html, /js\/wiki-images\.js/);
   assert.match(worker, /js\/wiki-images\.js/);
 
   for (const path of cachedWikiImages) {
