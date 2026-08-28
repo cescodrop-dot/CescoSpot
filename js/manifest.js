@@ -21,6 +21,10 @@
   quickDropScript.src = 'js/quick-drop.js';
   document.head.appendChild(quickDropScript);
 
+  const mapProvidersScript = document.createElement('script');
+  mapProvidersScript.src = 'js/map-providers.js';
+  document.head.appendChild(mapProvidersScript);
+
   if ('serviceWorker' in navigator && location.protocol !== 'file:') {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('./sw.js').catch(error => {
