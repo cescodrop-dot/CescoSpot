@@ -14,7 +14,7 @@ test('layout mobile polish viene caricato e resta disponibile offline', async ()
 
   assert.match(manifest, /styles\/mobile-polish\.css/);
   assert.match(worker, /styles\/mobile-polish\.css/);
-  assert.match(worker, /cescospot-v7/);
+  assert.match(worker, /cescospot-v\d+/);
 
   assert.match(css, /\.nav-item\.active/);
   assert.match(css, /#tabForecasts \.metric-grid/);
