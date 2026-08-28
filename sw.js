@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'cescospot-v3';
+const CACHE_VERSION = 'cescospot-v4';
 const APP_SHELL = [
   './',
   './index.html',
@@ -9,6 +9,7 @@ const APP_SHELL = [
   './js/app.js',
   './js/quick-drop.js',
   './js/river-status.js',
+  './js/map-providers.js',
   './vendor/suncalc.js',
   './vendor/fontawesome/css/all.min.css',
   './vendor/fontawesome/webfonts/fa-solid-900.woff2',
