@@ -16,6 +16,7 @@ const APP_SHELL = [
   './js/weather-insights.js',
   './js/wiki-images.js',
   './js/photo-upload.js',
+  './js/lightbox.js',
   './vendor/leaflet/leaflet.js',
   './vendor/leaflet/leaflet.css',
   './vendor/leaflet/images/marker-icon.png',

@@ -56,6 +56,10 @@
   photoUploadScript.src = 'js/photo-upload.js';
   document.head.appendChild(photoUploadScript);
 
+  const lightboxScript = document.createElement('script');
+  lightboxScript.src = 'js/lightbox.js';
+  document.head.appendChild(lightboxScript);
+
   if ('serviceWorker' in navigator && location.protocol !== 'file:') {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('./sw.js').catch(error => {
