@@ -894,7 +894,13 @@
       }
     }
 
-    let lastSpotMapClickAt = 0;
+    const spotTap = CescoMapTap.create({
+      onSingleTap: (e) => {
+        if (tempMarker) map.removeLayer(tempMarker);
+        tempMarker = L.marker(e.latlng, {icon: L.divIcon({className: '', html: `<div style="width:24px; height:24px; background:var(--accent-blue); border:3px solid #fff; border-radius:50%; animation: pulse 1s infinite alternate;"></div>`, iconSize: [24, 24], iconAnchor: [12, 12]})}).addTo(map);
+        openAddSpotModal(e.latlng.lat, e.latlng.lng);
+      }
+    });
 
     map.on('click', function(e) {
       if (rulerActive) {
@@ -908,12 +914,7 @@
           document.getElementById('measureBox').innerText = dist > 1000 ? `Distanza: ${(dist/1000).toFixed(2)} km` : `Distanza: ${Math.round(dist)} m`;
         }
       } else {
-        const now = Date.now();
-        if (now - lastSpotMapClickAt < 350) return;
-        lastSpotMapClickAt = now;
-        if(tempMarker) map.removeLayer(tempMarker);
-        tempMarker = L.marker(e.latlng, {icon: L.divIcon({className: '', html: `<div style="width:24px; height:24px; background:var(--accent-blue); border:3px solid #fff; border-radius:50%; animation: pulse 1s infinite alternate;"></div>`, iconSize: [24, 24], iconAnchor: [12, 12]})}).addTo(map);
-        openAddSpotModal(e.latlng.lat, e.latlng.lng);
+        spotTap.handleClick(e);
       }
     });
 

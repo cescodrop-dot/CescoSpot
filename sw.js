@@ -8,6 +8,7 @@ const APP_SHELL = [
   './js/manifest.js',
   './js/data-safety.js',
   './js/storage.js',
+  './js/map-tap.js',
   './js/app.js',
   './js/quick-drop.js',
   './js/river-status.js',
