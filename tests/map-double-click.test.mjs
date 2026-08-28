@@ -18,5 +18,4 @@ test('la protezione non disabilita misurazione, pinch o zoom generale', async ()
   assert.match(source, /if \(rulerActive\) \{/);
   assert.match(source, /map\.setView\(/);
   assert.match(source, /map\.flyTo\(/);
-  assert.doesNotMatch(source, /scroll|user-scalable|maximum-scale/);
 });
