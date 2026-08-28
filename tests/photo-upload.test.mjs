@@ -18,9 +18,13 @@ test('il caricamento foto limita sorgente e output e gestisce gli errori', async
 });
 
 test('il modulo foto possiede direttamente handlePhotoUpload', async () => {
-  const source = await read('js/photo-upload.js');
+  const [source, appSource] = await Promise.all([
+    read('js/photo-upload.js'),
+    read('js/app.js')
+  ]);
 
   assert.match(source, /globalScope\.handlePhotoUpload = robustPhotoUpload/);
+  assert.doesNotMatch(appSource, /function\s+handlePhotoUpload\s*\(/);
   assert.doesNotMatch(source, /typeof globalScope\.handlePhotoUpload !== 'function'/);
   assert.doesNotMatch(source, /DOMContentLoaded|setInterval/);
 });

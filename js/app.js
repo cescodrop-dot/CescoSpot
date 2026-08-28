@@ -324,47 +324,6 @@
       renderSpeciesSelector(Array.from(selectedSpeciesSet));
     }
 
-    // --- COMPRESSIONE FOTO LOCALI (PER SPOT E CATTURE) ---
-    function handlePhotoUpload(event, hiddenInputId, previewBoxId) {
-      const file = event.target.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const img = new Image();
-        img.onload = function() {
-          const canvas = document.createElement('canvas');
-          const maxDim = 800; 
-          let width = img.width;
-          let height = img.height;
-
-          if (width > height && width > maxDim) {
-            height = Math.round((height * maxDim) / width);
-            width = maxDim;
-          } else if (height > maxDim) {
-            width = Math.round((width * maxDim) / height);
-            height = maxDim;
-          }
-
-          canvas.width = width;
-          canvas.height = height;
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0, width, height);
-
-          const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
-          document.getElementById(hiddenInputId).value = compressedDataUrl;
-
-          const box = document.getElementById(previewBoxId);
-          box.innerHTML = `
-            <img src="${compressedDataUrl}">
-            <button type="button" class="btn-remove-photo" onclick="event.stopPropagation(); removePhoto('${hiddenInputId}', '${previewBoxId}')"><i class="fa-solid fa-trash"></i></button>
-          `;
-        };
-        img.src = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    }
-
     function removePhoto(hiddenInputId, previewBoxId) {
       document.getElementById(hiddenInputId).value = '';
       const box = document.getElementById(previewBoxId);
