@@ -45,7 +45,7 @@
 
 
     // --- MAPPA ---
-    const map = L.map('map', { zoomControl: false, attributionControl: false }).setView([41.9028, 12.4964], 6);
+    const map = L.map('map', { zoomControl: false, attributionControl: false, doubleClickZoom: false }).setView([41.9028, 12.4964], 6);
 
     L.control.scale({ imperial: false, position: 'bottomleft' }).addTo(map);
 
@@ -894,6 +894,8 @@
       }
     }
 
+    let lastSpotMapClickAt = 0;
+
     map.on('click', function(e) {
       if (rulerActive) {
         rulerPoints.push([e.latlng.lat, e.latlng.lng]);
@@ -906,6 +908,9 @@
           document.getElementById('measureBox').innerText = dist > 1000 ? `Distanza: ${(dist/1000).toFixed(2)} km` : `Distanza: ${Math.round(dist)} m`;
         }
       } else {
+        const now = Date.now();
+        if (now - lastSpotMapClickAt < 350) return;
+        lastSpotMapClickAt = now;
         if(tempMarker) map.removeLayer(tempMarker);
         tempMarker = L.marker(e.latlng, {icon: L.divIcon({className: '', html: `<div style="width:24px; height:24px; background:var(--accent-blue); border:3px solid #fff; border-radius:50%; animation: pulse 1s infinite alternate;"></div>`, iconSize: [24, 24], iconAnchor: [12, 12]})}).addTo(map);
         openAddSpotModal(e.latlng.lat, e.latlng.lng);
