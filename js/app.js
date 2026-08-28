@@ -43,24 +43,6 @@
       chipEl.classList.add('active');
     }
 
-    // --- GESTIONE LIGHTBOX FOTO ---
-    function openLightbox(src) {
-      const overlay = document.getElementById('lightboxOverlay');
-      const img = document.getElementById('lightboxImg');
-      img.src = src;
-      overlay.style.display = 'flex';
-      void overlay.offsetWidth; 
-      overlay.classList.add('show');
-    }
-
-    function closeLightbox() {
-      const overlay = document.getElementById('lightboxOverlay');
-      overlay.classList.remove('show');
-      setTimeout(() => {
-        overlay.style.display = 'none';
-        document.getElementById('lightboxImg').src = '';
-      }, 300);
-    }
 
     // --- MAPPE (GOOGLE SATELLITE + OPENCYCLEMAP) ---
     const map = L.map('map', { zoomControl: false, attributionControl: false }).setView([41.9028, 12.4964], 6);
