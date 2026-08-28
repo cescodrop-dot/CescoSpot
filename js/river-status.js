@@ -80,5 +80,4 @@
   }
 
   globalScope.CescoRiverStatus = Object.freeze({ classifyRiverStatus, renderRiverStatus });
-  installFloodResponseObserver();
 })(globalThis);
