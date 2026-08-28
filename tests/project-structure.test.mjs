@@ -21,6 +21,7 @@ test('carica gli asset locali estratti dal file principale', async () => {
   assert.match(html, /src="js\/app\.js"/);
   assert.match(manifest, /js\/quick-drop\.js/);
   assert.match(manifest, /js\/river-status\.js/);
+  assert.match(manifest, /js\/map-providers\.js/);
 
   await Promise.all([
     read('styles/app.css'),
@@ -30,6 +31,7 @@ test('carica gli asset locali estratti dal file principale', async () => {
     read('js/app.js'),
     read('js/quick-drop.js'),
     read('js/river-status.js'),
+    read('js/map-providers.js'),
     read('vendor/fontawesome/css/all.min.css'),
     read('vendor/fontawesome/webfonts/fa-solid-900.woff2'),
     read('vendor/fontawesome/webfonts/fa-regular-400.woff2'),
@@ -50,6 +52,23 @@ test('stato fiumi non promette pescabilità né usa soglie assolute universali',
   assert.doesNotMatch(riverStatus, /pescabile|piena/i);
   assert.doesNotMatch(riverStatus, /todayVal\s*>\s*150|diff\s*>\s*40/);
   assert.match(riverStatus, /relativeChange/);
+});
+
+test('provider mappa non usa tile Google e mostra attribuzioni', async () => {
+  const providers = await read('js/map-providers.js');
+
+  assert.doesNotMatch(providers, /google\.com\/vt|mt\d\.google/i);
+  assert.match(providers, /World_Imagery\/MapServer\/tile/);
+  assert.match(providers, /Esri/);
+  assert.match(providers, /OpenStreetMap contributors/);
+  assert.match(providers, /OpenTopoMap/);
+});
+
+test('service worker non precarica tile cartografici esterni', async () => {
+  const worker = await read('sw.js');
+
+  assert.match(worker, /js\/map-providers\.js/);
+  assert.doesNotMatch(worker, /server\.arcgisonline\.com|tile\.opentopomap\.org/);
 });
 
 test('non conserva grandi blocchi CSS o JavaScript inline', async () => {
