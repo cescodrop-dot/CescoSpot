@@ -13,6 +13,10 @@
   const blob = new Blob([stringManifest], { type: 'application/json' });
   document.getElementById('manifestLink').setAttribute('href', URL.createObjectURL(blob));
 
+  const riverStatusScript = document.createElement('script');
+  riverStatusScript.src = 'js/river-status.js';
+  document.head.appendChild(riverStatusScript);
+
   const quickDropScript = document.createElement('script');
   quickDropScript.src = 'js/quick-drop.js';
   document.head.appendChild(quickDropScript);
