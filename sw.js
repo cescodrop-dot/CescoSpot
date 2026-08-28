@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'cescospot-v10';
+const CACHE_VERSION = 'cescospot-v11';
 const APP_SHELL = [
   './',
   './index.html',
@@ -27,6 +27,21 @@ const APP_SHELL = [
   './map.png'
 ];
 
+const LOCKED_VIEWPORT = '<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">';
+
+async function withLockedViewport(response) {
+  if (!response) return response;
+  const headers = new Headers(response.headers);
+  headers.delete('content-length');
+  const html = await response.text();
+  const lockedHtml = html.replace(/<meta\s+name=["']viewport["']\s+content=["'][^"']*["']\s*\/?\s*>/i, LOCKED_VIEWPORT);
+  return new Response(lockedHtml, {
+    status: response.status,
+    statusText: response.statusText,
+    headers
+  });
+}
+
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_VERSION)
@@ -53,12 +68,13 @@ self.addEventListener('fetch', event => {
   if (isNavigation) {
     event.respondWith(
       fetch(event.request)
+        .then(response => withLockedViewport(response))
         .then(response => {
           const copy = response.clone();
           caches.open(CACHE_VERSION).then(cache => cache.put('./index.html', copy));
           return response;
         })
-        .catch(() => caches.match('./index.html'))
+        .catch(() => caches.match('./index.html').then(cached => withLockedViewport(cached)))
     );
     return;
   }
