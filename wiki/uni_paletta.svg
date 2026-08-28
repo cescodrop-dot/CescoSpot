@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 520" role="img" aria-labelledby="title desc">
+  <title id="title">Schema nodo Uni per amo a paletta</title>
+  <desc id="desc">Schema semplificato in quattro passaggi per legare un amo a paletta con nodo Uni.</desc>
+  <rect width="900" height="520" rx="28" fill="#0f172a"/>
+  <g fill="none" stroke="#38bdf8" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M95 115 C190 75 250 80 325 120 C375 148 390 202 350 238"/>
+    <path d="M350 238 C310 275 250 272 230 225 C212 184 248 148 300 150"/>
+    <path d="M505 115 L700 115"/>
+    <path d="M535 92 L535 240 C535 290 575 325 625 325 C675 325 715 290 715 240 L715 205"/>
+    <path d="M535 160 C590 140 645 142 700 165"/>
+    <path d="M535 185 C590 165 645 167 700 190"/>
+    <path d="M535 210 C590 190 645 192 700 215"/>
+  </g>
+  <g stroke="#f8fafc" stroke-width="8" stroke-linecap="round" fill="none">
+    <path d="M120 355 L325 355"/>
+    <path d="M300 325 L335 355 L300 385"/>
+    <path d="M505 390 L705 390"/>
+    <path d="M680 360 L715 390 L680 420"/>
+  </g>
+  <g fill="#f8fafc" font-family="system-ui, sans-serif" font-weight="700">
+    <text x="70" y="55" font-size="30">1 · Forma l’asola</text>
+    <text x="470" y="55" font-size="30">2 · Avvolgi 5–6 volte</text>
+    <text x="70" y="455" font-size="30">3 · Serra le spire</text>
+    <text x="470" y="455" font-size="30">4 · Porta il nodo sotto la paletta</text>
+  </g>
+  <g fill="#94a3b8" font-family="system-ui, sans-serif" font-size="21">
+    <text x="70" y="490">Schema indicativo: inumidire il filo prima del serraggio finale.</text>
+  </g>
+</svg>
