@@ -41,5 +41,5 @@ test('modulo modali è caricato e disponibile offline', async () => {
 
   assert.match(manifest, /js\/modal-accessibility\.js/);
   assert.match(worker, /js\/modal-accessibility\.js/);
-  assert.match(worker, /cescospot-v6/);
+  assert.match(worker, /const CACHE_VERSION = 'cescospot-v\d+';/);
 });
