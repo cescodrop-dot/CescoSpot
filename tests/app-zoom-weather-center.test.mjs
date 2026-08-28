@@ -5,12 +5,17 @@ import test from 'node:test';
 const root = new URL('../', import.meta.url);
 const read = path => readFile(new URL(path, root), 'utf8');
 
-test('l app blocca lo zoom pagina con il viewport precedente', async () => {
+test('l app blocca lo zoom pagina prima del rendering', async () => {
   const manifest = await read('js/manifest.js');
   const worker = await read('sw.js');
 
   assert.match(manifest, /maximum-scale=1\.0/);
   assert.match(manifest, /user-scalable=no/);
+  assert.match(worker, /LOCKED_VIEWPORT/);
+  assert.match(worker, /maximum-scale=1\.0/);
+  assert.match(worker, /user-scalable=no/);
+  assert.match(worker, /withLockedViewport/);
+  assert.match(worker, /mode === 'navigate'/);
   assert.doesNotMatch(manifest, /zoom-guard\.js/);
   assert.doesNotMatch(worker, /zoom-guard\.js/);
 });
