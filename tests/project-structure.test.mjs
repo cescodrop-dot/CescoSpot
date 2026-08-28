@@ -54,6 +54,17 @@ test("Leaflet è locale e disponibile nell'app shell offline", async () => {
   ]);
 });
 
+test('viewport e controlli mobile restano accessibili', async () => {
+  const html = await read('index.html');
+  const css = await read('styles/app.css');
+
+  assert.doesNotMatch(html, /user-scalable=no|maximum-scale=1\.0/);
+  assert.match(css, /:focus-visible/);
+  assert.match(css, /min-height:\s*44px/);
+  assert.match(css, /prefers-reduced-motion:\s*reduce/);
+  assert.match(css, /font-size:\s*16px/);
+});
+
 test('spot rapido usa le coordinate GPS ricevute', async () => {
   const quickDrop = await read('js/quick-drop.js');
 
