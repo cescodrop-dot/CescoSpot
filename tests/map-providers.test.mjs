@@ -23,8 +23,8 @@ test('map-providers.js possiede toggleMapType e attribuzione', async () => {
 });
 
 test('i provider mappa restano caricati anche offline', async () => {
-  const [manifest, worker] = await Promise.all([read('js/manifest.js'), read('sw.js')]);
-  assert.ok(manifest.includes('js/map-providers.js'));
+  const [html, worker] = await Promise.all([read('index.html'), read('sw.js')]);
+  assert.ok(html.includes('js/map-providers.js'));
   assert.ok(worker.includes('./js/map-providers.js'));
   assert.match(worker, /cescospot-v[0-9]+/);
 });

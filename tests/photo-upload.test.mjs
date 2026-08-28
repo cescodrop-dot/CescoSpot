@@ -30,10 +30,10 @@ test('il modulo foto possiede direttamente handlePhotoUpload', async () => {
 });
 
 test('il gestore foto è caricato e disponibile offline', async () => {
-  const manifest = await read('js/manifest.js');
+  const html = await read('index.html');
   const worker = await read('sw.js');
 
-  assert.match(manifest, /js\/photo-upload\.js/);
+  assert.match(html, /js\/photo-upload\.js/);
   assert.match(worker, /\.\/js\/photo-upload\.js/);
   assert.match(worker, /const CACHE_VERSION = 'cescospot-v\d+';/);
 });

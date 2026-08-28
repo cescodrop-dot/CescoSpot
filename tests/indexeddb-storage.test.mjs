@@ -83,3 +83,29 @@ test('migra una sola volta da localStorage e usa poi IndexedDB', async () => {
   assert.equal(await globalThis.persistSpots(), true);
   assert.equal(fakeIndexedDB.records.get('spots').spots[0].name, 'Nuovo archivio');
 });
+
+test('se IndexedDB non risponde il salvataggio termina usando localStorage', async () => {
+  const localRecords = new Map();
+  const originalSetTimeout = globalThis.setTimeout;
+  const originalClearTimeout = globalThis.clearTimeout;
+
+  globalThis.indexedDB = { open: () => ({}) };
+  globalThis.localStorage = {
+    getItem: key => localRecords.get(key) ?? null,
+    setItem: (key, value) => localRecords.set(key, value),
+  };
+  globalThis.spots = [validSpot('fallback-1', 'Fallback affidabile')];
+  globalThis.setTimeout = callback => {
+    queueMicrotask(callback);
+    return 1;
+  };
+  globalThis.clearTimeout = () => {};
+
+  try {
+    assert.equal(await globalThis.persistSpots(), true);
+    assert.equal(JSON.parse(localRecords.get('cescospot_data'))[0].name, 'Fallback affidabile');
+  } finally {
+    globalThis.setTimeout = originalSetTimeout;
+    globalThis.clearTimeout = originalClearTimeout;
+  }
+});
