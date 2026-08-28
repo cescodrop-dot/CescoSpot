@@ -1,9 +1,10 @@
-const CACHE_VERSION = 'cescospot-v8';
+const CACHE_VERSION = 'cescospot-v9';
 const APP_SHELL = [
   './',
   './index.html',
   './styles/app.css',
   './styles/mobile-polish.css',
+  './styles/weather-insights.css',
   './js/manifest.js',
   './js/data-safety.js',
   './js/storage.js',
@@ -13,6 +14,7 @@ const APP_SHELL = [
   './js/map-providers.js',
   './js/modal-accessibility.js',
   './js/zoom-guard.js',
+  './js/weather-insights.js',
   './vendor/leaflet/leaflet.js',
   './vendor/leaflet/leaflet.css',
   './vendor/leaflet/images/marker-icon.png',

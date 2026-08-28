@@ -18,6 +18,11 @@
   mobilePolishStyles.href = 'styles/mobile-polish.css';
   document.head.appendChild(mobilePolishStyles);
 
+  const weatherInsightsStyles = document.createElement('link');
+  weatherInsightsStyles.rel = 'stylesheet';
+  weatherInsightsStyles.href = 'styles/weather-insights.css';
+  document.head.appendChild(weatherInsightsStyles);
+
   const riverStatusScript = document.createElement('script');
   riverStatusScript.src = 'js/river-status.js';
   document.head.appendChild(riverStatusScript);
@@ -37,6 +42,10 @@
   const zoomGuardScript = document.createElement('script');
   zoomGuardScript.src = 'js/zoom-guard.js';
   document.head.appendChild(zoomGuardScript);
+
+  const weatherInsightsScript = document.createElement('script');
+  weatherInsightsScript.src = 'js/weather-insights.js';
+  document.head.appendChild(weatherInsightsScript);
 
   if ('serviceWorker' in navigator && location.protocol !== 'file:') {
     window.addEventListener('load', () => {
