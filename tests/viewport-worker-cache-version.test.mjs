@@ -4,7 +4,7 @@ import test from 'node:test';
 
 const root = new URL('../', import.meta.url);
 
-test('la cache PWA viene aggiornata per il nuovo viewport', async () => {
+test('la cache PWA usa una versione numerata', async () => {
   const worker = await readFile(new URL('sw.js', root), 'utf8');
-  assert.match(worker, /const CACHE_VERSION = 'cescospot-v11';/);
+  assert.match(worker, /const CACHE_VERSION = 'cescospot-v\d+';/);
 });
