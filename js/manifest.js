@@ -52,6 +52,10 @@
   wikiImagesScript.src = 'js/wiki-images.js';
   document.head.appendChild(wikiImagesScript);
 
+  const photoUploadScript = document.createElement('script');
+  photoUploadScript.src = 'js/photo-upload.js';
+  document.head.appendChild(photoUploadScript);
+
   if ('serviceWorker' in navigator && location.protocol !== 'file:') {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('./sw.js').catch(error => {
