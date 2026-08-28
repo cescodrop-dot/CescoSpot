@@ -368,62 +368,6 @@
       selectedColor = colorHex;
     }
 
-    function quickDropSpot() {
-      if (!navigator.geolocation) { alert("GPS non disponibile."); return; }
-      navigator.geolocation.getCurrentPosition(async (pos) => {
-        const { latitude: lat, longitude: lng } = pos.coords;
-        const now = new Date();
-      document.getElementById('weatherLocationText').innerHTML = `<i class="fa-solid fa-location-dot"></i> Posizione analizzata: ${center.lat.toFixed(4)}, ${center.lng.toFixed(4)}`;
-        const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        
-        let existingSpot = spots.find(s => L.latLng(s.lat, s.lng).distanceTo(L.latLng(lat, lng)) < 20);
-
-        if (existingSpot) {
-          existingSpot.notes += ` | Aggiornato al volo alle ${timeStr}`;
-          await persistSpots();
-          renderMapSpots();
-          map.flyTo([lat, lng], 16);
-          alert(`⚡ Spot esistente aggiornato nelle vicinanze!`);
-          return;
-        }
-
-        const newSpot = {
-          id: Date.now().toString(),
-          name: `Spot Rapido (${timeStr})`,
-          zone: 'In fase di rilevamento...',
-          techniques: [],
-          targets: [],
-          spotLures: [],
-          photo: '',
-          radius: null,
-          notes: `Salvato al volo alle ${timeStr}`,
-          color: '#eab308',
-          icon: '📍',
-          lat, lng,
-          catches: [],
-          date: now.toLocaleDateString()
-        };
-
-        fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=14`)
-          .then(res => res.json())
-          .then(async data => {
-            if(data && data.address) {
-              let city = data.address.city || data.address.town || data.address.village || data.address.county || '';
-              let state = data.address.state || '';
-              newSpot.zone = [city, state].filter(Boolean).join(', ') || 'Generale';
-              await persistSpots();
-              renderSavedSpotsUI();
-            }
-          }).catch(()=>{});
-
-        spots.push(newSpot);
-        await persistSpots();
-        renderMapSpots();
-        map.flyTo([lat, lng], 16);
-        alert(`⚡ Spot salvato al volo!`);
-      }, () => { alert("Attiva il GPS."); }, { enableHighAccuracy: true });
-    }
-
     function shareSpot(name, lat, lng) {
       const shareUrl = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
       if (navigator.share) {
