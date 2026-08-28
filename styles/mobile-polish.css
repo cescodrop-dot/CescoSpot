@@ -135,12 +135,11 @@
 
   #tabForecasts .weather-hero-card {
     min-height: 154px;
-    display: grid;
-    grid-template-columns: 84px 1fr;
-    grid-template-rows: auto auto;
-    column-gap: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
-    text-align: left;
+    text-align: center;
     padding: 18px;
     border-radius: 22px;
     margin-bottom: 10px;
@@ -148,28 +147,25 @@
   }
 
   #tabForecasts .w-icon-huge {
-    grid-row: 1 / span 2;
     font-size: 3.2rem;
-    margin: 0;
-    justify-self: center;
+    margin: 0 0 2px;
   }
 
   #tabForecasts .w-temp-huge {
-    align-self: end;
     font-size: clamp(3rem, 14vw, 4rem);
     margin: 0;
   }
 
   #tabForecasts .w-desc-text {
-    align-self: start;
     font-size: 0.86rem;
     letter-spacing: 0.7px;
     line-height: 1.25;
+    text-align: center;
   }
 
   #tabForecasts .weather-data-status {
     margin: 0 0 9px;
-    text-align: left;
+    text-align: center;
     padding: 0 2px;
     font-size: 0.7rem;
   }
