@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 
 await import('../js/river-status.js');
@@ -30,8 +31,7 @@ test('non inventa uno stato con dati insufficienti', () => {
 
 
 test('il flusso idrologico passa esplicitamente dal modulo senza override fetch', async () => {
-  const [{ readFile }, appSource, moduleSource] = await Promise.all([
-    import('node:fs/promises'),
+  const [appSource, moduleSource] = await Promise.all([
     readFile(new URL('../js/app.js', import.meta.url), 'utf8'),
     readFile(new URL('../js/river-status.js', import.meta.url), 'utf8')
   ]);
