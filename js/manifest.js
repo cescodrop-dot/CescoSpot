@@ -48,6 +48,10 @@
   weatherInsightsScript.src = 'js/weather-insights.js';
   document.head.appendChild(weatherInsightsScript);
 
+  const wikiImagesScript = document.createElement('script');
+  wikiImagesScript.src = 'js/wiki-images.js';
+  document.head.appendChild(wikiImagesScript);
+
   if ('serviceWorker' in navigator && location.protocol !== 'file:') {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('./sw.js').catch(error => {
