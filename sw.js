@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'cescospot-v11';
+const CACHE_VERSION = 'cescospot-v12';
 const APP_SHELL = [
   './',
   './index.html',
@@ -14,6 +14,7 @@ const APP_SHELL = [
   './js/map-providers.js',
   './js/modal-accessibility.js',
   './js/weather-insights.js',
+  './js/wiki-images.js',
   './vendor/leaflet/leaflet.js',
   './vendor/leaflet/leaflet.css',
   './vendor/leaflet/images/marker-icon.png',
@@ -24,7 +25,23 @@ const APP_SHELL = [
   './vendor/fontawesome/css/all.min.css',
   './vendor/fontawesome/webfonts/fa-solid-900.woff2',
   './vendor/fontawesome/webfonts/fa-regular-400.woff2',
-  './map.png'
+  './map.png',
+  './palomar.jpg',
+  './clinch.jpg',
+  './fg_knot.jpg',
+  './albright.jpg',
+  './rapala.jpg',
+  './spallinata_aperta.jpg',
+  './spallinata_chiusa.jpg',
+  './corona_tocco.jpg',
+  './galleggiante_scorr.jpg',
+  './running_rig.jpg',
+  './paternoster.jpg',
+  './method_feeder.jpg',
+  './jig_head.jpg',
+  './drop_shot.jpg',
+  './wiki/uni_paletta.svg',
+  './wiki/texas_rig.svg'
 ];
 
 const LOCKED_VIEWPORT = '<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">';
