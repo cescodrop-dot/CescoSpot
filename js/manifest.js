@@ -34,6 +34,10 @@
   modalAccessibilityScript.src = 'js/modal-accessibility.js';
   document.head.appendChild(modalAccessibilityScript);
 
+  const zoomGuardScript = document.createElement('script');
+  zoomGuardScript.src = 'js/zoom-guard.js';
+  document.head.appendChild(zoomGuardScript);
+
   if ('serviceWorker' in navigator && location.protocol !== 'file:') {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('./sw.js').catch(error => {
