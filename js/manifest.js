@@ -13,6 +13,11 @@
   const blob = new Blob([stringManifest], { type: 'application/json' });
   document.getElementById('manifestLink').setAttribute('href', URL.createObjectURL(blob));
 
+  const mobilePolishStyles = document.createElement('link');
+  mobilePolishStyles.rel = 'stylesheet';
+  mobilePolishStyles.href = 'styles/mobile-polish.css';
+  document.head.appendChild(mobilePolishStyles);
+
   const riverStatusScript = document.createElement('script');
   riverStatusScript.src = 'js/river-status.js';
   document.head.appendChild(riverStatusScript);
