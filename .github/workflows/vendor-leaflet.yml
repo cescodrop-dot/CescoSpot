@@ -1,0 +1,51 @@
+name: Vendor Leaflet
+
+on:
+  push:
+    branches:
+      - fix/vendor-leaflet
+    paths:
+      - .github/workflows/vendor-leaflet.yml
+
+permissions:
+  contents: write
+
+jobs:
+  vendor:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/vendor-leaflet
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Fetch Leaflet 1.9.4 from npm
+        run: |
+          set -euxo pipefail
+          rm -rf /tmp/leaflet-package vendor/leaflet
+          mkdir -p /tmp/leaflet-package vendor/leaflet/images
+          cd /tmp/leaflet-package
+          npm pack leaflet@1.9.4
+          tar -xzf leaflet-1.9.4.tgz
+          cp package/dist/leaflet.js "$GITHUB_WORKSPACE/vendor/leaflet/leaflet.js"
+          cp package/dist/leaflet.css "$GITHUB_WORKSPACE/vendor/leaflet/leaflet.css"
+          cp package/dist/images/marker-icon.png "$GITHUB_WORKSPACE/vendor/leaflet/images/marker-icon.png"
+          cp package/dist/images/marker-icon-2x.png "$GITHUB_WORKSPACE/vendor/leaflet/images/marker-icon-2x.png"
+          cp package/dist/images/marker-shadow.png "$GITHUB_WORKSPACE/vendor/leaflet/images/marker-shadow.png"
+          cp package/LICENSE "$GITHUB_WORKSPACE/vendor/leaflet/LICENSE"
+
+      - name: Commit vendored assets
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add vendor/leaflet
+          if git diff --cached --quiet; then
+            echo "Leaflet assets already up to date"
+            exit 0
+          fi
+          git commit -m "Vendor Leaflet 1.9.4 assets"
+          git push origin HEAD:fix/vendor-leaflet
