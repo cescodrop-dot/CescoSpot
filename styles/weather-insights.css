@@ -1,0 +1,55 @@
+.field-conditions-card .widget-title i { color: var(--accent-light-blue); }
+
+.field-conditions-note {
+  margin: -2px 0 12px;
+  color: var(--text-muted);
+  font-size: 0.76rem;
+  line-height: 1.4;
+}
+
+.field-conditions-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.field-condition {
+  min-width: 0;
+  padding: 12px 11px;
+  border-radius: 14px;
+  background: rgba(7, 13, 29, 0.54);
+  border: 1px solid rgba(255,255,255,0.055);
+}
+
+.field-condition span,
+.field-condition small,
+.field-condition strong {
+  display: block;
+}
+
+.field-condition span {
+  color: var(--text-muted);
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.35px;
+  text-transform: uppercase;
+}
+
+.field-condition strong {
+  margin-top: 6px;
+  color: #fff;
+  font-size: 1.04rem;
+  line-height: 1.15;
+}
+
+.field-condition small {
+  margin-top: 4px;
+  color: var(--accent-light-blue);
+  font-size: 0.68rem;
+  line-height: 1.25;
+}
+
+@media (max-width: 768px) {
+  .field-conditions-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .field-condition { min-height: 82px; }
+}
