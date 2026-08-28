@@ -77,11 +77,12 @@
     }
   }
 
-  let attempts = 0;
-  const timer = globalScope.setInterval(() => {
-    attempts += 1;
-    if (installProviders() || attempts >= 100) {
-      globalScope.clearInterval(timer);
+  function installWhenReady() {
+    if (installProviders()) return;
+    if (typeof document !== 'undefined' && document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', installProviders, { once: true });
     }
-  }, 50);
+  }
+
+  installWhenReady();
 })(globalThis);
