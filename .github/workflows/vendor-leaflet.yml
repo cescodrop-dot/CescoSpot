@@ -1,4 +1,4 @@
-name: Vendor Leaflet
+name: Finalize Local Leaflet
 
 on:
   push:
@@ -11,7 +11,7 @@ permissions:
   contents: write
 
 jobs:
-  vendor:
+  finalize:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -22,30 +22,57 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: npm
 
-      - name: Fetch Leaflet 1.9.4 from npm
+      - name: Replace CDN Leaflet with local assets
         run: |
-          set -euxo pipefail
-          rm -rf /tmp/leaflet-package vendor/leaflet
-          mkdir -p /tmp/leaflet-package vendor/leaflet/images
-          cd /tmp/leaflet-package
-          npm pack leaflet@1.9.4
-          tar -xzf leaflet-1.9.4.tgz
-          cp package/dist/leaflet.js "$GITHUB_WORKSPACE/vendor/leaflet/leaflet.js"
-          cp package/dist/leaflet.css "$GITHUB_WORKSPACE/vendor/leaflet/leaflet.css"
-          cp package/dist/images/marker-icon.png "$GITHUB_WORKSPACE/vendor/leaflet/images/marker-icon.png"
-          cp package/dist/images/marker-icon-2x.png "$GITHUB_WORKSPACE/vendor/leaflet/images/marker-icon-2x.png"
-          cp package/dist/images/marker-shadow.png "$GITHUB_WORKSPACE/vendor/leaflet/images/marker-shadow.png"
-          cp package/LICENSE "$GITHUB_WORKSPACE/vendor/leaflet/LICENSE"
+          python <<'PY'
+          from pathlib import Path
 
-      - name: Commit vendored assets
+          index = Path('index.html')
+          text = index.read_text()
+          old_css = '<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />'
+          old_js = '<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>'
+          if old_css not in text or old_js not in text:
+              raise SystemExit('Leaflet CDN references not found in index.html')
+          text = text.replace(old_css, '<link rel="stylesheet" href="vendor/leaflet/leaflet.css" />')
+          text = text.replace(old_js, '<script src="vendor/leaflet/leaflet.js"></script>')
+          index.write_text(text)
+
+          sw = Path('sw.js')
+          text = sw.read_text()
+          text = text.replace("const CACHE_VERSION = 'cescospot-v4';", "const CACHE_VERSION = 'cescospot-v5';")
+          anchor = "  './vendor/suncalc.js',"
+          assets = "  './vendor/leaflet/leaflet.js',\n  './vendor/leaflet/leaflet.css',\n  './vendor/leaflet/images/marker-icon.png',\n  './vendor/leaflet/images/marker-icon-2x.png',\n  './vendor/leaflet/images/marker-shadow.png',\n  './vendor/leaflet/LICENSE',\n"
+          if './vendor/leaflet/leaflet.js' not in text:
+              text = text.replace(anchor, assets + anchor)
+          start = text.find("\n  if (requestUrl.hostname === 'unpkg.com') {")
+          if start != -1:
+              end = text.find("\n  }\n", start)
+              if end == -1:
+                  raise SystemExit('Unable to remove old unpkg service-worker handler')
+              text = text[:start] + text[end + len("\n  }\n"):]
+          sw.write_text(text)
+
+          tests = Path('tests/project-structure.test.mjs')
+          text = tests.read_text()
+          marker = "test('spot rapido usa le coordinate GPS ricevute'"
+          block = """test('Leaflet è locale e disponibile nell'app shell offline', async () => {\n  const html = await read('index.html');\n  const worker = await read('sw.js');\n\n  assert.match(html, /href=\"vendor\\/leaflet\\/leaflet\\.css\"/);\n  assert.match(html, /src=\"vendor\\/leaflet\\/leaflet\\.js\"/);\n  assert.doesNotMatch(html, /unpkg\\.com\\/leaflet/);\n  assert.match(worker, /vendor\\/leaflet\\/leaflet\\.js/);\n  assert.match(worker, /vendor\\/leaflet\\/leaflet\\.css/);\n  await Promise.all([\n    read('vendor/leaflet/leaflet.js'),\n    read('vendor/leaflet/leaflet.css'),\n    read('vendor/leaflet/LICENSE'),\n  ]);\n});\n\n"""
+          if "Leaflet è locale" not in text:
+              text = text.replace(marker, block + marker)
+          tests.write_text(text)
+          PY
+
+      - name: Run tests
+        run: |
+          npm ci
+          npm test
+
+      - name: Commit final integration
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add vendor/leaflet
-          if git diff --cached --quiet; then
-            echo "Leaflet assets already up to date"
-            exit 0
-          fi
-          git commit -m "Vendor Leaflet 1.9.4 assets"
+          rm .github/workflows/vendor-leaflet.yml
+          git add index.html sw.js tests/project-structure.test.mjs vendor/leaflet .github/workflows/vendor-leaflet.yml
+          git commit -m "Load Leaflet locally and cache it offline"
           git push origin HEAD:fix/vendor-leaflet
