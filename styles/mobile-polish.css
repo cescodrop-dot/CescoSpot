@@ -127,7 +127,6 @@
 
   #tabForecasts {
     padding: 10px 0 0 !important;
-    touch-action: pan-x pan-y;
   }
 
   #tabForecasts .tab-inner {
