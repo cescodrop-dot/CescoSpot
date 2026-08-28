@@ -1,4 +1,9 @@
 (function generateManifest() {
+  const viewport = document.querySelector('meta[name="viewport"]');
+  if (viewport) {
+    viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover');
+  }
+
   const manifest = {
     name: 'CescoSpot Pro',
     short_name: 'CescoSpot PRO',
@@ -38,10 +43,6 @@
   const modalAccessibilityScript = document.createElement('script');
   modalAccessibilityScript.src = 'js/modal-accessibility.js';
   document.head.appendChild(modalAccessibilityScript);
-
-  const zoomGuardScript = document.createElement('script');
-  zoomGuardScript.src = 'js/zoom-guard.js';
-  document.head.appendChild(zoomGuardScript);
 
   const weatherInsightsScript = document.createElement('script');
   weatherInsightsScript.src = 'js/weather-insights.js';
