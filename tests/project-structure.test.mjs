@@ -10,6 +10,7 @@ async function read(path) {
 
 test('carica gli asset locali estratti dal file principale', async () => {
   const html = await read('index.html');
+  const manifest = await read('js/manifest.js');
 
   assert.match(html, /href="styles\/app\.css"/);
   assert.match(html, /href="vendor\/fontawesome\/css\/all\.min\.css"/);
@@ -18,6 +19,7 @@ test('carica gli asset locali estratti dal file principale', async () => {
   assert.match(html, /src="js\/data-safety\.js"/);
   assert.match(html, /src="js\/storage\.js"/);
   assert.match(html, /src="js\/app\.js"/);
+  assert.match(manifest, /js\/quick-drop\.js/);
 
   await Promise.all([
     read('styles/app.css'),
@@ -25,10 +27,19 @@ test('carica gli asset locali estratti dal file principale', async () => {
     read('js/data-safety.js'),
     read('js/storage.js'),
     read('js/app.js'),
+    read('js/quick-drop.js'),
     read('vendor/fontawesome/css/all.min.css'),
     read('vendor/fontawesome/webfonts/fa-solid-900.woff2'),
     read('vendor/fontawesome/webfonts/fa-regular-400.woff2'),
   ]);
+});
+
+test('spot rapido usa le coordinate GPS ricevute', async () => {
+  const quickDrop = await read('js/quick-drop.js');
+
+  assert.match(quickDrop, /latitude: lat, longitude: lng/);
+  assert.match(quickDrop, /lat\.toFixed\(4\).*lng\.toFixed\(4\)/s);
+  assert.doesNotMatch(quickDrop, /center\.lat|center\.lng/);
 });
 
 test('non conserva grandi blocchi CSS o JavaScript inline', async () => {
