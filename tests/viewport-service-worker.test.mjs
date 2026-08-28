@@ -14,5 +14,5 @@ test('il service worker riscrive il viewport prima del parsing della pagina', as
   assert.match(worker, /html\.replace/);
   assert.match(worker, /withLockedViewport\(response\)/);
   assert.match(worker, /withLockedViewport\(cached\)/);
-  assert.match(worker, /cescospot-v11/);
+  assert.match(worker, /const CACHE_VERSION = 'cescospot-v\d+';/);
 });
