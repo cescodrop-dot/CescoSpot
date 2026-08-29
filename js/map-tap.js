@@ -9,7 +9,15 @@
           pendingTimer = null;
           return false;
         }
-        pendingTimer = schedule(() => { pendingTimer = null; onSingleTap(event); }, threshold);
+        // Leaflet events are transient interaction objects. Capture only the
+        // coordinates now; never retain the event until the deferred callback.
+        const lat = event?.latlng?.lat;
+        const lng = event?.latlng?.lng;
+        if (!Number.isFinite(lat) || !Number.isFinite(lng)) return false;
+        pendingTimer = schedule(() => {
+          pendingTimer = null;
+          onSingleTap({ lat, lng });
+        }, threshold);
         return true;
       },
       cancel() { if (pendingTimer !== null) cancel(pendingTimer); pendingTimer = null; },
