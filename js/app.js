@@ -899,10 +899,11 @@
     }
 
     const spotTap = CescoMapTap.create({
-      onSingleTap: (e) => {
+      onSingleTap: ({ lat, lng }) => {
         if (tempMarker) map.removeLayer(tempMarker);
-        tempMarker = L.marker(e.latlng, {icon: L.divIcon({className: '', html: `<div style="width:24px; height:24px; background:var(--accent-blue); border:3px solid #fff; border-radius:50%; animation: pulse 1s infinite alternate;"></div>`, iconSize: [24, 24], iconAnchor: [12, 12]})}).addTo(map);
-        openAddSpotModal(e.latlng.lat, e.latlng.lng);
+        const latLng = L.latLng(lat, lng);
+        tempMarker = L.marker(latLng, {icon: L.divIcon({className: '', html: `<div style="width:24px; height:24px; background:var(--accent-blue); border:3px solid #fff; border-radius:50%; animation: pulse 1s infinite alternate;"></div>`, iconSize: [24, 24], iconAnchor: [12, 12]})}).addTo(map);
+        openAddSpotModal(lat, lng);
       }
     });
 
@@ -921,6 +922,10 @@
         spotTap.handleClick(e);
       }
     });
+
+    // Leaflet emits dblclick after the two clicks. Keep native double-click
+    // zoom disabled and cancel any still-pending single-tap action explicitly.
+    map.on('dblclick', () => spotTap.cancel());
 
     function updateForecastData(btnElement) {
       let originalHtml = '';
