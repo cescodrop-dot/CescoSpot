@@ -416,60 +416,9 @@
       window.open(`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`, '_blank');
     }
 
-    function openAddSpotModal(lat, lng) {
-      editingSpotId = null;
-      document.getElementById('modalTitle').innerText = "Salva Posizione";
-      
-      const center = Number.isFinite(lat) && Number.isFinite(lng) ? { lat, lng } : map.getCenter();
-      document.getElementById('tempLat').value = center.lat;
-      document.getElementById('tempLng').value = center.lng;
-      
-      document.getElementById('spotName').value = '';
-      document.getElementById('spotZone').value = 'Generale';
-      document.getElementById('spotRadius').value = '';
-      document.getElementById('spotNotes').value = '';
-      // The base dialog never depends on optional enhancements or the network.
-      const addSpotModal = document.getElementById('modalAddSpot');
-      addSpotModal.classList.add('open');
-      if (globalThis.CescoModalAccessibility && typeof CescoModalAccessibility.activate === 'function') {
-        CescoModalAccessibility.activate(addSpotModal);
-      }
-      document.getElementById('spotPhotoData').value = '';
-      selectedTechniquesSet = new Set();
-      selectedSpeciesSet = new Set();
-      selectedSpotLuresSet = new Set();
-      currentEnvironmentSpecies = freshwaterSpecies;
-
-      function enhance(label, action) {
-        try { action(); }
-        catch (error) { console.warn(`Add Spot: ${label} non disponibile.`, error); }
-      }
-      enhance('foto', () => removePhoto('spotPhotoData', 'spotPhotoBox'));
-      enhance('tecniche', () => renderTechniqueSelect([]));
-      enhance('specie', () => renderSpeciesSelector([]));
-      enhance('esche', () => renderSpotLureSelect([]));
-
-      // Also catches a synchronous fetch failure; opening has already completed.
-      Promise.resolve()
-        .then(() => fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${center.lat}&lon=${center.lng}&zoom=14`))
-        .then(res => {
-          if (!res.ok) throw new Error(`Reverse geocoding HTTP ${res.status}`);
-          return res.json();
-        })
-        .then(data => {
-          let zoneStr = 'Generale';
-          if(data && data.address) {
-            let city = data.address.city || data.address.town || data.address.village || data.address.county || '';
-            let state = data.address.state || '';
-            zoneStr = [city, state].filter(Boolean).join(', ') || 'Zona Non Definita';
-          }
-          document.getElementById('spotZone').value = zoneStr;
-          enhance('ambiente', () => detectWaterEnvironment(center.lat, center.lng, zoneStr));
-        })
-        .catch(() => { 
-          document.getElementById('spotZone').value = 'Generale';
-          enhance('ambiente', () => detectWaterEnvironment(center.lat, center.lng, ''));
-        });
+    function openAddSpotModal() {
+      const modal = document.getElementById('modalAddSpot');
+      modal.classList.add('open');
     }
 
     function closeModals() {
