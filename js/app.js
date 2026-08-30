@@ -416,9 +416,21 @@
       window.open(`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`, '_blank');
     }
 
-    function openAddSpotModal() {
-      const modal = document.getElementById('modalAddSpot');
-      modal.classList.add('open');
+    function openAddSpotModal(lat, lng) {
+      editingSpotId = null;
+      document.getElementById('modalTitle').innerText = 'Salva Posizione';
+      const center = Number.isFinite(lat) && Number.isFinite(lng) ? { lat, lng } : map.getCenter();
+      document.getElementById('tempLat').value = center.lat;
+      document.getElementById('tempLng').value = center.lng;
+      document.getElementById('spotName').value = '';
+      document.getElementById('spotZone').value = 'Generale';
+      document.getElementById('spotRadius').value = '';
+      document.getElementById('spotNotes').value = '';
+      selectedTechniquesSet = new Set();
+      selectedSpeciesSet = new Set();
+      selectedSpotLuresSet = new Set();
+      currentEnvironmentSpecies = freshwaterSpecies;
+      document.getElementById('modalAddSpot').classList.add('open');
     }
 
     function closeModals() {
