@@ -35,11 +35,11 @@ test('Escape usa il controllo di chiusura esistente', async () => {
   assert.doesNotMatch(source, /modal\.style\.display\s*=\s*['"]none/);
 });
 
-test('modulo modali è caricato e disponibile offline', async () => {
+test('modulo modali è escluso dalla pagina nella prova diagnostica', async () => {
   const html = await read('index.html');
   const worker = await read('sw.js');
 
-  assert.match(html, /js\/modal-accessibility\.js/);
-  assert.match(worker, /js\/modal-accessibility\.js/);
+  assert.doesNotMatch(html, /js\/modal-accessibility\.js/);
+  assert.doesNotMatch(worker, /js\/modal-accessibility\.js/);
   assert.match(worker, /const CACHE_VERSION = 'cescospot-v\d+';/);
 });

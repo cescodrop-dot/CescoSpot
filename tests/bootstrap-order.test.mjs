@@ -15,7 +15,6 @@ test('i moduli runtime sono caricati una volta sola e prima di app.js', async ()
     'js/river-status.js',
     'js/quick-drop.js',
     'js/map-providers.js',
-    'js/modal-accessibility.js',
     'js/weather-insights.js',
     'js/wiki-images.js',
     'js/photo-upload.js',
