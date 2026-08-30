@@ -420,22 +420,38 @@
       editingSpotId = null;
       document.getElementById('modalTitle').innerText = "Salva Posizione";
       
-      const center = lat && lng ? { lat, lng } : map.getCenter();
+      const center = Number.isFinite(lat) && Number.isFinite(lng) ? { lat, lng } : map.getCenter();
       document.getElementById('tempLat').value = center.lat;
       document.getElementById('tempLng').value = center.lng;
       
       document.getElementById('spotName').value = '';
-      document.getElementById('spotZone').value = 'Ricerca zona in corso...';
+      document.getElementById('spotZone').value = 'Generale';
       document.getElementById('spotRadius').value = '';
       document.getElementById('spotNotes').value = '';
-      removePhoto('spotPhotoData', 'spotPhotoBox');
-      
-      renderTechniqueSelect([]);
-      renderSpeciesSelector([]);
-      renderSpotLureSelect([]);
+      // The base dialog never depends on optional enhancements or the network.
+      document.getElementById('modalAddSpot').classList.add('open');
+      document.getElementById('spotPhotoData').value = '';
+      selectedTechniquesSet = new Set();
+      selectedSpeciesSet = new Set();
+      selectedSpotLuresSet = new Set();
+      currentEnvironmentSpecies = freshwaterSpecies;
 
-      fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${center.lat}&lon=${center.lng}&zoom=14`)
-        .then(res => res.json())
+      function enhance(label, action) {
+        try { action(); }
+        catch (error) { console.warn(`Add Spot: ${label} non disponibile.`, error); }
+      }
+      enhance('foto', () => removePhoto('spotPhotoData', 'spotPhotoBox'));
+      enhance('tecniche', () => renderTechniqueSelect([]));
+      enhance('specie', () => renderSpeciesSelector([]));
+      enhance('esche', () => renderSpotLureSelect([]));
+
+      // Also catches a synchronous fetch failure; opening has already completed.
+      Promise.resolve()
+        .then(() => fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${center.lat}&lon=${center.lng}&zoom=14`))
+        .then(res => {
+          if (!res.ok) throw new Error(`Reverse geocoding HTTP ${res.status}`);
+          return res.json();
+        })
         .then(data => {
           let zoneStr = 'Generale';
           if(data && data.address) {
@@ -444,14 +460,12 @@
             zoneStr = [city, state].filter(Boolean).join(', ') || 'Zona Non Definita';
           }
           document.getElementById('spotZone').value = zoneStr;
-          detectWaterEnvironment(center.lat, center.lng, zoneStr);
+          enhance('ambiente', () => detectWaterEnvironment(center.lat, center.lng, zoneStr));
         })
         .catch(() => { 
           document.getElementById('spotZone').value = 'Generale';
-          detectWaterEnvironment(center.lat, center.lng, '');
+          enhance('ambiente', () => detectWaterEnvironment(center.lat, center.lng, ''));
         });
-      
-      document.getElementById('modalAddSpot').classList.add('open');
     }
 
     function closeModals() {

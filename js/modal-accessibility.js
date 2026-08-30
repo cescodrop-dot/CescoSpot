@@ -28,8 +28,11 @@
   }
 
   function isVisible(element) {
-    if (!element || element.hidden || element.getAttribute('aria-hidden') === 'true') return false;
+    if (!element || element.hidden) return false;
     const style = globalScope.getComputedStyle(element);
+    // .open is authoritative even during the sheet's CSS transition.
+    // aria-hidden is derived output; reading it here would lock a closed sheet.
+    if (element.matches('.modal')) return element.classList.contains('open') && style.display !== 'none';
     return style.display !== 'none' && style.visibility !== 'hidden' && style.opacity !== '0';
   }
 
@@ -42,7 +45,7 @@
 
   function ensureLabel(modal) {
     if (modal.hasAttribute('aria-label') || modal.hasAttribute('aria-labelledby')) return;
-    const heading = modal.querySelector('h1, h2, h3, .modal-title, .form-title, .sheet-title');
+    const heading = modal.querySelector('h1, h2, h3, h4, h5, h6, .modal-title, .form-title, .sheet-title');
     if (heading) {
       if (!heading.id) heading.id = `modal-title-${Math.random().toString(36).slice(2, 9)}`;
       modal.setAttribute('aria-labelledby', heading.id);
@@ -52,7 +55,7 @@
   }
 
   function prepareModal(modal) {
-    if (!isTopLevelModal(modal)) return;
+    if (!isTopLevelModal(modal) || state.has(modal)) return;
     modal.setAttribute('role', 'dialog');
     modal.setAttribute('aria-modal', 'true');
     ensureLabel(modal);
@@ -180,7 +183,9 @@
       subtree: true,
       childList: true,
       attributes: true,
-      attributeFilter: ['class', 'style', 'hidden', 'aria-hidden']
+      // Do not observe our own derived ARIA writes: even setAttribute with the
+      // same value creates a mutation and previously starved the browser loop.
+      attributeFilter: ['class', 'style', 'hidden']
     });
 
     document.addEventListener('keydown', onKeyDown, true);
