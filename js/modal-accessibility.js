@@ -157,37 +157,6 @@
 
   function init() {
     syncAllModals();
-
-    const observer = new MutationObserver(mutations => {
-      const affected = new Set();
-      mutations.forEach(mutation => {
-        if (mutation.type === 'childList') {
-          mutation.addedNodes.forEach(node => {
-            if (!(node instanceof Element)) return;
-            if (node.matches(MODAL_SELECTOR)) affected.add(node);
-            node.querySelectorAll && node.querySelectorAll(MODAL_SELECTOR).forEach(modal => affected.add(modal));
-          });
-        }
-
-        if (mutation.target instanceof Element) {
-          const modal = mutation.target.matches(MODAL_SELECTOR)
-            ? mutation.target
-            : mutation.target.closest(MODAL_SELECTOR);
-          if (modal) affected.add(modal);
-        }
-      });
-      affected.forEach(syncModal);
-    });
-
-    observer.observe(document.body, {
-      subtree: true,
-      childList: true,
-      attributes: true,
-      // Do not observe our own derived ARIA writes: even setAttribute with the
-      // same value creates a mutation and previously starved the browser loop.
-      attributeFilter: ['class', 'style', 'hidden']
-    });
-
     document.addEventListener('keydown', onKeyDown, true);
   }
 
@@ -199,6 +168,8 @@
 
   globalScope.CescoModalAccessibility = Object.freeze({
     sync: syncAllModals,
+    activate: activateModal,
+    deactivate: deactivateModal,
     requestClose
   });
 })(globalThis);

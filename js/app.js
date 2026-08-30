@@ -429,7 +429,11 @@
       document.getElementById('spotRadius').value = '';
       document.getElementById('spotNotes').value = '';
       // The base dialog never depends on optional enhancements or the network.
-      document.getElementById('modalAddSpot').classList.add('open');
+      const addSpotModal = document.getElementById('modalAddSpot');
+      addSpotModal.classList.add('open');
+      if (globalThis.CescoModalAccessibility && typeof CescoModalAccessibility.activate === 'function') {
+        CescoModalAccessibility.activate(addSpotModal);
+      }
       document.getElementById('spotPhotoData').value = '';
       selectedTechniquesSet = new Set();
       selectedSpeciesSet = new Set();
@@ -469,7 +473,12 @@
     }
 
     function closeModals() {
-      document.querySelectorAll('.modal').forEach(m => m.classList.remove('open'));
+      document.querySelectorAll('.modal').forEach(m => {
+        m.classList.remove('open');
+        if (globalThis.CescoModalAccessibility && typeof CescoModalAccessibility.deactivate === 'function') {
+          CescoModalAccessibility.deactivate(m);
+        }
+      });
       if(tempMarker) { map.removeLayer(tempMarker); tempMarker = null; }
       editingSpotId = null;
     }
