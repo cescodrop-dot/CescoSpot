@@ -34,7 +34,8 @@ test('i moduli runtime sono caricati una volta sola e prima di app.js', async ()
 test('il flusso spot conserva tap singolo differito e salvataggio atomico', async () => {
   const app = await read('js/app.js');
 
-  assert.match(app, /CescoMapTap\.create\([\s\S]*onSingleTap:[\s\S]*tempMarker[\s\S]*openAddSpotModal/);
+  assert.match(app, /startSpotFromMap[\s\S]*tempMarker[\s\S]*openAddSpotModal/);
+  assert.match(app, /mapTapFactory\.create\(\{ onSingleTap: startSpotFromMap \}\)/);
   assert.match(app, /const previousSpots = normalizeBackupPayload\(spots\)/);
   assert.match(app, /if \(!await persistSpots\(\)\) \{\s*spots = previousSpots;\s*return;/);
   assert.match(app, /renderMapSpots\(\);\s*closeModals\(\);/);

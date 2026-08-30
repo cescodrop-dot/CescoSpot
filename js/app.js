@@ -898,13 +898,22 @@
       }
     }
 
-    const spotTap = CescoMapTap.create({
-      onSingleTap: (e) => {
-        if (tempMarker) map.removeLayer(tempMarker);
-        tempMarker = L.marker(e.latlng, {icon: L.divIcon({className: '', html: `<div style="width:24px; height:24px; background:var(--accent-blue); border:3px solid #fff; border-radius:50%; animation: pulse 1s infinite alternate;"></div>`, iconSize: [24, 24], iconAnchor: [12, 12]})}).addTo(map);
-        openAddSpotModal(e.latlng.lat, e.latlng.lng);
-      }
-    });
+    function startSpotFromMap({ lat, lng }) {
+      if (!Number.isFinite(lat) || !Number.isFinite(lng)) return;
+      if (tempMarker) map.removeLayer(tempMarker);
+      const latLng = L.latLng(lat, lng);
+      tempMarker = L.marker(latLng, {icon: L.divIcon({className: '', html: `<div style="width:24px; height:24px; background:var(--accent-blue); border:3px solid #fff; border-radius:50%; animation: pulse 1s infinite alternate;"></div>`, iconSize: [24, 24], iconAnchor: [12, 12]})}).addTo(map);
+      openAddSpotModal(lat, lng);
+    }
+
+    // The map module is loaded before app.js, but keep startup safe if an old
+    // PWA cache serves a partial shell. A plain single tap remains usable.
+    const mapTapFactory = window.CescoMapTap && typeof window.CescoMapTap.create === 'function'
+      ? window.CescoMapTap
+      : null;
+    const spotTap = mapTapFactory
+      ? mapTapFactory.create({ onSingleTap: startSpotFromMap })
+      : { handleClick: (e) => { startSpotFromMap(e.latlng); return true; }, cancel: () => {} };
 
     map.on('click', function(e) {
       if (rulerActive) {
@@ -921,6 +930,10 @@
         spotTap.handleClick(e);
       }
     });
+
+    // Leaflet emits dblclick after the two clicks. Keep native double-click
+    // zoom disabled and cancel any still-pending single-tap action explicitly.
+    map.on('dblclick', () => spotTap.cancel());
 
     function updateForecastData(btnElement) {
       let originalHtml = '';
