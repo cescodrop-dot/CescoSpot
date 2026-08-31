@@ -947,6 +947,20 @@
     // zoom disabled and cancel any still-pending single-tap action explicitly.
     map.on('dblclick', () => spotTap.cancel());
 
+    // Sole writer for forecast context/status. Keep the decorative icon when
+    // replacing a label (including one previously written by Spot Rapido).
+    function setWeatherLocationContext(source, message) {
+      const element = document.getElementById('weatherLocationText');
+      if (!element) return null;
+      const icon = document.createElement('i');
+      icon.className = 'fa-solid fa-location-dot';
+      icon.setAttribute('aria-hidden', 'true');
+      const label = document.createTextNode(' ' + (message ||
+        (source === 'gps' ? 'Posizione analizzata: posizione GPS' : 'Posizione analizzata: centro della mappa')));
+      element.replaceChildren(icon, label);
+      return label;
+    }
+
     function updateForecastData(btnElement, coordinatesOverride) {
       let originalHtml = '';
       if(btnElement) { originalHtml = btnElement.innerHTML; btnElement.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sincronizzazione...'; btnElement.disabled = true; }
@@ -955,8 +969,8 @@
       const overrideLng = coordinatesOverride && Number(coordinatesOverride.lng);
       const hasValidOverride = Number.isFinite(overrideLat) && Number.isFinite(overrideLng);
       const center = hasValidOverride ? { lat: overrideLat, lng: overrideLng } : map.getCenter();
-      const locationText = document.getElementById('weatherLocationText');
       const gpsLocation = hasValidOverride;
+      const locationLabel = setWeatherLocationContext(gpsLocation ? 'gps' : 'map');
       const now = new Date();
 
       const formatClock = (date) => date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -1072,7 +1086,10 @@
         }).catch(() => {
           document.getElementById('wDesc').innerText = 'Errore di Rete';
           document.getElementById('weatherDataStatus').innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Impossibile aggiornare i dati meteo';
-          if (gpsLocation && locationText) locationText.innerText = 'Posizione GPS acquisita, ma i dati meteo non sono stati aggiornati';
+          // A late response must not overwrite a newer context or GPS error.
+          if (gpsLocation && locationLabel && locationLabel.parentNode) {
+            setWeatherLocationContext('gps', 'Posizione analizzata: posizione GPS · dati meteo non aggiornati');
+          }
           return false;
         });
 
@@ -1101,8 +1118,7 @@
     }
 
     function useCurrentLocationForForecast(button) {
-      const locationText = document.getElementById('weatherLocationText');
-      if (!navigator.geolocation) { if (locationText) locationText.innerText = 'GPS non supportato da questo dispositivo'; return; }
+      if (!navigator.geolocation) { setWeatherLocationContext('error', 'GPS non supportato da questo dispositivo'); return; }
       const original = button.innerHTML;
       button.disabled = true;
       button.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Localizzo';
@@ -1111,7 +1127,7 @@
           const lat = Number(coords?.latitude);
           const lng = Number(coords?.longitude);
           if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
-            if (locationText) locationText.innerText = 'Coordinate GPS non valide';
+            setWeatherLocationContext('error', 'Coordinate GPS non valide');
             button.innerHTML = original;
             button.disabled = false;
             return;
@@ -1120,19 +1136,18 @@
           try {
             map.setView([lat, lng], Math.max(map.getZoom(), 13));
           } catch (error) {
-            if (locationText) locationText.innerText = 'Posizione GPS non disponibile: impossibile aggiornare la mappa';
+            setWeatherLocationContext('error', 'Posizione GPS non disponibile: impossibile aggiornare la mappa');
             button.innerHTML = original;
             button.disabled = false;
             return;
           }
 
-          if (locationText) locationText.innerText = `Posizione GPS acquisita: ${lat.toFixed(5)}, ${lng.toFixed(5)}`;
           button.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Aggiorno meteo...';
           let request;
           try {
             request = updateForecastData(null, { lat, lng });
           } catch (error) {
-            if (locationText) locationText.innerText = 'Posizione GPS acquisita, ma i dati meteo non sono stati aggiornati';
+            setWeatherLocationContext('gps', 'Posizione analizzata: posizione GPS · dati meteo non aggiornati');
             button.innerHTML = original;
             button.disabled = false;
             return;
@@ -1148,7 +1163,7 @@
             : error && error.code === 3
               ? 'Timeout GPS: riprova o usa il centro della mappa'
               : 'Posizione non disponibile: usa il centro della mappa';
-          if (locationText) locationText.innerText = message;
+          setWeatherLocationContext('error', message);
           button.innerHTML = original;
           button.disabled = false;
         },

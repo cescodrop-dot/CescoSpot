@@ -3,78 +3,150 @@ import { readFile } from 'node:fs/promises';
 import vm from 'node:vm';
 import test from 'node:test';
 
-const root = new URL('../', import.meta.url);
-const read = path => readFile(new URL(path, root), 'utf8');
+const app = await readFile(new URL('../js/app.js', import.meta.url), 'utf8');
+const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
 
-async function handlerFixture(geolocation) {
-  const app = globalThis.__weatherAppSource;
-  const bindStart = app.indexOf('function bindWeatherLocationButton(');
-  const bindEnd = app.indexOf('\n    function bindImageProtections', bindStart);
-  const useStart = app.indexOf('function useCurrentLocationForForecast(');
-  const useEnd = app.indexOf('\n    function switchTab(', useStart);
-  let clickHandler;
-  let mapView;
-  const button = { innerHTML: 'Usa la mia posizione', disabled: false, addEventListener(type, handler) { assert.equal(type, 'click'); clickHandler = handler; } };
-  const locationText = { innerText: '' };
-  let forecastArgs;
+// Minimal DOM with real EventTarget dispatch and text-node ownership.
+class Element extends EventTarget {
+  constructor(tagName = 'span') {
+    super();
+    this.tagName = tagName.toUpperCase();
+    this.children = [];
+    this.style = {};
+    this.disabled = false;
+    this.attributes = {};
+  }
+  replaceChildren(...nodes) {
+    for (const child of this.children) child.parentNode = null;
+    this.children = nodes;
+    for (const child of nodes) child.parentNode = this;
+  }
+  set textContent(text) { this.replaceChildren({ textContent: String(text) }); }
+  get textContent() { return this.children.map(child => child.textContent).join(''); }
+  set innerText(text) { this.textContent = text; }
+  get innerText() { return this.textContent; }
+  setAttribute(name, value) { this.attributes[name] = value; }
+}
+
+function fixture() {
+  const elements = new Map([...html.matchAll(/id="([^"]+)"/g)].map(([, id]) => [id, new Element()]));
+  const location = elements.get('weatherLocationText');
+  const initialIcon = new Element('i');
+  initialIcon.className = 'fa-solid fa-location-dot';
+  location.replaceChildren(initialIcon, {
+    textContent: html.match(/id="weatherLocationText">[\s\S]*?<\/i>([^<]*)<\/span>/)[1],
+  });
+  const button = elements.get('btnWeatherCurrentLocation');
+  button.innerHTML = 'Usa la mia posizione';
+  const requests = [];
+  let gpsSuccess, gpsError, gpsCalls = 0, mapView;
   const context = vm.createContext({
-    window: { matchMedia: () => ({ matches: false }), navigator: { standalone: false }, addEventListener() {} },
-    document: { getElementById(id) { return id === 'btnWeatherCurrentLocation' ? button : locationText; }, addEventListener() {} },
-    navigator: { geolocation },
-    map: { getZoom: () => 10, setView(view) { mapView = view; } },
-    updateForecastData(...args) { forecastArgs = args; return Promise.resolve(true); }, Promise
+    window: {},
+    document: {
+      getElementById: id => elements.get(id) ?? null,
+      createElement: tag => new Element(tag),
+      createTextNode: text => ({ textContent: text, parentNode: null }),
+    },
+    navigator: { geolocation: { getCurrentPosition(success, error) { gpsCalls++; gpsSuccess = success; gpsError = error; } } },
+    // Deliberately do not change getCenter in setView: prove GPS overrides it.
+    map: { getCenter: () => ({ lat: 1, lng: 2 }), getZoom: () => 10, setView(view) { mapView = Array.from(view); } },
+    fetch(url) { return new Promise((resolve, reject) => requests.push({ url, resolve, reject })); },
+    CescoRiverStatus: { renderRiverStatus() {} },
   });
-  vm.runInContext(app.slice(bindStart, bindEnd) + app.slice(useStart, useEnd) + '\nbindWeatherLocationButton();', context);
-  assert.equal(typeof clickHandler, 'function');
-  return { clickHandler, button, locationText, getMapView: () => mapView, getForecastArgs: () => forecastArgs };
+  const helperStart = app.indexOf('function setWeatherLocationContext(');
+  const start = helperStart < 0 ? app.indexOf('function updateForecastData(') : helperStart;
+  const end = app.indexOf('function switchTab(', start);
+  const bindStart = app.indexOf('function bindWeatherLocationButton(');
+  const bindEnd = app.indexOf('function bindImageProtections(', bindStart);
+  vm.runInContext(app.slice(start, end) + app.slice(bindStart, bindEnd) + '\nbindWeatherLocationButton();', context);
+  const respond = request => request.resolve({ ok: true, json: async () => ({ current: {
+    weather_code: 0, temperature_2m: 20, apparent_temperature: 20, relative_humidity_2m: 50,
+    wind_speed_10m: 1, wind_direction_10m: 0, surface_pressure: 1013, precipitation: 0, cloud_cover: 0
+  }, hourly: { time: [], surface_pressure: [] }, daily: {} }) });
+  return {
+    context, elements, location, button, requests, respond,
+    click: () => button.dispatchEvent(new Event('click')),
+    success: coords => gpsSuccess({ coords }), error: code => gpsError({ code }),
+    gpsCalls: () => gpsCalls, mapView: () => mapView,
+  };
 }
 
-test('successo GPS passa le coordinate esatte al meteo e aggiorna la mappa', async () => {
-  globalThis.__weatherAppSource = await read('js/app.js');
-  let gpsCalls = 0;
-  const fixture = await handlerFixture({ getCurrentPosition(success) { gpsCalls++; success({ coords: { latitude: 44.5, longitude: 11.3 } }); } });
-  fixture.clickHandler();
-  await Promise.resolve();
-  assert.equal(gpsCalls, 1);
-  assert.equal(fixture.getMapView()[0], 44.5);
-  assert.equal(fixture.getMapView()[1], 11.3);
-  assert.equal(fixture.getForecastArgs()[0], null);
-  assert.equal(fixture.getForecastArgs()[1].lat, 44.5);
-  assert.equal(fixture.getForecastArgs()[1].lng, 11.3);
-  assert.match(fixture.locationText.innerText, /Posizione GPS acquisita/);
-  assert.equal(fixture.button.disabled, false);
+function assertLocation(f, source) {
+  assert.equal(f.location.textContent.trim(), `Posizione analizzata: ${source}`);
+  assert.equal(f.location.children[0].tagName, 'I');
+  assert.equal(f.location.children[0].className, 'fa-solid fa-location-dot');
+}
+
+test('senza override il meteo imposta subito il contesto centro della mappa', async () => {
+  const f = fixture();
+  const request = vm.runInContext('updateForecastData()', f.context);
+  assertLocation(f, 'centro della mappa');
+  assert.match(f.requests[0].url, /latitude=1&longitude=2/);
+  f.respond(f.requests[0]);
+  await request;
+  assertLocation(f, 'centro della mappa');
 });
 
-for (const [name, code, expected] of [['permesso negato', 1, 'Permesso posizione negato'], ['timeout', 3, 'Timeout GPS'], ['posizione non disponibile', 2, 'Posizione non disponibile']]) {
-  test(`GPS: ${name}`, async () => {
-    globalThis.__weatherAppSource = await read('js/app.js');
-    const fixture = await handlerFixture({ getCurrentPosition(_success, error) { error({ code }); } });
-    fixture.clickHandler();
-    assert.match(fixture.locationText.innerText, new RegExp(expected));
-    assert.equal(fixture.getForecastArgs(), undefined);
+test('override GPS imposta il testo prima del fetch e lo conserva dopo il completamento', async () => {
+  const f = fixture();
+  const request = vm.runInContext('updateForecastData(null, {lat: 44.5, lng: 11.3})', f.context);
+  assertLocation(f, 'posizione GPS');
+  for (const { url } of f.requests) assert.match(url, /latitude=44.5&longitude=11.3/);
+  f.respond(f.requests[0]);
+  await request;
+  assert.equal(f.elements.get('wTempLarge').innerText, '20°');
+  assertLocation(f, 'posizione GPS');
+});
+
+test('click reale → Localizzo → GPS → mappa → fetch reale → etichetta GPS persistente', async () => {
+  const f = fixture();
+  f.click();
+  assert.equal(f.gpsCalls(), 1);
+  assert.match(f.button.innerHTML, /Localizzo/);
+  f.success({ latitude: 44.5, longitude: 11.3 });
+  assert.deepEqual(f.mapView(), [44.5, 11.3]);
+  assert.match(f.requests[0].url, /latitude=44.5&longitude=11.3/);
+  assert.match(f.button.innerHTML, /Aggiorno meteo/);
+  assertLocation(f, 'posizione GPS');
+  f.respond(f.requests[0]);
+  await new Promise(resolve => setImmediate(resolve));
+  assert.equal(f.button.disabled, false);
+  assertLocation(f, 'posizione GPS');
+});
+
+for (const [code, message] of [[1, /Permesso posizione negato/], [2, /Posizione non disponibile/], [3, /Timeout GPS/]]) {
+  test(`errore GPS ${code} rimane visibile senza avviare fetch`, () => {
+    const f = fixture();
+    f.click(); f.error(code);
+    assert.match(f.location.textContent, message);
+    assert.equal(f.location.children[0].tagName, 'I');
+    assert.equal(f.requests.length, 0);
+    assert.equal(f.button.disabled, false);
   });
 }
 
-test('coordinate GPS non valide non avviano il meteo', async () => {
-  globalThis.__weatherAppSource = await read('js/app.js');
-  const fixture = await handlerFixture({ getCurrentPosition(success) { success({ coords: { latitude: NaN, longitude: 11.3 } }); } });
-  fixture.clickHandler();
-  assert.match(fixture.locationText.innerText, /Coordinate GPS non valide/);
-  assert.equal(fixture.getForecastArgs(), undefined);
+test('coordinate GPS non valide non aggiornano mappa o meteo', () => {
+  const f = fixture(); f.click(); f.success({ latitude: NaN, longitude: 11.3 });
+  assert.match(f.location.textContent, /Coordinate GPS non valide/);
+  assert.equal(f.requests.length, 0);
+  assert.equal(f.mapView(), undefined);
 });
 
-test('updateForecastData usa il centro mappa senza override e le coordinate esplicite con override', async () => {
-  const app = await read('js/app.js');
-  const start = app.indexOf('function updateForecastData(');
-  const end = app.indexOf('\n    function useCurrentLocationForForecast(', start);
-  const elements = new Proxy({}, { get: (target, id) => target[id] ||= { innerText: '', innerHTML: '', style: {} } });
-  const urls = [];
-  const response = { ok: true, json: async () => ({ current: { weather_code: 0, temperature_2m: 20, apparent_temperature: 20, relative_humidity_2m: 50, wind_speed_10m: 1, wind_direction_10m: 0, surface_pressure: 1013, precipitation: 0, cloud_cover: 0 }, hourly: { time: [], surface_pressure: [] }, daily: {} }) };
-  const context = vm.createContext({ window: {}, document: { getElementById: id => elements[id] }, map: { getCenter: () => ({ lat: 1, lng: 2 }) }, fetch(url) { urls.push(url); return Promise.resolve(response); }, CescoRiverStatus: { renderRiverStatus() {} }, Promise });
-  vm.runInContext(app.slice(start, end), context);
-  await vm.runInContext('updateForecastData()', context);
-  assert.match(urls[0], /latitude=1&longitude=2/);
-  urls.length = 0;
-  await vm.runInContext('updateForecastData(null, {lat: 44.5, lng: 11.3})', context);
-  assert.match(urls[0], /latitude=44.5&longitude=11.3/);
+test('errore meteo conserva il contesto GPS e distingue il mancato aggiornamento', async () => {
+  const f = fixture();
+  const request = vm.runInContext('updateForecastData(null, {lat: 44.5, lng: 11.3})', f.context);
+  f.requests[0].reject(new Error('offline'));
+  await request;
+  assert.match(f.location.textContent, /posizione GPS.*meteo non aggiornati/);
+  assert.equal(f.location.children[0].tagName, 'I');
+});
+
+test('un vecchio errore GPS/meteo non sovrascrive un contesto successivo della mappa', async () => {
+  const f = fixture();
+  const oldRequest = vm.runInContext('updateForecastData(null, {lat: 44.5, lng: 11.3})', f.context);
+  const newRequest = vm.runInContext('updateForecastData()', f.context);
+  f.respond(f.requests[3]); await newRequest;
+  f.requests[0].reject(new Error('vecchia richiesta'));
+  await oldRequest;
+  assertLocation(f, 'centro della mappa');
 });
