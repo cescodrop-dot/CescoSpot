@@ -1172,12 +1172,58 @@
     }
 
 
+    let cancelTabTransition = null;
+
     function switchTab(tabId, btn) {
-      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+      const next = document.getElementById(tabId);
+      if (!next || !next.classList.contains('tab-content')) return;
+      const previous = document.querySelector('.tab-content.active');
+      if (previous === next) return;
+
+      // Finish only the visual cleanup when navigation interrupts an animation.
+      if (cancelTabTransition) cancelTabTransition();
       document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-      document.getElementById(tabId).classList.add('active');
-      btn.classList.add('active');
-      if(tabId === 'tabMap') setTimeout(() => map.invalidateSize(), 300);
+      if (btn) btn.classList.add('active');
+      if (previous) {
+        previous.classList.remove('active');
+        previous.classList.add('is-leaving');
+        previous.inert = true;
+      }
+      next.classList.add('active', 'is-entering');
+      next.inert = false;
+
+      let timer;
+      let finished = false;
+      const settle = (completed) => {
+        if (finished) return;
+        finished = true;
+        clearTimeout(timer);
+        next.removeEventListener('animationend', onEnd);
+        next.classList.remove('is-entering');
+        if (previous) {
+          previous.classList.remove('is-leaving');
+          previous.inert = false;
+        }
+        cancelTabTransition = null;
+        // The target is now visible and no longer animating. Never resize a
+        // map whose transition was cancelled by another navigation action.
+        if (completed && tabId === 'tabMap') map.invalidateSize();
+      };
+      const onEnd = (event) => {
+        if (event.target === next &&
+            (event.animationName === 'tab-enter' || event.animationName === 'tab-fade-in')) settle(true);
+      };
+      cancelTabTransition = () => settle(false);
+
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        settle(true);
+      } else {
+        next.addEventListener('animationend', onEnd);
+        // Deterministic fallback for interrupted/undelivered animationend
+        // (e.g. a background PWA), using the same duration as the CSS.
+        const duration = parseFloat(getComputedStyle(next).getPropertyValue('--tab-transition-duration')) || 220;
+        timer = setTimeout(() => settle(true), duration);
+      }
       if(tabId === 'tabForecasts') updateForecastData();
     }
 
