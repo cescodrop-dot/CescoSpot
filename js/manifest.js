@@ -11,7 +11,7 @@
     display: 'standalone',
     background_color: '#070d1d',
     theme_color: '#070d1d',
-    icons: [{ src: 'map.png', sizes: '512x512', type: 'image/png' }]
+    icons: [{ src: 'assets/images/app/map.png', sizes: '512x512', type: 'image/png' }]
   };
 
   const stringManifest = JSON.stringify(manifest);
