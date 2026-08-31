@@ -947,11 +947,16 @@
     // zoom disabled and cancel any still-pending single-tap action explicitly.
     map.on('dblclick', () => spotTap.cancel());
 
-    function updateForecastData(btnElement) {
+    function updateForecastData(btnElement, coordinatesOverride) {
       let originalHtml = '';
       if(btnElement) { originalHtml = btnElement.innerHTML; btnElement.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sincronizzazione...'; btnElement.disabled = true; }
 
-      const center = map.getCenter();
+      const overrideLat = coordinatesOverride && Number(coordinatesOverride.lat);
+      const overrideLng = coordinatesOverride && Number(coordinatesOverride.lng);
+      const hasValidOverride = Number.isFinite(overrideLat) && Number.isFinite(overrideLng);
+      const center = hasValidOverride ? { lat: overrideLat, lng: overrideLng } : map.getCenter();
+      const locationText = document.getElementById('weatherLocationText');
+      const gpsLocation = hasValidOverride;
       const now = new Date();
 
       const formatClock = (date) => date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -995,8 +1000,11 @@
       }
       document.getElementById('wTideState').innerText = 'Non disponibile';
 
-      fetch(`https://api.open-meteo.com/v1/forecast?latitude=${center.lat}&longitude=${center.lng}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m,wind_direction_10m,surface_pressure,cloud_cover&hourly=temperature_2m,weather_code,precipitation,wind_speed_10m,surface_pressure&daily=sunrise,sunset&timezone=auto`)
-        .then(res => res.json())
+      const forecastRequest = fetch(`https://api.open-meteo.com/v1/forecast?latitude=${center.lat}&longitude=${center.lng}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m,wind_direction_10m,surface_pressure,cloud_cover&hourly=temperature_2m,weather_code,precipitation,wind_speed_10m,surface_pressure&daily=sunrise,sunset&timezone=auto`)
+        .then(res => {
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          return res.json();
+        })
         .then(data => {
             const code = data.current.weather_code || 0;
             let weatherIconStr = '<i class="fa-solid fa-sun" style="color:#eab308;"></i>';
@@ -1064,6 +1072,8 @@
         }).catch(() => {
           document.getElementById('wDesc').innerText = 'Errore di Rete';
           document.getElementById('weatherDataStatus').innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Impossibile aggiornare i dati meteo';
+          if (gpsLocation && locationText) locationText.innerText = 'Posizione GPS acquisita, ma i dati meteo non sono stati aggiornati';
+          return false;
         });
 
       fetch(`https://flood-api.open-meteo.com/v1/flood?latitude=${center.lat}&longitude=${center.lng}&daily=river_discharge&past_days=2&forecast_days=3`)
@@ -1086,22 +1096,59 @@
             document.getElementById('wSeaTemp').innerText = "Interno";
           }
         }).catch(() => {});
+
+      return forecastRequest;
     }
 
     function useCurrentLocationForForecast(button) {
-      if (!navigator.geolocation) { document.getElementById('weatherLocationText').innerText = 'GPS non supportato da questo dispositivo'; return; }
+      const locationText = document.getElementById('weatherLocationText');
+      if (!navigator.geolocation) { if (locationText) locationText.innerText = 'GPS non supportato da questo dispositivo'; return; }
       const original = button.innerHTML;
       button.disabled = true;
       button.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Localizzo';
       navigator.geolocation.getCurrentPosition(
-        ({ coords }) => { map.setView([coords.latitude, coords.longitude], Math.max(map.getZoom(), 13)); updateForecastData(); button.innerHTML = original; button.disabled = false; },
+        ({ coords }) => {
+          const lat = Number(coords?.latitude);
+          const lng = Number(coords?.longitude);
+          if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
+            if (locationText) locationText.innerText = 'Coordinate GPS non valide';
+            button.innerHTML = original;
+            button.disabled = false;
+            return;
+          }
+
+          try {
+            map.setView([lat, lng], Math.max(map.getZoom(), 13));
+          } catch (error) {
+            if (locationText) locationText.innerText = 'Posizione GPS non disponibile: impossibile aggiornare la mappa';
+            button.innerHTML = original;
+            button.disabled = false;
+            return;
+          }
+
+          if (locationText) locationText.innerText = `Posizione GPS acquisita: ${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+          button.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Aggiorno meteo...';
+          let request;
+          try {
+            request = updateForecastData(null, { lat, lng });
+          } catch (error) {
+            if (locationText) locationText.innerText = 'Posizione GPS acquisita, ma i dati meteo non sono stati aggiornati';
+            button.innerHTML = original;
+            button.disabled = false;
+            return;
+          }
+          Promise.resolve(request).finally(() => {
+            button.innerHTML = original;
+            button.disabled = false;
+          });
+        },
         error => {
           const message = error && error.code === 1
             ? 'Permesso posizione negato: abilita il GPS nelle impostazioni'
             : error && error.code === 3
               ? 'Timeout GPS: riprova o usa il centro della mappa'
               : 'Posizione non disponibile: usa il centro della mappa';
-          document.getElementById('weatherLocationText').innerText = message;
+          if (locationText) locationText.innerText = message;
           button.innerHTML = original;
           button.disabled = false;
         },
