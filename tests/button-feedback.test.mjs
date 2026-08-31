@@ -13,11 +13,13 @@ function rule(source, selector) {
   return source.slice(start + selector.length, source.indexOf('}', start) + 1);
 }
 
-test('feedback condiviso: transizioni esplicite di 160ms senza geometria/layout', () => {
+test('feedback condiviso: transizioni naturali di 200ms senza geometria/layout', () => {
   const shared = rule(css, controls);
   for (const property of ['transform', 'filter', 'background-color', 'border-color', 'opacity']) {
-    assert.ok(shared.includes(`${property} 160ms ease`));
+    assert.ok(shared.includes(property));
   }
+  assert.match(shared, /transition-duration: 200ms/);
+  assert.match(shared, /transition-timing-function: cubic-bezier\(0\.22, 1, 0\.36, 1\)/);
   assert.doesNotMatch(shared, /\b(all|width|height|padding|margin|left|top)\b/);
   assert.equal(css.split(controls + ' {').length - 1, 1);
   assert.doesNotMatch(rule(mobile, '.nav-item'), /transition:/);
@@ -26,7 +28,8 @@ test('feedback condiviso: transizioni esplicite di 160ms senza geometria/layout'
 test('pressione lieve senza ritardi e senza applicarla ai pulsanti disabilitati', () => {
   const active = rule(css, press);
   assert.match(active, /transform: scale\(0\.97\)/);
-  assert.match(active, /filter: brightness\(0\.96\)/);
+  assert.match(active, /filter: brightness\(0\.95\)/);
+  assert.match(active, /opacity: 0\.96/);
   assert.doesNotMatch(active, /transition-delay|pointer-events/);
   assert.match(rule(css, 'button:not(:where(.leaflet-container *, .lightbox-overlay *)):disabled'), /opacity: 0\.72/);
 });
