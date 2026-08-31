@@ -110,6 +110,7 @@
   }
 
   async function persistSpots() {
+    if (!globalScope.CescoStorageReadiness.ensureWriteReady()) return false;
     try {
       const safeSpots = normalizeBackupPayload(spots);
       const database = await openDatabaseOrFallback();
@@ -224,11 +225,13 @@
   }
 
   async function confirmImportAction(action) {
-    document.getElementById('importDialogOverlay').classList.remove('open');
     if (!pendingImportData || action === 'cancel') {
+      document.getElementById('importDialogOverlay').classList.remove('open');
       pendingImportData = null;
       return;
     }
+    if (!globalScope.CescoStorageReadiness.ensureWriteReady()) return;
+    document.getElementById('importDialogOverlay').classList.remove('open');
 
     const previousSpots = spots;
     let successMessage = '';

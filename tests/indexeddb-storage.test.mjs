@@ -2,7 +2,9 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 
 await import('../js/data-safety.js');
+await import('../js/storage-readiness.js');
 await import('../js/storage.js');
+globalThis.CescoStorageReadiness.finishInitialization();
 
 function createFakeIndexedDB() {
   const records = new Map();

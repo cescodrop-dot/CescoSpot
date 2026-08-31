@@ -1,3 +1,6 @@
+Warning: truncated output (original token count: 30439)
+Total output lines: 1920
+
 // --- PWA E INSTALLAZIONE ---
     let deferredPrompt;
     const installBanner = document.getElementById('installBanner');
@@ -473,6 +476,7 @@
     }
 
     async function saveSpotFromModal() {
+      if (!CescoStorageReadiness.ensureWriteReady()) return;
       const previousSpots = normalizeBackupPayload(spots);
       const name = normalizeText(document.getElementById('spotName').value, 120) || 'Nuovo Spot';
       const zone = normalizeText(document.getElementById('spotZone').value, 160) || 'Generale';
@@ -559,6 +563,7 @@
     }
 
     async function deleteSpot(id) {
+      if (!CescoStorageReadiness.ensureWriteReady()) return;
       if(confirm("Eliminare definitivamente questo spot?")) {
         spots = spots.filter(s => s.id !== id);
         if (!await persistSpots()) return;
@@ -593,6 +598,7 @@
     }
 
     async function saveCatch() {
+      if (!CescoStorageReadiness.ensureWriteReady()) return;
       const spotId = document.getElementById('catchSpotId').value;
       const editId = document.getElementById('catchEditId').value;
       const spot = spots.find(s => s.id === spotId);
@@ -666,6 +672,7 @@
     }
 
     async function deleteCatch(spotId, catchId) {
+      if (!CescoStorageReadiness.ensureWriteReady()) return;
       const spot = spots.find(s => s.id === spotId);
       if (!spot || !spot.catches) return;
       if (confirm("Eliminare questa cattura?")) {
@@ -1134,53 +1141,7 @@
           }
 
           try {
-            map.setView([lat, lng], Math.max(map.getZoom(), 13));
-          } catch (error) {
-            setWeatherLocationContext('error', 'Posizione GPS non disponibile: impossibile aggiornare la mappa');
-            button.innerHTML = original;
-            button.disabled = false;
-            return;
-          }
-
-          button.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Aggiorno meteo...';
-          let request;
-          try {
-            request = updateForecastData(null, { lat, lng });
-          } catch (error) {
-            setWeatherLocationContext('gps', 'Posizione analizzata: posizione GPS · dati meteo non aggiornati');
-            button.innerHTML = original;
-            button.disabled = false;
-            return;
-          }
-          Promise.resolve(request).finally(() => {
-            button.innerHTML = original;
-            button.disabled = false;
-          });
-        },
-        error => {
-          const message = error && error.code === 1
-            ? 'Permesso posizione negato: abilita il GPS nelle impostazioni'
-            : error && error.code === 3
-              ? 'Timeout GPS: riprova o usa il centro della mappa'
-              : 'Posizione non disponibile: usa il centro della mappa';
-          setWeatherLocationContext('error', message);
-          button.innerHTML = original;
-          button.disabled = false;
-        },
-        { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
-      );
-    }
-
-
-    let cancelTabTransition = null;
-
-    function switchTab(tabId, btn) {
-      const next = document.getElementById(tabId);
-      if (!next || !next.classList.contains('tab-content')) return;
-      const previous = document.querySelector('.tab-content.active');
-      if (previous === next) return;
-
-      // Finish only the visual cleanup when navigation interrupts an animation.
+            map.setView([lat, lng], Math.max(map.getZoom(), 13…439 tokens truncated… when navigation interrupts an animation.
       if (cancelTabTransition) cancelTabTransition();
       document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
       if (btn) btn.classList.add('active');
@@ -1318,14 +1279,20 @@
     document.head.appendChild(style);
 
     async function initializeStoredData() {
+      CescoStorageReadiness.beginInitialization();
       try {
         spots = await loadStoredSpots();
       } catch (error) {
         console.warn('Archivio locale non leggibile:', error);
         alert('I dati locali non sono leggibili. Non verranno sovrascritti: prova a ripristinare un backup valido.');
+      } finally {
+        try {
+          renderMapSpots();
+          if (spots.length > 0) map.setView([spots[spots.length - 1].lat, spots[spots.length - 1].lng], 13);
+        } finally {
+          CescoStorageReadiness.finishInitialization();
+        }
       }
-      renderMapSpots();
-      if (spots.length > 0) map.setView([spots[spots.length - 1].lat, spots[spots.length - 1].lng], 13);
     }
 
     initializeStoredData();
