@@ -1067,9 +1067,24 @@
       button.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Localizzo';
       navigator.geolocation.getCurrentPosition(
         ({ coords }) => { map.setView([coords.latitude, coords.longitude], Math.max(map.getZoom(), 13)); updateForecastData(); button.innerHTML = original; button.disabled = false; },
-        () => { document.getElementById('weatherLocationText').innerText = 'Posizione non disponibile: usa il centro della mappa'; button.innerHTML = original; button.disabled = false; },
+        error => {
+          const message = error && error.code === 1
+            ? 'Permesso posizione negato: abilita il GPS nelle impostazioni'
+            : error && error.code === 3
+              ? 'Timeout GPS: riprova o usa il centro della mappa'
+              : 'Posizione non disponibile: usa il centro della mappa';
+          document.getElementById('weatherLocationText').innerText = message;
+          button.innerHTML = original;
+          button.disabled = false;
+        },
         { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
       );
+    }
+
+    const weatherLocationButton = document.getElementById('btnWeatherCurrentLocation');
+    if (weatherLocationButton && !weatherLocationButton.__cescoWeatherBound) {
+      weatherLocationButton.addEventListener('click', () => useCurrentLocationForForecast(weatherLocationButton));
+      weatherLocationButton.__cescoWeatherBound = true;
     }
 
     function switchTab(tabId, btn) {
