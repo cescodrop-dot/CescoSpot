@@ -11,9 +11,11 @@ test('il click reale del pulsante meteo invoca il GPS e aggiorna la mappa', asyn
   assert.match(html, /id="btnWeatherCurrentLocation"/);
   assert.doesNotMatch(html, /onclick="useCurrentLocationForForecast/);
 
-  const start = app.indexOf('function useCurrentLocationForForecast(');
-  const end = app.indexOf('    function switchTab(', start);
-  const source = app.slice(start, end);
+  const bindStart = app.indexOf('function bindWeatherLocationButton(');
+  const bindEnd = app.indexOf('\n    function bindImageProtections', bindStart);
+  const useStart = app.indexOf('function useCurrentLocationForForecast(');
+  const useEnd = app.indexOf('\n    function switchTab(', useStart);
+  const source = app.slice(bindStart, bindEnd) + app.slice(useStart, useEnd);
   let clickHandler;
   let gpsCalls = 0;
   let mapView;
@@ -24,12 +26,13 @@ test('il click reale del pulsante meteo invoca il GPS e aggiorna la mappa', asyn
   };
   const locationText = { innerText: '' };
   const context = vm.createContext({
-    document: { getElementById(id) { return id === 'btnWeatherCurrentLocation' ? button : locationText; } },
+    window: { matchMedia: () => ({ matches: false }), navigator: { standalone: false }, addEventListener() {} },
+    document: { getElementById(id) { return id === 'btnWeatherCurrentLocation' ? button : locationText; }, addEventListener() {} },
     navigator: { geolocation: { getCurrentPosition(success) { gpsCalls++; success({ coords: { latitude: 44.5, longitude: 11.3 } }); } } },
     map: { getZoom: () => 10, setView(view) { mapView = view; } },
     updateForecastData() { forecastCalls++; }
   });
-  vm.runInContext(source, context);
+  vm.runInContext(source + '\nbindWeatherLocationButton();', context);
   assert.equal(typeof clickHandler, 'function');
   clickHandler();
   assert.equal(gpsCalls, 1);
