@@ -1,6 +1,3 @@
-Warning: truncated output (original token count: 30439)
-Total output lines: 1920
-
 // --- PWA E INSTALLAZIONE ---
     let deferredPrompt;
     const installBanner = document.getElementById('installBanner');
@@ -1141,7 +1138,53 @@ Total output lines: 1920
           }
 
           try {
-            map.setView([lat, lng], Math.max(map.getZoom(), 13…439 tokens truncated… when navigation interrupts an animation.
+            map.setView([lat, lng], Math.max(map.getZoom(), 13));
+          } catch (error) {
+            setWeatherLocationContext('error', 'Posizione GPS non disponibile: impossibile aggiornare la mappa');
+            button.innerHTML = original;
+            button.disabled = false;
+            return;
+          }
+
+          button.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Aggiorno meteo...';
+          let request;
+          try {
+            request = updateForecastData(null, { lat, lng });
+          } catch (error) {
+            setWeatherLocationContext('gps', 'Posizione analizzata: posizione GPS · dati meteo non aggiornati');
+            button.innerHTML = original;
+            button.disabled = false;
+            return;
+          }
+          Promise.resolve(request).finally(() => {
+            button.innerHTML = original;
+            button.disabled = false;
+          });
+        },
+        error => {
+          const message = error && error.code === 1
+            ? 'Permesso posizione negato: abilita il GPS nelle impostazioni'
+            : error && error.code === 3
+              ? 'Timeout GPS: riprova o usa il centro della mappa'
+              : 'Posizione non disponibile: usa il centro della mappa';
+          setWeatherLocationContext('error', message);
+          button.innerHTML = original;
+          button.disabled = false;
+        },
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
+      );
+    }
+
+
+    let cancelTabTransition = null;
+
+    function switchTab(tabId, btn) {
+      const next = document.getElementById(tabId);
+      if (!next || !next.classList.contains('tab-content')) return;
+      const previous = document.querySelector('.tab-content.active');
+      if (previous === next) return;
+
+      // Finish only the visual cleanup when navigation interrupts an animation.
       if (cancelTabTransition) cancelTabTransition();
       document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
       if (btn) btn.classList.add('active');
