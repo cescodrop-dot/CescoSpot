@@ -473,6 +473,7 @@
     }
 
     async function saveSpotFromModal() {
+      if (!CescoStorageReadiness.ensureWriteReady()) return;
       const previousSpots = normalizeBackupPayload(spots);
       const name = normalizeText(document.getElementById('spotName').value, 120) || 'Nuovo Spot';
       const zone = normalizeText(document.getElementById('spotZone').value, 160) || 'Generale';
@@ -559,6 +560,7 @@
     }
 
     async function deleteSpot(id) {
+      if (!CescoStorageReadiness.ensureWriteReady()) return;
       if(confirm("Eliminare definitivamente questo spot?")) {
         spots = spots.filter(s => s.id !== id);
         if (!await persistSpots()) return;
@@ -593,6 +595,7 @@
     }
 
     async function saveCatch() {
+      if (!CescoStorageReadiness.ensureWriteReady()) return;
       const spotId = document.getElementById('catchSpotId').value;
       const editId = document.getElementById('catchEditId').value;
       const spot = spots.find(s => s.id === spotId);
@@ -666,6 +669,7 @@
     }
 
     async function deleteCatch(spotId, catchId) {
+      if (!CescoStorageReadiness.ensureWriteReady()) return;
       const spot = spots.find(s => s.id === spotId);
       if (!spot || !spot.catches) return;
       if (confirm("Eliminare questa cattura?")) {
@@ -1318,14 +1322,20 @@
     document.head.appendChild(style);
 
     async function initializeStoredData() {
+      CescoStorageReadiness.beginInitialization();
       try {
         spots = await loadStoredSpots();
       } catch (error) {
         console.warn('Archivio locale non leggibile:', error);
         alert('I dati locali non sono leggibili. Non verranno sovrascritti: prova a ripristinare un backup valido.');
+      } finally {
+        try {
+          renderMapSpots();
+          if (spots.length > 0) map.setView([spots[spots.length - 1].lat, spots[spots.length - 1].lng], 13);
+        } finally {
+          CescoStorageReadiness.finishInitialization();
+        }
       }
-      renderMapSpots();
-      if (spots.length > 0) map.setView([spots[spots.length - 1].lat, spots[spots.length - 1].lng], 13);
     }
 
     initializeStoredData();

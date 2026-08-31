@@ -11,6 +11,7 @@ test('la cache PWA è incrementata e include app.js', async () => {
   assert.ok(match, 'CACHE_VERSION numerata non trovata');
   assert.ok(Number(match[1]) >= 16, 'incrementare CACHE_VERSION quando cambia app.js');
   assert.match(source, /'\.\/js\/app\.js'/);
+  assert.match(source, /'\.\/js\/storage-readiness\.js'/);
 });
 
 test('activate elimina le cache precedenti', async () => {

@@ -10,6 +10,7 @@ test('i moduli runtime sono caricati una volta sola e prima di app.js', async ()
   const scripts = [...html.matchAll(/<script\s+src="([^"]+)"/g)].map(match => match[1]);
   const runtimeModules = [
     'js/data-safety.js',
+    'js/storage-readiness.js',
     'js/storage.js',
     'js/map-tap.js',
     'js/river-status.js',

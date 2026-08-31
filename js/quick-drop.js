@@ -3,6 +3,7 @@
 
   function install() {
     globalScope.quickDropSpot = function quickDropSpot() {
+      if (!globalScope.CescoStorageReadiness.ensureWriteReady()) return;
       if (!navigator.geolocation) {
         alert('GPS non disponibile.');
         return;
