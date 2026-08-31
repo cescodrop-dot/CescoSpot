@@ -1298,3 +1298,23 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+/* La UI non deve comportarsi come testo selezionabile; i campi restano editabili. */
+body,
+body * {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+input,
+textarea,
+[contenteditable="true"] {
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+img {
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
+}

@@ -4,6 +4,34 @@
     const installBtn = document.getElementById('installBtn');
     const installText = document.getElementById('installText');
 
+    function bindWeatherLocationButton() {
+      const button = document.getElementById('btnWeatherCurrentLocation');
+      if (!button || button.__cescoWeatherBound) return;
+      button.addEventListener('click', () => useCurrentLocationForForecast(button));
+      button.__cescoWeatherBound = true;
+    }
+
+    function bindImageProtections() {
+      if (document.__cescoImageProtectionsBound) return;
+      document.addEventListener('dragstart', event => {
+        if (event.target.closest && event.target.closest('img')) event.preventDefault();
+      });
+      document.addEventListener('contextmenu', event => {
+        if (event.target.closest && event.target.closest('img')) event.preventDefault();
+      });
+      document.__cescoImageProtectionsBound = true;
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => {
+        bindWeatherLocationButton();
+        bindImageProtections();
+      }, { once: true });
+    } else {
+      bindWeatherLocationButton();
+      bindImageProtections();
+    }
+
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
 
@@ -1081,11 +1109,6 @@
       );
     }
 
-    const weatherLocationButton = document.getElementById('btnWeatherCurrentLocation');
-    if (weatherLocationButton && !weatherLocationButton.__cescoWeatherBound) {
-      weatherLocationButton.addEventListener('click', () => useCurrentLocationForForecast(weatherLocationButton));
-      weatherLocationButton.__cescoWeatherBound = true;
-    }
 
     function switchTab(tabId, btn) {
       document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
