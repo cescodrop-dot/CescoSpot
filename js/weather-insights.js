@@ -2,6 +2,7 @@
   'use strict';
 
   const CARD_ID = 'weatherFieldConditions';
+  let latestGeneration = 0;
 
   const compass = degrees => {
     const dirs = ['N','NE','E','SE','S','SO','O','NO'];
@@ -73,49 +74,51 @@
     document.getElementById('fieldPressureTrend').textContent = pressureTrend;
   }
 
-  async function refresh() {
-    if (typeof map === 'undefined' || !map) return;
-    const center = map.getCenter();
+  function validSnapshot(snapshot) {
+    const lat = Number(snapshot?.lat);
+    const lng = Number(snapshot?.lng);
+    return Number.isFinite(lat) && Number.isFinite(lng) ? { lat, lng } : null;
+  }
+
+  function refresh(snapshot, generation, isCurrentRefresh = () => true) {
+    const coordinates = validSnapshot(snapshot);
+    if (!coordinates) return Promise.resolve(false);
+    latestGeneration = Math.max(latestGeneration, Number(generation) || 0);
+    const current = () => generation === latestGeneration && isCurrentRefresh();
     const params = new URLSearchParams({
-      latitude: center.lat,
-      longitude: center.lng,
+      latitude: coordinates.lat,
+      longitude: coordinates.lng,
       current: 'wind_speed_10m,wind_gusts_10m,wind_direction_10m,surface_pressure',
       hourly: 'precipitation,precipitation_probability,surface_pressure',
       forecast_days: '2',
       timezone: 'auto'
     });
 
-    try {
-      const response = await fetch(`https://api.open-meteo.com/v1/forecast?${params}`);
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      render(await response.json());
-    } catch (error) {
-      ensureCard();
-      const note = document.querySelector(`#${CARD_ID} .field-conditions-note`);
-      if (note) note.textContent = 'Riepilogo rapido temporaneamente non disponibile.';
-      console.warn('Condizioni meteo rapide non disponibili:', error);
-    }
+    return fetch(`https://api.open-meteo.com/v1/forecast?${params}`)
+      .then(response => {
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return response.json();
+      })
+      .then(data => {
+        if (!current()) return false;
+        render(data);
+        return true;
+      })
+      .catch(error => {
+        if (!current()) return false;
+        ensureCard();
+        const note = document.querySelector(`#${CARD_ID} .field-conditions-note`);
+        if (note) note.textContent = 'Riepilogo rapido temporaneamente non disponibile.';
+        console.warn('Condizioni meteo rapide non disponibili:', error);
+        return false;
+      });
   }
 
-  let timer = null;
-  function scheduleRefresh() {
-    clearTimeout(timer);
-    timer = setTimeout(refresh, 250);
-  }
+  globalScope.CescoWeatherInsights = { ensureCard, refresh };
 
-  function install() {
-    if (!ensureCard()) return false;
-    const status = document.getElementById('weatherDataStatus');
-    if (status) new MutationObserver(scheduleRefresh).observe(status, { childList: true, subtree: true, characterData: true });
-    document.getElementById('btnUpdateWeather')?.addEventListener('click', scheduleRefresh);
-    document.querySelector('[onclick*="useCurrentLocationForForecast"]')?.addEventListener('click', () => setTimeout(refresh, 1200));
-    scheduleRefresh();
-    return true;
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', ensureCard, { once: true });
+  } else {
+    ensureCard();
   }
-
-  let attempts = 0;
-  const interval = globalScope.setInterval(() => {
-    attempts += 1;
-    if (install() || attempts >= 80) globalScope.clearInterval(interval);
-  }, 100);
 })(globalThis);

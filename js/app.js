@@ -993,16 +993,48 @@
       return label;
     }
 
+    // Every weather refresh owns one generation. Async responses may only
+    // update the UI while their generation is still the most recent one.
+    let weatherRefreshGeneration = 0;
+    let activeWeatherRefreshButton = null;
+
+    function isCurrentWeatherRefresh(generation) {
+      return generation === weatherRefreshGeneration;
+    }
+
+    function restoreWeatherRefreshButton(button) {
+      if (!button || !button.__cescoWeatherOriginalHtml) return;
+      button.innerHTML = button.__cescoWeatherOriginalHtml;
+      button.disabled = false;
+      delete button.__cescoWeatherOriginalHtml;
+      if (activeWeatherRefreshButton === button) activeWeatherRefreshButton = null;
+    }
+
     function updateForecastData(btnElement, coordinatesOverride) {
-      let originalHtml = '';
-      if(btnElement) { originalHtml = btnElement.innerHTML; btnElement.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sincronizzazione...'; btnElement.disabled = true; }
+      if (activeWeatherRefreshButton && activeWeatherRefreshButton !== btnElement) {
+        restoreWeatherRefreshButton(activeWeatherRefreshButton);
+      }
+      if (btnElement) {
+        if (!btnElement.__cescoWeatherOriginalHtml) btnElement.__cescoWeatherOriginalHtml = btnElement.innerHTML;
+        btnElement.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sincronizzazione...';
+        // A second manual refresh may supersede this one immediately.
+        btnElement.disabled = false;
+        activeWeatherRefreshButton = btnElement;
+      }
 
       const overrideLat = coordinatesOverride && Number(coordinatesOverride.lat);
       const overrideLng = coordinatesOverride && Number(coordinatesOverride.lng);
       const hasValidOverride = Number.isFinite(overrideLat) && Number.isFinite(overrideLng);
       const center = hasValidOverride ? { lat: overrideLat, lng: overrideLng } : map.getCenter();
-      const gpsLocation = hasValidOverride;
-      const locationLabel = setWeatherLocationContext(gpsLocation ? 'gps' : 'map');
+      const snapshot = Object.freeze({
+        lat: Number(center.lat),
+        lng: Number(center.lng),
+        source: hasValidOverride ? 'gps' : 'map'
+      });
+      const generation = ++weatherRefreshGeneration;
+      const isCurrent = () => isCurrentWeatherRefresh(generation);
+      const gpsLocation = snapshot.source === 'gps';
+      setWeatherLocationContext(snapshot.source);
       const now = new Date();
 
       const formatClock = (date) => date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -1046,12 +1078,17 @@
       }
       document.getElementById('wTideState').innerText = 'Non disponibile';
 
-      const forecastRequest = fetch(`https://api.open-meteo.com/v1/forecast?latitude=${center.lat}&longitude=${center.lng}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m,wind_direction_10m,surface_pressure,cloud_cover&hourly=temperature_2m,weather_code,precipitation,wind_speed_10m,surface_pressure&daily=sunrise,sunset&timezone=auto`)
+      if (window.CescoWeatherInsights && typeof window.CescoWeatherInsights.refresh === 'function') {
+        window.CescoWeatherInsights.refresh(snapshot, generation, isCurrent);
+      }
+
+      const forecastRequest = fetch(`https://api.open-meteo.com/v1/forecast?latitude=${snapshot.lat}&longitude=${snapshot.lng}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m,wind_direction_10m,surface_pressure,cloud_cover&hourly=temperature_2m,weather_code,precipitation,wind_speed_10m,surface_pressure&daily=sunrise,sunset&timezone=auto`)
         .then(res => {
           if (!res.ok) throw new Error(`HTTP ${res.status}`);
           return res.json();
         })
         .then(data => {
+            if (!isCurrent()) return false;
             const code = data.current.weather_code || 0;
             let weatherIconStr = '<i class="fa-solid fa-sun" style="color:#eab308;"></i>';
             let descText = "Sereno";
@@ -1114,27 +1151,44 @@
               document.getElementById('wGoldenEve').innerText = `${new Date(ss.getTime() - 45*60000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - ${new Date(ss.getTime() + 20*60000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
             }
 
-            if(btnElement) { btnElement.innerHTML = '<i class="fa-solid fa-check"></i> Aggiornato'; setTimeout(() => { btnElement.innerHTML = originalHtml; btnElement.disabled = false; }, 2000); }
+            if (btnElement && activeWeatherRefreshButton === btnElement) {
+              btnElement.innerHTML = '<i class="fa-solid fa-check"></i> Aggiornato';
+              setTimeout(() => {
+                if (isCurrent() && activeWeatherRefreshButton === btnElement) restoreWeatherRefreshButton(btnElement);
+              }, 2000);
+            }
+            return true;
         }).catch(() => {
+          if (!isCurrent()) return false;
           document.getElementById('wDesc').innerText = 'Errore di Rete';
           document.getElementById('weatherDataStatus').innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Impossibile aggiornare i dati meteo';
-          // A late response must not overwrite a newer context or GPS error.
-          if (gpsLocation && locationLabel && locationLabel.parentNode) {
+          if (gpsLocation) {
             setWeatherLocationContext('gps', 'Posizione analizzata: posizione GPS · dati meteo non aggiornati');
           }
+          restoreWeatherRefreshButton(btnElement);
           return false;
         });
 
-      fetch(`https://flood-api.open-meteo.com/v1/flood?latitude=${center.lat}&longitude=${center.lng}&daily=river_discharge&past_days=2&forecast_days=3`)
-        .then(res => res.json())
+      fetch(`https://flood-api.open-meteo.com/v1/flood?latitude=${snapshot.lat}&longitude=${snapshot.lng}&daily=river_discharge&past_days=2&forecast_days=3`)
+        .then(res => {
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          return res.json();
+        })
         .then(fdata => {
+          if (!isCurrent()) return;
           CescoRiverStatus.renderRiverStatus(fdata?.daily?.river_discharge);
         })
-        .catch(() => CescoRiverStatus.renderRiverStatus([]));
+        .catch(() => {
+          if (isCurrent()) CescoRiverStatus.renderRiverStatus([]);
+        });
 
-      fetch(`https://marine-api.open-meteo.com/v1/marine?latitude=${center.lat}&longitude=${center.lng}&current=wave_height,wave_period,sea_surface_temperature`)
-        .then(res => res.json())
+      fetch(`https://marine-api.open-meteo.com/v1/marine?latitude=${snapshot.lat}&longitude=${snapshot.lng}&current=wave_height,wave_period,sea_surface_temperature`)
+        .then(res => {
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          return res.json();
+        })
         .then(mdata => {
+          if (!isCurrent()) return;
           if (mdata && mdata.current && mdata.current.wave_height !== null) {
             document.getElementById('wWaveHeight').innerText = `${mdata.current.wave_height.toFixed(1)} m`;
             document.getElementById('wWavePeriod').innerText = `${Math.round(mdata.current.wave_period || 0)} s`;

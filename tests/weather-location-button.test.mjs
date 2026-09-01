@@ -39,9 +39,11 @@ function fixture() {
   const button = elements.get('btnWeatherCurrentLocation');
   button.innerHTML = 'Usa la mia posizione';
   const requests = [];
+  const riverValues = [];
+  const insightCalls = [];
   let gpsSuccess, gpsError, gpsCalls = 0, mapView;
   const context = vm.createContext({
-    window: {},
+    window: { CescoWeatherInsights: { refresh(...args) { insightCalls.push(args); } } },
     document: {
       getElementById: id => elements.get(id) ?? null,
       createElement: tag => new Element(tag),
@@ -51,7 +53,8 @@ function fixture() {
     // Deliberately do not change getCenter in setView: prove GPS overrides it.
     map: { getCenter: () => ({ lat: 1, lng: 2 }), getZoom: () => 10, setView(view) { mapView = Array.from(view); } },
     fetch(url) { return new Promise((resolve, reject) => requests.push({ url, resolve, reject })); },
-    CescoRiverStatus: { renderRiverStatus() {} },
+    CescoRiverStatus: { renderRiverStatus(values) { riverValues.push(values); } },
+    setTimeout() { return 0; },
   });
   const helperStart = app.indexOf('function setWeatherLocationContext(');
   const start = helperStart < 0 ? app.indexOf('function updateForecastData(') : helperStart;
@@ -59,15 +62,19 @@ function fixture() {
   const bindStart = app.indexOf('function bindWeatherLocationButton(');
   const bindEnd = app.indexOf('function bindImageProtections(', bindStart);
   vm.runInContext(app.slice(start, end) + app.slice(bindStart, bindEnd) + '\nbindWeatherLocationButton();', context);
-  const respond = request => request.resolve({ ok: true, json: async () => ({ current: {
-    weather_code: 0, temperature_2m: 20, apparent_temperature: 20, relative_humidity_2m: 50,
+  const respond = (request, temperature = 20) => request.resolve({ ok: true, json: async () => ({ current: {
+    weather_code: 0, temperature_2m: temperature, apparent_temperature: temperature, relative_humidity_2m: 50,
     wind_speed_10m: 1, wind_direction_10m: 0, surface_pressure: 1013, precipitation: 0, cloud_cover: 0
   }, hourly: { time: [], surface_pressure: [] }, daily: {} }) });
+  const respondFlood = (request, discharge) => request.resolve({ ok: true, json: async () => ({ daily: { river_discharge: discharge } }) });
+  const respondMarine = (request, waveHeight) => request.resolve({ ok: true, json: async () => ({ current: {
+    wave_height: waveHeight, wave_period: 5, sea_surface_temperature: 19
+  } }) });
   return {
-    context, elements, location, button, requests, respond,
+    context, elements, location, button, requests, respond, respondFlood, respondMarine,
     click: () => button.dispatchEvent(new Event('click')),
     success: coords => gpsSuccess({ coords }), error: code => gpsError({ code }),
-    gpsCalls: () => gpsCalls, mapView: () => mapView,
+    gpsCalls: () => gpsCalls, mapView: () => mapView, riverValues, insightCalls,
   };
 }
 
@@ -105,6 +112,9 @@ test('click reale → Localizzo → GPS → mappa → fetch reale → etichetta 
   assert.match(f.button.innerHTML, /Localizzo/);
   f.success({ latitude: 44.5, longitude: 11.3 });
   assert.deepEqual(f.mapView(), [44.5, 11.3]);
+  assert.equal(f.insightCalls[0][0].lat, 44.5);
+  assert.equal(f.insightCalls[0][0].lng, 11.3);
+  assert.equal(f.insightCalls[0][0].source, 'gps');
   assert.match(f.requests[0].url, /latitude=44.5&longitude=11.3/);
   assert.match(f.button.innerHTML, /Aggiorno meteo/);
   assertLocation(f, 'posizione GPS');
@@ -149,4 +159,69 @@ test('un vecchio errore GPS/meteo non sovrascrive un contesto successivo della m
   f.requests[0].reject(new Error('vecchia richiesta'));
   await oldRequest;
   assertLocation(f, 'centro della mappa');
+});
+
+test('una risposta forecast vecchia non puo sovrascrivere il refresh piu recente', async () => {
+  const f = fixture();
+  const requestA = vm.runInContext('updateForecastData(null, {lat: 41.1, lng: 12.1})', f.context);
+  const requestB = vm.runInContext('updateForecastData(null, {lat: 45.4, lng: 9.2})', f.context);
+
+  f.respond(f.requests[3], 24);
+  await requestB;
+  assert.equal(f.elements.get('wTempLarge').innerText, '24°');
+
+  f.respond(f.requests[0], 11);
+  await requestA;
+  assert.equal(f.elements.get('wTempLarge').innerText, '24°');
+  assertLocation(f, 'posizione GPS');
+});
+
+test('due refresh manuali rapidi mantengono cliccabile il pulsante e lasciano vincere l ultimo', async () => {
+  const f = fixture();
+  const manualButton = f.elements.get('btnUpdateWeather');
+  manualButton.innerHTML = 'Aggiorna Condizioni';
+  const requestA = vm.runInContext('updateForecastData(document.getElementById("btnUpdateWeather"), {lat: 41.1, lng: 12.1})', f.context);
+  assert.equal(manualButton.disabled, false);
+  const requestB = vm.runInContext('updateForecastData(document.getElementById("btnUpdateWeather"), {lat: 45.4, lng: 9.2})', f.context);
+  assert.equal(manualButton.disabled, false);
+
+  f.respond(f.requests[3], 26);
+  await requestB;
+  f.respond(f.requests[0], 9);
+  await requestA;
+  assert.equal(f.elements.get('wTempLarge').innerText, '26°');
+  assert.match(manualButton.innerHTML, /Aggiornato/);
+});
+
+test('un refresh centro mappa vecchio non puo sostituire un refresh GPS piu recente', async () => {
+  const f = fixture();
+  const requestA = vm.runInContext('updateForecastData()', f.context);
+  const requestB = vm.runInContext('updateForecastData(null, {lat: 44.5, lng: 11.3})', f.context);
+
+  f.respond(f.requests[3], 23);
+  await requestB;
+  f.requests[0].reject(new Error('risposta centro mappa in ritardo'));
+  await requestA;
+
+  assert.equal(f.elements.get('wTempLarge').innerText, '23°');
+  assertLocation(f, 'posizione GPS');
+  assert.doesNotMatch(f.elements.get('weatherDataStatus').innerHTML, /Impossibile aggiornare/);
+});
+
+test('risposte flood e marine vecchie non sovrascrivono il refresh piu recente', async () => {
+  const f = fixture();
+  vm.runInContext('updateForecastData(null, {lat: 41.1, lng: 12.1})', f.context);
+  vm.runInContext('updateForecastData(null, {lat: 45.4, lng: 9.2})', f.context);
+
+  f.respondFlood(f.requests[4], [220]);
+  f.respondMarine(f.requests[5], 1.8);
+  await new Promise(resolve => setImmediate(resolve));
+  assert.deepEqual(f.riverValues, [[220]]);
+  assert.equal(f.elements.get('wWaveHeight').innerText, '1.8 m');
+
+  f.respondFlood(f.requests[1], [90]);
+  f.respondMarine(f.requests[2], 0.4);
+  await new Promise(resolve => setImmediate(resolve));
+  assert.deepEqual(f.riverValues, [[220]]);
+  assert.equal(f.elements.get('wWaveHeight').innerText, '1.8 m');
 });
