@@ -5,19 +5,23 @@ import test from 'node:test';
 
 const root = new URL('../', import.meta.url);
 
-function requestKey(request) {
+function requestKey(request, baseUrl) {
   const raw = typeof request === 'string' ? request : request.url;
-  const url = new URL(raw, 'https://app.test/');
-  return url.pathname === '/' || url.pathname === '/index.html'
-    ? './index.html'
-    : `.${url.pathname}`;
+  return new URL(raw, baseUrl).href;
 }
 
-function createWorkerHarness({ shell, network, cacheVersion = 'cescospot-v33', otherCaches = {} }) {
+function createWorkerHarness({
+  shell,
+  network,
+  cacheVersion = 'cescospot-v34',
+  otherCaches = {},
+  scope = 'https://app.test/'
+}) {
   const handlers = new Map();
-  const stores = new Map([[cacheVersion, new Map(Object.entries(shell))]]);
+  const toStore = entries => new Map(Object.entries(entries).map(([key, response]) => [requestKey(key, scope), response]));
+  const stores = new Map([[cacheVersion, toStore(shell)]]);
   for (const [name, entries] of Object.entries(otherCaches)) {
-    stores.set(name, new Map(Object.entries(entries)));
+    stores.set(name, toStore(entries));
   }
   const clone = response => response.clone();
 
@@ -28,24 +32,24 @@ function createWorkerHarness({ shell, network, cacheVersion = 'cescospot-v33', o
       return {
         async addAll(paths) {
           const entries = await Promise.all(paths.map(async path => {
-            const response = await network({ url: new URL(path, 'https://app.test/').href, method: 'GET' });
+            const response = await network({ url: new URL(path, scope).href, method: 'GET' });
             if (!response || !response.ok) throw new Error(`Impossibile installare ${path}`);
-            return [requestKey(path), clone(response)];
+            return [requestKey(path, scope), clone(response)];
           }));
           for (const [key, response] of entries) store.set(key, response);
         },
         async match(request) {
-          const response = store.get(requestKey(request));
+          const response = store.get(requestKey(request, scope));
           return response && clone(response);
         },
         async put(request, response) {
-          store.set(requestKey(request), clone(response));
+          store.set(requestKey(request, scope), clone(response));
         }
       };
     },
     async match(request) {
       for (const store of stores.values()) {
-        const response = store.get(requestKey(request));
+        const response = store.get(requestKey(request, scope));
         if (response) return clone(response);
       }
       return undefined;
@@ -55,7 +59,8 @@ function createWorkerHarness({ shell, network, cacheVersion = 'cescospot-v33', o
   };
 
   const self = {
-    location: { origin: 'https://app.test' },
+    location: { origin: new URL(scope).origin, href: new URL('sw.js', scope).href },
+    registration: { scope },
     addEventListener(type, handler) { handlers.set(type, handler); },
     skipWaiting() { return Promise.resolve(); },
     clients: { claim() { return Promise.resolve(); } }
@@ -139,6 +144,103 @@ test('una shell cached resta disponibile offline', async () => {
 
   assert.match(await index.text(), /INDEX-V1/);
   assert.equal(await app.text(), 'APP-V1');
+});
+
+test('sotto il sottopercorso GitHub Pages il JS shell viene riconosciuto e servito offline', async () => {
+  const cacheVersion = 'cescospot-v1';
+  const scope = 'https://app.test/CescoSpot/';
+  const harness = createWorkerHarness({
+    cacheVersion,
+    scope,
+    shell: {
+      './index.html': new Response('<html>INDEX-V1</html>'),
+      './js/app.js': new Response('APP-V1')
+    },
+    network: () => Promise.reject(new Error('offline'))
+  });
+  await loadWorker(harness, cacheVersion);
+
+  const app = await harness.dispatch('fetch', {
+    url: 'https://app.test/CescoSpot/js/app.js',
+    method: 'GET',
+    mode: 'cors'
+  });
+
+  assert.equal(await app.text(), 'APP-V1');
+});
+
+test('sotto il sottopercorso navigation, CSS, moduli, vendor e immagini shell restano disponibili offline', async () => {
+  const cacheVersion = 'cescospot-v1';
+  const scope = 'https://app.test/CescoSpot/';
+  const harness = createWorkerHarness({
+    cacheVersion,
+    scope,
+    shell: {
+      './index.html': new Response('<html>INDEX-V1</html>'),
+      './styles/app.css': new Response('CSS-V1'),
+      './js/storage.js': new Response('STORAGE-V1'),
+      './vendor/leaflet/leaflet.js': new Response('LEAFLET-V1'),
+      './vendor/fontawesome/webfonts/fa-solid-900.woff2': new Response('FONT-V1'),
+      './assets/images/app/map.png': new Response('IMAGE-V1')
+    },
+    network: () => Promise.reject(new Error('offline'))
+  });
+  await loadWorker(harness, cacheVersion);
+
+  const requests = [
+    ['https://app.test/CescoSpot/', 'navigate', /INDEX-V1/],
+    ['https://app.test/CescoSpot/styles/app.css', 'cors', 'CSS-V1'],
+    ['https://app.test/CescoSpot/js/storage.js', 'cors', 'STORAGE-V1'],
+    ['https://app.test/CescoSpot/vendor/leaflet/leaflet.js', 'cors', 'LEAFLET-V1'],
+    ['https://app.test/CescoSpot/vendor/fontawesome/webfonts/fa-solid-900.woff2', 'cors', 'FONT-V1'],
+    ['https://app.test/CescoSpot/assets/images/app/map.png', 'cors', 'IMAGE-V1']
+  ];
+
+  for (const [url, mode, expected] of requests) {
+    const response = await harness.dispatch('fetch', { url, method: 'GET', mode });
+    const body = await response.text();
+    expected instanceof RegExp ? assert.match(body, expected) : assert.equal(body, expected);
+  }
+});
+
+test('un URL same-origin fuori scope non viene scambiato per asset della shell', async () => {
+  let networkCalls = 0;
+  const harness = createWorkerHarness({
+    scope: 'https://app.test/CescoSpot/',
+    shell: { './js/app.js': new Response('APP-SCOPE') },
+    network: () => {
+      networkCalls += 1;
+      return Promise.resolve(new Response('OUT-OF-SCOPE'));
+    }
+  });
+  await loadWorker(harness);
+
+  const response = await harness.dispatch('fetch', {
+    url: 'https://app.test/js/app.js',
+    method: 'GET',
+    mode: 'cors'
+  });
+  assert.equal(await response.text(), 'OUT-OF-SCOPE');
+  assert.equal(networkCalls, 1);
+});
+
+test('cache.addAll risolve gli asset shell rispetto allo scope del worker', async () => {
+  const scope = 'https://app.test/CescoSpot/';
+  const seenUrls = [];
+  const harness = createWorkerHarness({
+    scope,
+    shell: {},
+    network: request => {
+      seenUrls.push(request.url);
+      return Promise.resolve(new Response('SHELL-V2'));
+    }
+  });
+  await loadWorker(harness);
+
+  await harness.dispatch('install');
+  assert.ok(seenUrls.includes('https://app.test/CescoSpot/js/app.js'));
+  assert.ok(seenUrls.includes('https://app.test/CescoSpot/styles/app.css'));
+  assert.equal(seenUrls.some(url => url === 'https://app.test/js/app.js'), false);
 });
 
 test('le API remote non vengono lette dalla cache shell', async () => {
