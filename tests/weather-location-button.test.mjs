@@ -151,14 +151,14 @@ test('errore meteo conserva il contesto GPS e distingue il mancato aggiornamento
   assert.equal(f.location.children[0].tagName, 'I');
 });
 
-test('un vecchio errore GPS/meteo non sovrascrive un contesto successivo della mappa', async () => {
+test('un vecchio errore GPS/meteo non sovrascrive il contesto GPS della sessione', async () => {
   const f = fixture();
   const oldRequest = vm.runInContext('updateForecastData(null, {lat: 44.5, lng: 11.3})', f.context);
   const newRequest = vm.runInContext('updateForecastData()', f.context);
   f.respond(f.requests[3]); await newRequest;
   f.requests[0].reject(new Error('vecchia richiesta'));
   await oldRequest;
-  assertLocation(f, 'centro della mappa');
+  assertLocation(f, 'posizione GPS');
 });
 
 test('una risposta forecast vecchia non puo sovrascrivere il refresh piu recente', async () => {
