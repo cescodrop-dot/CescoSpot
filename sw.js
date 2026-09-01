@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'cescospot-v33';
+const CACHE_VERSION = 'cescospot-v34';
 const APP_SHELL = [
   './',
   './index.html',
@@ -66,7 +66,6 @@ self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_VERSION)
       .then(cache => cache.addAll(APP_SHELL))
-      .then(() => self.skipWaiting())
   );
 });
 
@@ -74,9 +73,16 @@ self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys()
       .then(keys => Promise.all(keys.filter(key => key !== CACHE_VERSION).map(key => caches.delete(key))))
-      .then(() => self.clients.claim())
   );
 });
+
+function isShellAsset(requestUrl) {
+  return APP_SHELL.some(path => new URL(path, self.location.origin).pathname === requestUrl.pathname);
+}
+
+function fromActiveShell(request) {
+  return caches.open(CACHE_VERSION).then(cache => cache.match(request));
+}
 
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
@@ -87,26 +93,18 @@ self.addEventListener('fetch', event => {
 
   if (isNavigation) {
     event.respondWith(
-      fetch(event.request)
-        .then(response => withLockedViewport(response))
-        .then(response => {
-          const copy = response.clone();
-          caches.open(CACHE_VERSION).then(cache => cache.put('./index.html', copy));
-          return response;
-        })
-        .catch(() => caches.match('./index.html').then(cached => withLockedViewport(cached)))
+      fromActiveShell('./index.html')
+        .then(cached => cached
+          ? withLockedViewport(cached)
+          : new Response('Shell dell\'app non disponibile.', { status: 503 }))
     );
     return;
   }
 
-  if (isSameOrigin) {
+  if (isSameOrigin && isShellAsset(requestUrl)) {
     event.respondWith(
-      caches.match(event.request).then(cached => cached || fetch(event.request).then(response => {
-        const copy = response.clone();
-        caches.open(CACHE_VERSION).then(cache => cache.put(event.request, copy));
-        return response;
-      }))
+      fromActiveShell(event.request)
+        .then(cached => cached || new Response('Risorsa della shell non disponibile.', { status: 503 }))
     );
-    return;
   }
 });
