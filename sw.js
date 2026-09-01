@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'cescospot-v34';
+const CACHE_VERSION = 'cescospot-v35';
 const APP_SHELL = [
   './',
   './index.html',
@@ -48,6 +48,7 @@ const APP_SHELL = [
 ];
 
 const LOCKED_VIEWPORT = '<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">';
+const APP_SHELL_URLS = APP_SHELL.map(path => new URL(path, self.registration.scope).href);
 
 async function withLockedViewport(response) {
   if (!response) return response;
@@ -65,7 +66,7 @@ async function withLockedViewport(response) {
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_VERSION)
-      .then(cache => cache.addAll(APP_SHELL))
+      .then(cache => cache.addAll(APP_SHELL_URLS))
   );
 });
 
@@ -77,11 +78,14 @@ self.addEventListener('activate', event => {
 });
 
 function isShellAsset(requestUrl) {
-  return APP_SHELL.some(path => new URL(path, self.location.origin).pathname === requestUrl.pathname);
+  return APP_SHELL_URLS.includes(requestUrl.href);
 }
 
 function fromActiveShell(request) {
-  return caches.open(CACHE_VERSION).then(cache => cache.match(request));
+  const shellRequest = typeof request === 'string'
+    ? new URL(request, self.registration.scope).href
+    : request;
+  return caches.open(CACHE_VERSION).then(cache => cache.match(shellRequest));
 }
 
 self.addEventListener('fetch', event => {
