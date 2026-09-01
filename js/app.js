@@ -997,6 +997,9 @@
     // update the UI while their generation is still the most recent one.
     let weatherRefreshGeneration = 0;
     let activeWeatherRefreshButton = null;
+    // Session-only preference: map remains dynamic, while GPS keeps the
+    // last coordinates intentionally chosen by the user.
+    let lastWeatherLocation = { source: 'map' };
 
     function isCurrentWeatherRefresh(generation) {
       return generation === weatherRefreshGeneration;
@@ -1025,12 +1028,24 @@
       const overrideLat = coordinatesOverride && Number(coordinatesOverride.lat);
       const overrideLng = coordinatesOverride && Number(coordinatesOverride.lng);
       const hasValidOverride = Number.isFinite(overrideLat) && Number.isFinite(overrideLng);
-      const center = hasValidOverride ? { lat: overrideLat, lng: overrideLng } : map.getCenter();
+      const hasStoredGps = lastWeatherLocation.source === 'gps' &&
+        Number.isFinite(lastWeatherLocation.lat) && Number.isFinite(lastWeatherLocation.lng);
+      const center = hasValidOverride
+        ? { lat: overrideLat, lng: overrideLng }
+        : hasStoredGps
+          ? { lat: lastWeatherLocation.lat, lng: lastWeatherLocation.lng }
+          : map.getCenter();
+      const source = hasValidOverride || hasStoredGps ? 'gps' : 'map';
       const snapshot = Object.freeze({
         lat: Number(center.lat),
         lng: Number(center.lng),
-        source: hasValidOverride ? 'gps' : 'map'
+        source
       });
+      if (source === 'gps') {
+        lastWeatherLocation = { source: 'gps', lat: snapshot.lat, lng: snapshot.lng };
+      } else {
+        lastWeatherLocation = { source: 'map' };
+      }
       const generation = ++weatherRefreshGeneration;
       const isCurrent = () => isCurrentWeatherRefresh(generation);
       const gpsLocation = snapshot.source === 'gps';
