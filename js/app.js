@@ -362,9 +362,11 @@
       { id: '⚠️', type: 'emoji', name: 'Ostacolo / Incastro' }
     ];
 
-    let selectedColor = '#22c55e';
-    let selectedIcon = '📍';
-    let selectedIconType = 'emoji';
+    const DEFAULT_SPOT_COLOR = '#22c55e';
+    const DEFAULT_SPOT_ICON = iconList[0];
+    let selectedColor = DEFAULT_SPOT_COLOR;
+    let selectedIcon = DEFAULT_SPOT_ICON.id;
+    let selectedIconType = DEFAULT_SPOT_ICON.type;
     let selectedTechFilter = 'all';
     let spots = [];
     let mapMarkers = {};
@@ -444,20 +446,46 @@
       window.open(`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`, '_blank');
     }
 
-    function openAddSpotModal(lat, lng) {
+    function resetAddSpotFormState() {
       editingSpotId = null;
       document.getElementById('modalTitle').innerText = 'Salva Posizione';
-      const center = Number.isFinite(lat) && Number.isFinite(lng) ? { lat, lng } : map.getCenter();
-      document.getElementById('tempLat').value = center.lat;
-      document.getElementById('tempLng').value = center.lng;
       document.getElementById('spotName').value = '';
       document.getElementById('spotZone').value = 'Generale';
       document.getElementById('spotRadius').value = '';
       document.getElementById('spotNotes').value = '';
-      selectedTechniquesSet = new Set();
-      selectedSpeciesSet = new Set();
-      selectedSpotLuresSet = new Set();
       currentEnvironmentSpecies = freshwaterSpecies;
+      document.getElementById('waterEnvironmentBadge').innerText = 'Acqua Dolce';
+      document.getElementById('waterEnvironmentBadge').style.background = 'rgba(34,197,94,0.2)';
+      document.getElementById('waterEnvironmentBadge').style.color = 'var(--accent-green)';
+
+      document.getElementById('spotPhotoData').value = '';
+      document.getElementById('spotPhotoInput').value = '';
+      document.getElementById('spotPhotoBox').innerHTML = `
+        <i class="fa-solid fa-camera" style="font-size:2rem; color:var(--accent-light-blue);"></i>
+        <span style="font-size:0.85rem; font-weight:700;">Tocca per scattare o caricare foto</span>
+      `;
+
+      document.getElementById('customSpeciesInput').value = '';
+      document.getElementById('customSpotLureInput').value = '';
+      renderTechniqueSelect([]);
+      renderSpeciesSelector([]);
+      renderSpotLureSelect([]);
+
+      selectedColor = DEFAULT_SPOT_COLOR;
+      selectColor(DEFAULT_SPOT_COLOR, document.querySelector(`.color-opt[data-color="${DEFAULT_SPOT_COLOR}"]`));
+      selectedIcon = DEFAULT_SPOT_ICON.id;
+      selectedIconType = DEFAULT_SPOT_ICON.type;
+      document.querySelectorAll('.icon-card').forEach(card => {
+        card.classList.toggle('selected', card.dataset.icon === DEFAULT_SPOT_ICON.id);
+      });
+      document.getElementById('selectedIconLabel').innerText = DEFAULT_SPOT_ICON.name;
+    }
+
+    function openAddSpotModal(lat, lng) {
+      resetAddSpotFormState();
+      const center = Number.isFinite(lat) && Number.isFinite(lng) ? { lat, lng } : map.getCenter();
+      document.getElementById('tempLat').value = center.lat;
+      document.getElementById('tempLng').value = center.lng;
       document.getElementById('modalAddSpot').classList.add('open');
     }
 
