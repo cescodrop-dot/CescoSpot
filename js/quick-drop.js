@@ -12,10 +12,6 @@
       navigator.geolocation.getCurrentPosition(async (pos) => {
         const { latitude: lat, longitude: lng } = pos.coords;
         const now = new Date();
-        const weatherLocationText = document.getElementById('weatherLocationText');
-        if (weatherLocationText) {
-          weatherLocationText.innerHTML = `<i class="fa-solid fa-location-dot"></i> Posizione analizzata: ${lat.toFixed(4)}, ${lng.toFixed(4)}`;
-        }
         const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
         const existingSpot = spots.find(spot => L.latLng(spot.lat, spot.lng).distanceTo(L.latLng(lat, lng)) < 20);
