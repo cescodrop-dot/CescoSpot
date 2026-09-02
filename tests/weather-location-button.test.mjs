@@ -67,8 +67,8 @@ function fixture() {
     wind_speed_10m: 1, wind_direction_10m: 0, surface_pressure: 1013, precipitation: 0, cloud_cover: 0
   }, hourly: { time: [], surface_pressure: [] }, daily: {} }) });
   const respondFlood = (request, discharge) => request.resolve({ ok: true, json: async () => ({ daily: { river_discharge: discharge } }) });
-  const respondMarine = (request, waveHeight) => request.resolve({ ok: true, json: async () => ({ current: {
-    wave_height: waveHeight, wave_period: 5, sea_surface_temperature: 19
+  const respondMarine = (request, waveHeight, wavePeriod = 5, seaTemperature = 19) => request.resolve({ ok: true, json: async () => ({ current: {
+    wave_height: waveHeight, wave_period: wavePeriod, sea_surface_temperature: seaTemperature
   } }) });
   return {
     context, elements, location, button, requests, respond, respondFlood, respondMarine,
@@ -218,10 +218,62 @@ test('risposte flood e marine vecchie non sovrascrivono il refresh piu recente',
   await new Promise(resolve => setImmediate(resolve));
   assert.deepEqual(f.riverValues, [[220]]);
   assert.equal(f.elements.get('wWaveHeight').innerText, '1.8 m');
+  assert.equal(f.elements.get('wWavePeriod').innerText, '5 s');
+  assert.equal(f.elements.get('wSeaTemp').innerText, '19°C');
 
   f.respondFlood(f.requests[1], [90]);
   f.respondMarine(f.requests[2], 0.4);
   await new Promise(resolve => setImmediate(resolve));
   assert.deepEqual(f.riverValues, [[220]]);
   assert.equal(f.elements.get('wWaveHeight').innerText, '1.8 m');
+  assert.equal(f.elements.get('wWavePeriod').innerText, '5 s');
+  assert.equal(f.elements.get('wSeaTemp').innerText, '19°C');
+});
+
+test('un errore Marine del refresh corrente non lascia visibili i valori del refresh precedente', async () => {
+  const f = fixture();
+  vm.runInContext('updateForecastData(null, {lat: 41.1, lng: 12.1})', f.context);
+  f.respondMarine(f.requests[2], 1.8, 6, 20);
+  await new Promise(resolve => setImmediate(resolve));
+  assert.equal(f.elements.get('wWaveHeight').innerText, '1.8 m');
+  assert.equal(f.elements.get('wWavePeriod').innerText, '6 s');
+  assert.equal(f.elements.get('wSeaTemp').innerText, '20°C');
+
+  vm.runInContext('updateForecastData(null, {lat: 45.4, lng: 9.2})', f.context);
+  f.requests[5].reject(new Error('Marine non disponibile'));
+  await new Promise(resolve => setImmediate(resolve));
+
+  assert.equal(f.elements.get('wWaveHeight').innerText, '-- m');
+  assert.equal(f.elements.get('wWavePeriod').innerText, '-- s');
+  assert.equal(f.elements.get('wSeaTemp').innerText, '--°C');
+});
+
+test('un errore Marine corrente non interrompe forecast, fiume o Weather Insights', async () => {
+  const f = fixture();
+  const request = vm.runInContext('updateForecastData(null, {lat: 44.5, lng: 11.3})', f.context);
+  f.respond(f.requests[0], 23);
+  f.respondFlood(f.requests[1], [180]);
+  f.requests[2].reject(new Error('Marine non disponibile'));
+  await request;
+  await new Promise(resolve => setImmediate(resolve));
+
+  assert.equal(f.elements.get('wTempLarge').innerText, '23°');
+  assert.deepEqual(f.riverValues, [[180]]);
+  assert.equal(f.insightCalls.length, 1);
+  assert.equal(f.elements.get('wWaveHeight').innerText, '-- m');
+});
+
+test('un errore Marine vecchio non cancella i dati del refresh piu recente', async () => {
+  const f = fixture();
+  vm.runInContext('updateForecastData(null, {lat: 41.1, lng: 12.1})', f.context);
+  vm.runInContext('updateForecastData(null, {lat: 45.4, lng: 9.2})', f.context);
+
+  f.respondMarine(f.requests[5], 2.2, 7, 21);
+  await new Promise(resolve => setImmediate(resolve));
+  f.requests[2].reject(new Error('risposta vecchia fallita'));
+  await new Promise(resolve => setImmediate(resolve));
+
+  assert.equal(f.elements.get('wWaveHeight').innerText, '2.2 m');
+  assert.equal(f.elements.get('wWavePeriod').innerText, '7 s');
+  assert.equal(f.elements.get('wSeaTemp').innerText, '21°C');
 });

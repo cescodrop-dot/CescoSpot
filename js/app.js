@@ -1013,6 +1013,12 @@
       if (activeWeatherRefreshButton === button) activeWeatherRefreshButton = null;
     }
 
+    function clearMarineData() {
+      document.getElementById('wWaveHeight').innerText = '-- m';
+      document.getElementById('wWavePeriod').innerText = '-- s';
+      document.getElementById('wSeaTemp').innerText = '--°C';
+    }
+
     function updateForecastData(btnElement, coordinatesOverride) {
       if (activeWeatherRefreshButton && activeWeatherRefreshButton !== btnElement) {
         restoreWeatherRefreshButton(activeWeatherRefreshButton);
@@ -1213,7 +1219,9 @@
             document.getElementById('wWavePeriod').innerText = "--";
             document.getElementById('wSeaTemp').innerText = "Interno";
           }
-        }).catch(() => {});
+        }).catch(() => {
+          if (isCurrent()) clearMarineData();
+        });
 
       return forecastRequest;
     }
