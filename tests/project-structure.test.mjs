@@ -69,8 +69,9 @@ test('spot rapido usa le coordinate GPS ricevute', async () => {
   const quickDrop = await read('js/quick-drop.js');
 
   assert.match(quickDrop, /latitude: lat, longitude: lng/);
-  assert.match(quickDrop, /lat\.toFixed\(4\).*lng\.toFixed\(4\)/s);
+  assert.match(quickDrop, /lat,\s*\n\s*lng,/);
   assert.doesNotMatch(quickDrop, /center\.lat|center\.lng/);
+  assert.doesNotMatch(quickDrop, /weatherLocationText/);
 });
 
 test('stato fiumi non promette pescabilità né usa soglie assolute universali', async () => {
