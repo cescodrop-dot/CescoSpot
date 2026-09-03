@@ -68,6 +68,8 @@ async function createHarness() {
   const selectColor = extractFunction(source, 'function selectColor(colorHex, el)', '\n\n    function shareSpot');
   const resetStart = source.indexOf('function resetAddSpotFormState()');
   const reset = resetStart >= 0 ? extractFunction(source, 'function resetAddSpotFormState()', '\n\n    function openAddSpotModal') : '';
+  const localityStart = source.indexOf('function resolveAddSpotLocality(');
+  const locality = localityStart >= 0 ? extractFunction(source, 'function resolveAddSpotLocality(', '\n\n    function openAddSpotModal') : '';
   const open = extractFunction(source, 'function openAddSpotModal(lat, lng)', '\n\n    function closeModals');
   const edit = extractFunction(source, 'function editSpot(id)', '\n\n    async function deleteSpot');
   const startFromMap = extractFunction(source, 'function startSpotFromMap({ lat, lng })', '\n\n    // The map module');
@@ -89,6 +91,7 @@ async function createHarness() {
     let selectedIcon = '📍';
     let selectedIconType = 'emoji';
     let editingSpotId = null;
+    let addSpotLocalityGeneration = 0;
     let spots = [];
     const map = { getCenter: () => ({ lat: 41.9, lng: 12.5 }), removeLayer() {} };
     const L = {
@@ -96,6 +99,8 @@ async function createHarness() {
       divIcon: options => options,
       marker: latLng => ({ latLng, addTo: () => ({ latLng }) }),
     };
+    const reverseRequests = [];
+    const fetch = url => new Promise((resolve, reject) => reverseRequests.push({ url, resolve, reject }));
     let tempMarker = null;
     const escapeHtml = value => value;
     const encodeInlineValue = value => value;
@@ -103,6 +108,7 @@ async function createHarness() {
     ${renderSpecies}
     ${renderLures}
     ${selectColor}
+    ${locality}
     ${reset}
     ${open}
     ${startFromMap}
@@ -121,6 +127,7 @@ async function createHarness() {
       startFromMap: startSpotFromMap,
       edit: editSpot,
       setSpot: spot => { spots = [spot]; },
+      reverseRequests,
       stale() {
         editingSpotId = 'edited';
         selectedTechniquesSet = new Set(['Spinning']);
@@ -231,4 +238,60 @@ test('l’editing conserva lo stato dello spot e il nuovo Add Spot riparte pulit
   assert.equal(fresh.icon, '📍');
   assert.equal(fresh.environment, 'freshwater');
   assert.deepEqual(fresh.coordinates, [43.6, 10.3]);
+  assert.equal(app.reverseRequests.length, 1);
+  assert.match(app.reverseRequests[0].url, /lat=43\.6.*lon=10\.3/);
+});
+
+test('un Add Spot aperto su coordinate reali risolve la località senza ritardare la modale', async () => {
+  const app = await createHarness();
+  const openedAt = Date.now();
+  app.open(43.7, 10.4);
+
+  assert.ok(Date.now() - openedAt < 100, 'l’apertura deve essere sincrona');
+  assert.equal(app.snapshot().zone, 'Generale');
+  assert.equal(app.reverseRequests.length, 1);
+  assert.match(app.reverseRequests[0].url, /reverse\?format=json.*lat=43\.7.*lon=10\.4/);
+
+  app.reverseRequests[0].resolve({
+    ok: true,
+    json: async () => ({ address: { municipality: 'Pisa' } }),
+  });
+  await new Promise(resolve => setImmediate(resolve));
+  assert.equal(app.snapshot().zone, 'Pisa');
+});
+
+test('una risposta reverse geocoding vecchia non sovrascrive la modale aperta dopo', async () => {
+  const app = await createHarness();
+  app.open(43.7, 10.4);
+  app.open(44.5, 11.3);
+  assert.equal(app.reverseRequests.length, 2);
+
+  app.reverseRequests[1].resolve({ ok: true, json: async () => ({ address: { town: 'Bologna' } }) });
+  await new Promise(resolve => setImmediate(resolve));
+  assert.equal(app.snapshot().zone, 'Bologna');
+
+  app.reverseRequests[0].resolve({ ok: true, json: async () => ({ address: { town: 'Pisa' } }) });
+  await new Promise(resolve => setImmediate(resolve));
+  assert.equal(app.snapshot().zone, 'Bologna');
+});
+
+test('il reverse geocoding fallito o incompleto lascia il fallback Generale utilizzabile', async () => {
+  const app = await createHarness();
+  app.open(43.7, 10.4);
+  app.reverseRequests[0].reject(new Error('offline'));
+  await new Promise(resolve => setImmediate(resolve));
+  assert.equal(app.snapshot().zone, 'Generale');
+
+  app.open(44.5, 11.3);
+  app.reverseRequests[1].resolve({ ok: true, json: async () => ({ address: {} }) });
+  await new Promise(resolve => setImmediate(resolve));
+  assert.equal(app.snapshot().zone, 'Generale');
+});
+
+test('un Add Spot senza coordinate usa il centro mappa corrente per la richiesta locale', async () => {
+  const app = await createHarness();
+  app.open();
+  assert.equal(app.snapshot().coordinates[0], 41.9);
+  assert.equal(app.snapshot().coordinates[1], 12.5);
+  assert.match(app.reverseRequests[0].url, /lat=41\.9.*lon=12\.5/);
 });

@@ -373,6 +373,7 @@
     let mapCircles = {};
     let editingSpotId = null;
     let tempMarker = null;
+    let addSpotLocalityGeneration = 0;
     let pendingImportData = null; 
 
     const iconPickerEl = document.getElementById('iconPicker');
@@ -481,12 +482,40 @@
       document.getElementById('selectedIconLabel').innerText = DEFAULT_SPOT_ICON.name;
     }
 
+    function resolveAddSpotLocality(lat, lng) {
+      const generation = ++addSpotLocalityGeneration;
+      if (!Number.isFinite(lat) || !Number.isFinite(lng) || typeof fetch !== 'function') return;
+
+      fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=14`)
+        .then(response => {
+          if (!response.ok) throw new Error(`Reverse geocoding HTTP ${response.status}`);
+          return response.json();
+        })
+        .then(data => {
+          if (generation !== addSpotLocalityGeneration) return;
+          const address = data && data.address;
+          if (!address) return;
+          const locality = [
+            address.suburb,
+            address.neighbourhood,
+            address.village,
+            address.town,
+            address.city,
+            address.municipality,
+            address.county,
+          ].find(value => typeof value === 'string' && value.trim());
+          if (locality) document.getElementById('spotZone').value = locality.trim();
+        })
+        .catch(() => {});
+    }
+
     function openAddSpotModal(lat, lng) {
       resetAddSpotFormState();
       const center = Number.isFinite(lat) && Number.isFinite(lng) ? { lat, lng } : map.getCenter();
       document.getElementById('tempLat').value = center.lat;
       document.getElementById('tempLng').value = center.lng;
       document.getElementById('modalAddSpot').classList.add('open');
+      resolveAddSpotLocality(center.lat, center.lng);
     }
 
     function closeModals() {

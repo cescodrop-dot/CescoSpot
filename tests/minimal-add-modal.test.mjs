@@ -12,7 +12,7 @@ test('il nuovo Add Spot usa solo il reset sincrono sicuro prima di aprire il mod
   const end = app.indexOf('\n    function closeModals()', start);
   const fn = app.slice(start, end);
   const resetStart = app.indexOf('function resetAddSpotFormState()');
-  const resetEnd = app.indexOf('\n\n    function openAddSpotModal', resetStart);
+  const resetEnd = app.indexOf('\n\n    function resolveAddSpotLocality', resetStart);
   const reset = app.slice(resetStart, resetEnd);
   assert.match(html, /class="fab-add" onclick="openAddSpotModal\(\)"/);
   assert.match(fn, /resetAddSpotFormState\(\)/);
