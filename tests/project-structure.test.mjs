@@ -54,11 +54,12 @@ test("Leaflet è locale e disponibile nell'app shell offline", async () => {
   ]);
 });
 
-test('viewport e controlli mobile restano accessibili', async () => {
+test('viewport e controlli mobile rispettano il blocco zoom previsto', async () => {
   const html = await read('index.html');
   const css = await read('styles/app.css');
 
-  assert.doesNotMatch(html, /user-scalable=no|maximum-scale=1\.0/);
+  assert.match(html, /maximum-scale=1\.0/);
+  assert.match(html, /user-scalable=no/);
   assert.match(css, /:focus-visible/);
   assert.match(css, /min-height:\s*44px/);
   assert.match(css, /prefers-reduced-motion:\s*reduce/);
