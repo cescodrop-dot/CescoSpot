@@ -4,20 +4,6 @@
     viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, viewport-fit=cover');
   }
 
-  const manifest = {
-    name: 'CescoSpot Pro',
-    short_name: 'CescoSpot PRO',
-    start_url: '.',
-    display: 'standalone',
-    background_color: '#070d1d',
-    theme_color: '#070d1d',
-    icons: [{ src: 'assets/images/app/map.png', sizes: '512x512', type: 'image/png' }]
-  };
-
-  const stringManifest = JSON.stringify(manifest);
-  const blob = new Blob([stringManifest], { type: 'application/json' });
-  document.getElementById('manifestLink').setAttribute('href', URL.createObjectURL(blob));
-
   const mobilePolishStyles = document.createElement('link');
   mobilePolishStyles.rel = 'stylesheet';
   mobilePolishStyles.href = 'styles/mobile-polish.css';

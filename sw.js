@@ -1,7 +1,8 @@
-const CACHE_VERSION = 'cescospot-v38';
+const CACHE_VERSION = 'cescospot-v39';
 const APP_SHELL = [
   './',
   './index.html',
+  './manifest.webmanifest',
   './styles/app.css',
   './styles/mobile-polish.css',
   './styles/weather-insights.css',
