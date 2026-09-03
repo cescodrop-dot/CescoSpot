@@ -147,7 +147,7 @@ test('una shell cached resta disponibile offline', async () => {
 });
 
 for (const scope of ['https://app.test/', 'https://app.test/CescoSpot/']) {
-  test(`la navigation shell in ${scope} mantiene un viewport zoomabile`, async () => {
+  test(`la navigation shell in ${scope} mantiene il viewport bloccato`, async () => {
     const cacheVersion = 'cescospot-v1';
     const harness = createWorkerHarness({
       cacheVersion,
@@ -161,8 +161,8 @@ for (const scope of ['https://app.test/', 'https://app.test/CescoSpot/']) {
 
     const response = await harness.dispatch('fetch', { url: scope, method: 'GET', mode: 'navigate' });
     const body = await response.text();
-    assert.doesNotMatch(body, /maximum-scale=1(?:\.0)?/);
-    assert.doesNotMatch(body, /user-scalable=no/);
+    assert.match(body, /maximum-scale=1\.0/);
+    assert.match(body, /user-scalable=no/);
     assert.match(body, /width=device-width/);
     assert.match(body, /initial-scale=1\.0/);
     assert.match(body, /viewport-fit=cover/);
