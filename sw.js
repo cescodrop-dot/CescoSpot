@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'cescospot-v37';
+const CACHE_VERSION = 'cescospot-v38';
 const APP_SHELL = [
   './',
   './index.html',
@@ -47,7 +47,7 @@ const APP_SHELL = [
   './wiki/texas_rig.svg'
 ];
 
-const LOCKED_VIEWPORT = '<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">';
+const LOCKED_VIEWPORT = '<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">';
 const APP_SHELL_URLS = APP_SHELL.map(path => new URL(path, self.registration.scope).href);
 
 async function withLockedViewport(response) {

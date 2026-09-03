@@ -146,6 +146,29 @@ test('una shell cached resta disponibile offline', async () => {
   assert.equal(await app.text(), 'APP-V1');
 });
 
+for (const scope of ['https://app.test/', 'https://app.test/CescoSpot/']) {
+  test(`la navigation shell in ${scope} mantiene un viewport zoomabile`, async () => {
+    const cacheVersion = 'cescospot-v1';
+    const harness = createWorkerHarness({
+      cacheVersion,
+      scope,
+      shell: {
+        './index.html': new Response('<html><head><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"></head></html>')
+      },
+      network: () => Promise.reject(new Error('offline'))
+    });
+    await loadWorker(harness, cacheVersion);
+
+    const response = await harness.dispatch('fetch', { url: scope, method: 'GET', mode: 'navigate' });
+    const body = await response.text();
+    assert.doesNotMatch(body, /maximum-scale=1(?:\.0)?/);
+    assert.doesNotMatch(body, /user-scalable=no/);
+    assert.match(body, /width=device-width/);
+    assert.match(body, /initial-scale=1\.0/);
+    assert.match(body, /viewport-fit=cover/);
+  });
+}
+
 test('sotto il sottopercorso GitHub Pages il JS shell viene riconosciuto e servito offline', async () => {
   const cacheVersion = 'cescospot-v1';
   const scope = 'https://app.test/CescoSpot/';

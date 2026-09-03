@@ -5,15 +5,21 @@ import test from 'node:test';
 const root = new URL('../', import.meta.url);
 const read = path => readFile(new URL(path, root), 'utf8');
 
-test('l app blocca lo zoom pagina prima del rendering', async () => {
+test('l app preserva lo zoom pagina prima del rendering', async () => {
+  const html = await read('index.html');
   const manifest = await read('js/manifest.js');
   const worker = await read('sw.js');
 
-  assert.match(manifest, /maximum-scale=1\.0/);
-  assert.match(manifest, /user-scalable=no/);
+  assert.doesNotMatch(html, /maximum-scale=1(?:\.0)?/);
+  assert.doesNotMatch(html, /user-scalable=no/);
+  assert.doesNotMatch(manifest, /maximum-scale=1(?:\.0)?/);
+  assert.doesNotMatch(manifest, /user-scalable=no/);
   assert.match(worker, /LOCKED_VIEWPORT/);
-  assert.match(worker, /maximum-scale=1\.0/);
-  assert.match(worker, /user-scalable=no/);
+  assert.doesNotMatch(worker, /maximum-scale=1(?:\.0)?/);
+  assert.doesNotMatch(worker, /user-scalable=no/);
+  assert.match(worker, /width=device-width/);
+  assert.match(worker, /initial-scale=1\.0/);
+  assert.match(worker, /viewport-fit=cover/);
   assert.match(worker, /withLockedViewport/);
   assert.match(worker, /mode === 'navigate'/);
   assert.doesNotMatch(manifest, /zoom-guard\.js/);
